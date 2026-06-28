@@ -132,6 +132,7 @@ namespace Content.Server.VendingMachines
 
             // CorvaxGoob Start
             SubscribeLocalEvent<VendingMachineComponent, ComponentInit>(OnComponentInit);
+            SubscribeLocalEvent<VendingMachineComponent, DestructionEventArgs>(OnDestruction);
 
             // Some closed Openable items handle fallback interactions before the vending machine can see them.
             // Use InteractUsingEvent so those items can still be returned before OpenableSystem blocks the click.
@@ -210,6 +211,28 @@ namespace Content.Server.VendingMachines
 
             entry = null;
             return false;
+        }
+
+        private void OnDestruction(EntityUid uid, VendingMachineComponent component, DestructionEventArgs args)
+        {
+            if (component.ReturnedInventory == null)
+                return;
+
+            var coordinates = Transform(uid).Coordinates;
+
+            // When the vending machine is destroyed, all previously returned items stored inside it fall out.
+            foreach (var returned in component.ReturnedInventory.Values)
+            {
+                foreach (var item in returned)
+                {
+                    if (Deleted(item))
+                        continue;
+
+                    _container.Remove(item, component.ReturnedInventoryContainer, destination: coordinates);
+                }
+            }
+
+            component.ReturnedInventory.Clear();
         }
         // CorvaxGoob End
 
