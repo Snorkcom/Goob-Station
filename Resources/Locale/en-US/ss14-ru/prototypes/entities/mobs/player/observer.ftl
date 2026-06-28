@@ -16,3 +16,5 @@ ent-ActionToggleGhosts = Toggle Ghosts
     .desc = Toggle the visibility of other ghosts.
 ent-ActionToggleGhostHearing = Toggle Ghost Hearing
     .desc = Toggle between hearing all messages and hearing only radio & nearby messages.
+ent-ActionToggleGhostSecurityHud = Toggle Security Statuses
+    .desc = Toggle viewing job, mindshield, criminal record, and squad status icons.

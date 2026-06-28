@@ -115,6 +115,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Systems;
 using Content.Shared.NameModifier.EntitySystems;
+using Content.Shared.Overlays;
 using Content.Shared.Popups;
 using Content.Shared.Storage.Components;
 using Content.Shared.Tag;
@@ -203,6 +204,7 @@ namespace Content.Server.Ghost
 
             SubscribeLocalEvent<GhostComponent, BooActionEvent>(OnActionPerform);
             SubscribeLocalEvent<GhostComponent, ToggleGhostHearingActionEvent>(OnGhostHearingAction);
+            SubscribeLocalEvent<GhostComponent, ToggleGhostSecurityHudActionEvent>(OnGhostSecurityHudAction); // CorvaxGoob
             SubscribeLocalEvent<GhostComponent, InsertIntoEntityStorageAttemptEvent>(OnEntityStorageInsertAttempt);
 
             SubscribeLocalEvent<RoundEndTextAppendEvent>(_ => MakeVisible(true));
@@ -326,16 +328,48 @@ namespace Content.Server.Ghost
             // Entity can't see ghosts anymore.
             _eye.RefreshVisibilityMask(uid);
             _actions.RemoveAction(uid, component.BooActionEntity);
+            _actions.RemoveAction(uid, component.ToggleGhostSecurityHudActionEntity);
         }
 
         private void OnMapInit(EntityUid uid, GhostComponent component, MapInitEvent args)
         {
             _actions.AddAction(uid, ref component.BooActionEntity, component.BooAction);
             _actions.AddAction(uid, ref component.ToggleGhostHearingActionEntity, component.ToggleGhostHearingAction);
+            _actions.AddAction(uid, ref component.ToggleGhostSecurityHudActionEntity, component.ToggleGhostSecurityHudAction);
             _actions.AddAction(uid, ref component.ToggleLightingActionEntity, component.ToggleLightingAction);
             _actions.AddAction(uid, ref component.ToggleFoVActionEntity, component.ToggleFoVAction);
             _actions.AddAction(uid, ref component.ToggleGhostsActionEntity, component.ToggleGhostsAction);
         }
+
+        // CorvaxGoob Start
+        private void OnGhostSecurityHudAction(EntityUid uid, GhostComponent component, ToggleGhostSecurityHudActionEvent args)
+        {
+            if (args.Handled)
+                return;
+
+            args.Handled = true;
+
+            if (HasComp<ShowJobIconsComponent>(uid))
+            {
+                RemComp<ShowJobIconsComponent>(uid);
+                RemComp<ShowMindShieldIconsComponent>(uid);
+                RemComp<ShowCriminalRecordIconsComponent>(uid);
+                RemComp<ShowSquadIconsComponent>(uid);
+                _actions.SetToggled(component.ToggleGhostSecurityHudActionEntity, false);
+                Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-security-statuses-popup-off"), uid, uid);
+                return;
+            }
+
+            // These HUD components only display existing security status icons.
+            // They do not grant the ghost any status-editing interactions.
+            EnsureComp<ShowJobIconsComponent>(uid);
+            EnsureComp<ShowMindShieldIconsComponent>(uid);
+            EnsureComp<ShowCriminalRecordIconsComponent>(uid);
+            EnsureComp<ShowSquadIconsComponent>(uid);
+            _actions.SetToggled(component.ToggleGhostSecurityHudActionEntity, true);
+            Popup.PopupEntity(Loc.GetString("ghost-gui-toggle-security-statuses-popup-on"), uid, uid);
+        }
+        // CorvaxGoob End
 
         private void OnGhostExamine(EntityUid uid, GhostComponent component, ExaminedEvent args)
         {

@@ -52,6 +52,14 @@ public sealed partial class GhostComponent : Component
     [DataField]
     public EntityUid? ToggleGhostHearingActionEntity;
 
+    // CorvaxGoob Start
+    [DataField]
+    public EntProtoId ToggleGhostSecurityHudAction = "ActionToggleGhostSecurityHud";
+
+    [DataField, AutoNetworkedField]
+    public EntityUid? ToggleGhostSecurityHudActionEntity;
+    // CorvaxGoob End
+
     [DataField]
     public EntProtoId BooAction = "ActionGhostBoo";
 
@@ -132,6 +140,8 @@ public sealed partial class ToggleGhostsActionEvent : InstantActionEvent { }
 public sealed partial class ToggleLightingActionEvent : InstantActionEvent { }
 
 public sealed partial class ToggleGhostHearingActionEvent : InstantActionEvent { }
+
+public sealed partial class ToggleGhostSecurityHudActionEvent : InstantActionEvent { } // CorvaxGoob
 
 public sealed partial class ToggleGhostVisibilityToAllEvent : InstantActionEvent { }
 

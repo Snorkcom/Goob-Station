@@ -318,3 +318,18 @@
     iconOn: Interface/Actions/ghostHearingToggled.png
   - type: InstantAction
     event: !type:ToggleGhostHearingActionEvent
+
+# Goobstation
+- type: entity
+  parent: BaseMentalAction
+  id: ActionToggleGhostSecurityHud
+  name: Toggle Security Statuses
+  description: Toggle viewing job, mindshield, criminal record, and squad status icons.
+  components:
+  - type: Action
+    icon: Interface/Minimalist/Slots/glasses.png
+    iconOn: Interface/Actions/red_glasses.png
+    priority: 9
+    checkCanInteract: false
+  - type: InstantAction
+    event: !type:ToggleGhostSecurityHudActionEvent
