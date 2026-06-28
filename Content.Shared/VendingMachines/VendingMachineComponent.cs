@@ -18,6 +18,7 @@
 
 using Content.Shared.Actions;
 using Robust.Shared.Audio;
+using Robust.Shared.Containers; // CorvaxGoob
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
@@ -58,6 +59,33 @@ namespace Content.Shared.VendingMachines
 
         [DataField]
         public Dictionary<string, VendingMachineInventoryEntry> ContrabandInventory = new();
+
+        // CorvaxGoob Start
+        /// <summary>
+        /// Container ID used to store entities returned to this vending machine.
+        /// </summary>
+        /// <remarks>
+        /// Kept as a constant so creation and removal always refer to the same container.
+        /// </remarks>
+        public const string ReturnedInventoryContainerId = "vending_machine_returned_inventory";
+
+        /// <summary>
+        /// Hidden container holding returned item entities.
+        /// </summary>
+        /// <remarks>
+        /// Vending inventory tracks prototype IDs and counts, so returned entities need separate storage.
+        /// </remarks>
+        public Container ReturnedInventoryContainer = default!;
+
+        /// <summary>
+        /// Returned entities grouped by prototype ID.
+        /// </summary>
+        /// <remarks>
+        /// Used to vend returned entities before falling back to spawning new prototype instances.
+        /// A null value means no items have been returned to this machine yet.
+        /// </remarks>
+        public Dictionary<string, List<EntityUid>>? ReturnedInventory;
+        // CorvaxGoob End
 
         /// <summary>
         /// If true then unlocks the <see cref="ContrabandInventory"/>
