@@ -95,7 +95,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Server.VendingMachines
 {
-    public sealed partial class VendingMachineSystem : SharedVendingMachineSystem
+    public sealed partial class VendingMachineSystem : SharedVendingMachineSystem // corvax goob edit - made partial
     {
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly PricingSystem _pricing = default!;
@@ -115,7 +115,6 @@ namespace Content.Server.VendingMachines
             SubscribeLocalEvent<VendingMachineComponent, EmpPulseEvent>(OnEmpPulse);
             SubscribeLocalEvent<VendingMachineComponent, TryVocalizeEvent>(OnTryVocalize);
 
-            // Initializes item return behavior for vending machines (VendingMachineSystem.Return.cs).
             InitializeVendingReturn(); // CorvaxGoob
 
             SubscribeLocalEvent<VendingMachineComponent, ActivatableUIOpenAttemptEvent>(OnActivatableUIOpenAttempt);

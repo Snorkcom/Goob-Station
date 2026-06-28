@@ -14,7 +14,6 @@ using Robust.Shared.Utility;
 
 namespace Content.Server.VendingMachines
 {
-    // CorvaxGoob Start
     public sealed partial class VendingMachineSystem
     {
         [Dependency] private readonly SharedContainerSystem _container = default!;
@@ -148,5 +147,4 @@ namespace Content.Server.VendingMachines
             return false;
         }
     }
-    // CorvaxGoob End
 }
