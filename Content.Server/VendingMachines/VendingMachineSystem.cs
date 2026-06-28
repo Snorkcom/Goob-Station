@@ -133,7 +133,8 @@ namespace Content.Server.VendingMachines
             // CorvaxGoob Start
             SubscribeLocalEvent<VendingMachineComponent, ComponentInit>(OnComponentInit);
 
-            // Returned items need to be handled before closed Openable items mark fallback interactions as handled.
+            // Some closed Openable items handle fallback interactions before the vending machine can see them.
+            // Use InteractUsingEvent so those items can still be returned before OpenableSystem blocks the click.
             SubscribeLocalEvent<VendingMachineComponent, InteractUsingEvent>(OnInteractUsing);
             // CorvaxGoob End
 
@@ -149,7 +150,7 @@ namespace Content.Server.VendingMachines
         // CorvaxGoob Start
         private void OnComponentInit(Entity<VendingMachineComponent> ent, ref ComponentInit args)
         {
-            // Vending inventory only stores prototype counts, so returned item entities need separate storage.
+            // Returned items are real entities stored in the machine, while vending inventory only tracks prototype counts.
             ent.Comp.ReturnedInventoryContainer = _container.EnsureContainer<Container>(ent, VendingMachineComponent.ReturnedInventoryContainerId);
         }
 
@@ -158,7 +159,7 @@ namespace Content.Server.VendingMachines
             if (args.Handled)
                 return;
 
-            // Only consume the click when the item was accepted, preserving normal interactions otherwise.
+            // Only consume the click when the item was actually accepted, preserving normal interactions otherwise.
             args.Handled = TryReturnItem((uid, component), args.User, args.Used);
         }
 
@@ -166,20 +167,24 @@ namespace Content.Server.VendingMachines
         {
             var (uid, component) = vending;
 
-            // Restock boxes have their own interaction path and must not count as returned stock.
+            // Restock boxes have their own interaction path and must not be handled by the new return flow.
             if (HasComp<VendingMachineRestockComponent>(used))
                 return false;
 
-            // Only accept items already present in this machine's configured inventory.
+            // Only accept item types that already exist in this machine's configured inventory.
             var prototype = MetaData(used).EntityPrototype?.ID;
             if (prototype == null || !TryGetReturnableEntry(component, prototype, out var entry))
+                return false;
+
+            // Do not accept returned items if the machine is broken or has no power.
+            if (component.Broken || !this.IsPowered(uid, EntityManager))
                 return false;
 
             // Keep the stored entity and displayed stock count in sync by moving the item before incrementing stock.
             if (!_hands.TryDropIntoContainer(user, used, component.ReturnedInventoryContainer))
                 return false;
 
-            // Prefer returned entities for later vends so their state is preserved instead of spawning a fresh copy.
+            // Store the returned entity by prototype so the machine can vend that exact item instead of a new entity.
             component.ReturnedInventory ??= new();
             component.ReturnedInventory.GetOrNew(prototype).Add(used);
             entry.Amount++;
@@ -197,7 +202,7 @@ namespace Content.Server.VendingMachines
             string prototype,
             [NotNullWhen(true)] out VendingMachineInventoryEntry? entry)
         {
-            // Returned items may belong to any configured inventory pool.
+            // Returned items can refill regular, emagged, or contraband inventory entries.
             if (component.Inventory.TryGetValue(prototype, out entry) ||
                 component.EmaggedInventory.TryGetValue(prototype, out entry) ||
                 component.ContrabandInventory.TryGetValue(prototype, out entry))
@@ -397,7 +402,7 @@ namespace Content.Server.VendingMachines
                 spawnCoordinates = spawnCoordinates.Offset(offset);
             }
 
-            // Returned entities should be vended before falling back to spawning a new prototype.
+            // Vend a stored returned entity first; spawn a new prototype only if none are available.
             var ent = TryTakeReturnedItem(vendComponent, vendComponent.NextItemToEject, spawnCoordinates, out var returned)
                 ? returned
                 : Spawn(vendComponent.NextItemToEject, spawnCoordinates); // CorvaxGoob
@@ -418,30 +423,30 @@ namespace Content.Server.VendingMachines
         {
             item = default;
 
-            // No stored entity exists for this prototype, so the caller can use normal spawning.
+            // No returned entity is stored for this prototype, so the caller should spawn normally.
             if (component.ReturnedInventory == null ||
                 !component.ReturnedInventory.TryGetValue(itemId, out var returned))
                 return false;
 
-            // Pop from the end to avoid shifting the list on every vend.
+            // Remove from the end so List<T> does not need to shift the remaining entries.
             while (returned.Count > 0)
             {
                 var index = returned.Count - 1;
                 item = returned[index];
                 returned.RemoveAt(index);
 
-                // Skip stale entries in case the stored entity was deleted or failed to detach from storage.
+                // Skip stale entries if the stored entity was deleted or cannot be removed from storage.
                 if (Deleted(item) || !_container.Remove(item, component.ReturnedInventoryContainer, destination: spawnCoordinates))
                     continue;
 
-                // Remove empty buckets so future vends can fall back immediately.
+                // No returned items of this type are left, so remove the entry from the lookup dictionary.
                 if (returned.Count == 0)
                     component.ReturnedInventory.Remove(itemId);
 
                 return true;
             }
 
-            // All stored entries were stale, so clear the bucket and let the caller spawn normally.
+            // None of the saved returned items could be used, so remove this type from the lookup dictionary.
             component.ReturnedInventory.Remove(itemId);
             return false;
         }
