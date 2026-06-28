@@ -92,26 +92,13 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
-
-// CorvaxGoob Start
-using System.Diagnostics.CodeAnalysis;
-using Content.Shared.Hands.EntitySystems;
-using Content.Shared.Interaction;
-using Robust.Shared.Containers;
-using Robust.Shared.Map;
 using Robust.Shared.Utility;
-// CorvaxGoob End
 
 namespace Content.Server.VendingMachines
 {
-    public sealed class VendingMachineSystem : SharedVendingMachineSystem
+    public sealed partial class VendingMachineSystem : SharedVendingMachineSystem
     {
         [Dependency] private readonly IRobustRandom _random = default!;
-
-        // CorvaxGoob Start
-        [Dependency] private readonly SharedContainerSystem _container = default!;
-        [Dependency] private readonly SharedHandsSystem _hands = default!;
-        // CorvaxGoob End
 
         [Dependency] private readonly PricingSystem _pricing = default!;
         [Dependency] private readonly ThrowingSystem _throwingSystem = default!;
@@ -130,14 +117,8 @@ namespace Content.Server.VendingMachines
             SubscribeLocalEvent<VendingMachineComponent, EmpPulseEvent>(OnEmpPulse);
             SubscribeLocalEvent<VendingMachineComponent, TryVocalizeEvent>(OnTryVocalize);
 
-            // CorvaxGoob Start
-            SubscribeLocalEvent<VendingMachineComponent, ComponentInit>(OnComponentInit);
-            SubscribeLocalEvent<VendingMachineComponent, DestructionEventArgs>(OnDestruction);
-
-            // Some closed Openable items handle fallback interactions before the vending machine can see them.
-            // Use InteractUsingEvent so those items can still be returned before OpenableSystem blocks the click.
-            SubscribeLocalEvent<VendingMachineComponent, InteractUsingEvent>(OnInteractUsing);
-            // CorvaxGoob End
+            // Initializes item return behavior for vending machines (VendingMachineSystem.Return.cs).
+            InitializeVendingReturn(); // CorvaxGoob
 
             SubscribeLocalEvent<VendingMachineComponent, ActivatableUIOpenAttemptEvent>(OnActivatableUIOpenAttempt);
 
@@ -147,94 +128,6 @@ namespace Content.Server.VendingMachines
 
             SubscribeLocalEvent<VendingMachineRestockComponent, PriceCalculationEvent>(OnPriceCalculation);
         }
-
-        // CorvaxGoob Start
-        private void OnComponentInit(Entity<VendingMachineComponent> ent, ref ComponentInit args)
-        {
-            // Returned items are real entities stored in the machine, while vending inventory only tracks prototype counts.
-            ent.Comp.ReturnedInventoryContainer = _container.EnsureContainer<Container>(ent, VendingMachineComponent.ReturnedInventoryContainerId);
-        }
-
-        private void OnInteractUsing(EntityUid uid, VendingMachineComponent component, InteractUsingEvent args)
-        {
-            if (args.Handled)
-                return;
-
-            // Only consume the click when the item was actually accepted, preserving normal interactions otherwise.
-            args.Handled = TryReturnItem((uid, component), args.User, args.Used);
-        }
-
-        private bool TryReturnItem(Entity<VendingMachineComponent> vending, EntityUid user, EntityUid used)
-        {
-            var (uid, component) = vending;
-
-            // Restock boxes have their own interaction path and must not be handled by the new return flow.
-            if (HasComp<VendingMachineRestockComponent>(used))
-                return false;
-
-            // Only accept item types that already exist in this machine's configured inventory.
-            var prototype = MetaData(used).EntityPrototype?.ID;
-            if (prototype == null || !TryGetReturnableEntry(component, prototype, out var entry))
-                return false;
-
-            // Do not accept returned items if the machine is broken or has no power.
-            if (component.Broken || !this.IsPowered(uid, EntityManager))
-                return false;
-
-            // Keep the stored entity and displayed stock count in sync by moving the item before incrementing stock.
-            if (!_hands.TryDropIntoContainer(user, used, component.ReturnedInventoryContainer))
-                return false;
-
-            // Store the returned entity by prototype so the machine can vend that exact item instead of a new entity.
-            component.ReturnedInventory ??= new();
-            component.ReturnedInventory.GetOrNew(prototype).Add(used);
-            entry.Amount++;
-            Dirty(uid, component);
-            UpdateUI((uid, component));
-
-            Popup.PopupEntity(Loc.GetString("vending-machine-component-return-success",
-                ("item", used),
-                ("target", uid)), user, user);
-            return true;
-        }
-
-        private static bool TryGetReturnableEntry(
-            VendingMachineComponent component,
-            string prototype,
-            [NotNullWhen(true)] out VendingMachineInventoryEntry? entry)
-        {
-            // Returned items can refill regular, emagged, or contraband inventory entries.
-            if (component.Inventory.TryGetValue(prototype, out entry) ||
-                component.EmaggedInventory.TryGetValue(prototype, out entry) ||
-                component.ContrabandInventory.TryGetValue(prototype, out entry))
-                return true;
-
-            entry = null;
-            return false;
-        }
-
-        private void OnDestruction(EntityUid uid, VendingMachineComponent component, DestructionEventArgs args)
-        {
-            if (component.ReturnedInventory == null)
-                return;
-
-            var coordinates = Transform(uid).Coordinates;
-
-            // When the vending machine is destroyed, all previously returned items stored inside it fall out.
-            foreach (var returned in component.ReturnedInventory.Values)
-            {
-                foreach (var item in returned)
-                {
-                    if (Deleted(item))
-                        continue;
-
-                    _container.Remove(item, component.ReturnedInventoryContainer, destination: coordinates);
-                }
-            }
-
-            component.ReturnedInventory.Clear();
-        }
-        // CorvaxGoob End
 
         private void OnVendingPrice(EntityUid uid, VendingMachineComponent component, ref PriceCalculationEvent args)
         {
@@ -426,7 +319,7 @@ namespace Content.Server.VendingMachines
             }
 
             // Vend a stored returned entity first; spawn a new prototype only if none are available.
-            var ent = TryTakeReturnedItem(vendComponent, vendComponent.NextItemToEject, spawnCoordinates, out var returned)
+            var ent = TryTakeReturnedItemForVend(vendComponent, vendComponent.NextItemToEject, spawnCoordinates, out var returned)
                 ? returned
                 : Spawn(vendComponent.NextItemToEject, spawnCoordinates); // CorvaxGoob
 
@@ -440,40 +333,6 @@ namespace Content.Server.VendingMachines
             vendComponent.NextItemToEject = null;
             vendComponent.ThrowNextItem = false;
         }
-
-        // CorvaxGoob Start
-        private bool TryTakeReturnedItem(VendingMachineComponent component, string itemId, EntityCoordinates spawnCoordinates, out EntityUid item)
-        {
-            item = default;
-
-            // No returned entity is stored for this prototype, so the caller should spawn normally.
-            if (component.ReturnedInventory == null ||
-                !component.ReturnedInventory.TryGetValue(itemId, out var returned))
-                return false;
-
-            // Remove from the end so List<T> does not need to shift the remaining entries.
-            while (returned.Count > 0)
-            {
-                var index = returned.Count - 1;
-                item = returned[index];
-                returned.RemoveAt(index);
-
-                // Skip stale entries if the stored entity was deleted or cannot be removed from storage.
-                if (Deleted(item) || !_container.Remove(item, component.ReturnedInventoryContainer, destination: spawnCoordinates))
-                    continue;
-
-                // No returned items of this type are left, so remove the entry from the lookup dictionary.
-                if (returned.Count == 0)
-                    component.ReturnedInventory.Remove(itemId);
-
-                return true;
-            }
-
-            // None of the saved returned items could be used, so remove this type from the lookup dictionary.
-            component.ReturnedInventory.Remove(itemId);
-            return false;
-        }
-        // CorvaxGoob End
 
         public override void Update(float frameTime)
         {
