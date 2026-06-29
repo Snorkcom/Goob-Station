@@ -5,6 +5,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Content.Server.Power.EntitySystems;
 using Content.Shared.Destructible;
+using Content.Shared.Examine;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.VendingMachines;
@@ -22,11 +23,13 @@ namespace Content.Server.VendingMachines
         private void InitializeVendingReturn()
         {
             SubscribeLocalEvent<VendingMachineComponent, ComponentInit>(OnComponentInit);
-            SubscribeLocalEvent<VendingMachineComponent, DestructionEventArgs>(OnDestruction);
 
             // Some closed Openable items handle fallback interactions before the vending machine can see them.
             // Use InteractUsingEvent so those items can still be returned before OpenableSystem blocks the click.
             SubscribeLocalEvent<VendingMachineComponent, InteractUsingEvent>(OnInteractUsing);
+
+            SubscribeLocalEvent<VendingMachineComponent, ExaminedEvent>(OnExamined);
+            SubscribeLocalEvent<VendingMachineComponent, DestructionEventArgs>(OnDestruction);
         }
 
         private void OnComponentInit(Entity<VendingMachineComponent> ent, ref ComponentInit args)
@@ -93,9 +96,36 @@ namespace Content.Server.VendingMachines
             return false;
         }
 
+        private void OnExamined(EntityUid uid, VendingMachineComponent component, ExaminedEvent args)
+        {
+            if (!HasStoredReturnedItems(component))
+                return;
+
+            var message = Loc.GetString("vending-machine-component-returned-items-examine");
+            args.PushMarkup($"[color=yellow]{message}[/color]");
+        }
+
+        private bool HasStoredReturnedItems(VendingMachineComponent component)
+        {
+            if (component.ReturnedInventory is null)
+                return false;
+
+            foreach (var returned in component.ReturnedInventory.Values)
+            {
+                foreach (var item in returned)
+                {
+                    // Only show the examine hint for items still physically stored inside this machine.
+                    if (!Deleted(item) && component.ReturnedInventoryContainer.Contains(item))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         private void OnDestruction(EntityUid uid, VendingMachineComponent component, DestructionEventArgs args)
         {
-            if (component.ReturnedInventory == null)
+            if (component.ReturnedInventory is null)
                 return;
 
             var coordinates = Transform(uid).Coordinates;
@@ -120,7 +150,7 @@ namespace Content.Server.VendingMachines
             item = default;
 
             // No returned entity is stored for this prototype, so the caller should spawn normally.
-            if (component.ReturnedInventory == null ||
+            if (component.ReturnedInventory is null ||
                 !component.ReturnedInventory.TryGetValue(itemId, out var returned))
                 return false;
 
