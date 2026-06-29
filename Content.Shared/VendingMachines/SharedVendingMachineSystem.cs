@@ -78,17 +78,17 @@ public abstract partial class SharedVendingMachineSystem : EntitySystem
 
         foreach (var weh in component.Inventory)
         {
-            inventory[weh.Key] = new(weh.Value);
+            inventory[weh.Key] = CopyInventoryEntry(component, weh.Value); // CorvaxGoob edit
         }
 
         foreach (var weh in component.EmaggedInventory)
         {
-            emaggedInventory[weh.Key] = new(weh.Value);
+            emaggedInventory[weh.Key] = CopyInventoryEntry(component, weh.Value); // CorvaxGoob edit
         }
 
         foreach (var weh in component.ContrabandInventory)
         {
-            contrabandInventory[weh.Key] = new(weh.Value);
+            contrabandInventory[weh.Key] = CopyInventoryEntry(component, weh.Value); // CorvaxGoob edit
         }
 
         args.State = new VendingMachineComponentState()

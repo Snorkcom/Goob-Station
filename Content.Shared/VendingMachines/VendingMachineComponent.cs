@@ -235,6 +235,7 @@ namespace Content.Shared.VendingMachines
             Type = entry.Type;
             ID = entry.ID;
             Amount = entry.Amount;
+            HasReturnedItem = entry.HasReturnedItem; // CorvaxGoob edit
         }
     }
 

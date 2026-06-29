@@ -145,6 +145,16 @@ namespace Content.Server.VendingMachines
             component.ReturnedInventory.Clear();
         }
 
+        private void UpdateReturnedItemMarkerAfterVend(EntityUid uid, VendingMachineComponent component, bool usedReturnedItem)
+        {
+            if (!usedReturnedItem)
+                return;
+
+            // The UI marker is computed from component state, so refresh it after removing a returned entity.
+            Dirty(uid, component);
+            UpdateUI((uid, component));
+        }
+
         private bool TryTakeReturnedItemForVend(VendingMachineComponent component, string itemId, EntityCoordinates spawnCoordinates, out EntityUid item)
         {
             item = default;
