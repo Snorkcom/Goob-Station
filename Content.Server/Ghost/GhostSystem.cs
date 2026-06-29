@@ -328,14 +328,14 @@ namespace Content.Server.Ghost
             // Entity can't see ghosts anymore.
             _eye.RefreshVisibilityMask(uid);
             _actions.RemoveAction(uid, component.BooActionEntity);
-            _actions.RemoveAction(uid, component.ToggleGhostSecurityHudActionEntity);
+            _actions.RemoveAction(uid, component.ToggleGhostSecurityHudActionEntity); // CorvaxGoob
         }
 
         private void OnMapInit(EntityUid uid, GhostComponent component, MapInitEvent args)
         {
             _actions.AddAction(uid, ref component.BooActionEntity, component.BooAction);
             _actions.AddAction(uid, ref component.ToggleGhostHearingActionEntity, component.ToggleGhostHearingAction);
-            _actions.AddAction(uid, ref component.ToggleGhostSecurityHudActionEntity, component.ToggleGhostSecurityHudAction);
+            _actions.AddAction(uid, ref component.ToggleGhostSecurityHudActionEntity, component.ToggleGhostSecurityHudAction); // CorvaxGoob
             _actions.AddAction(uid, ref component.ToggleLightingActionEntity, component.ToggleLightingAction);
             _actions.AddAction(uid, ref component.ToggleFoVActionEntity, component.ToggleFoVAction);
             _actions.AddAction(uid, ref component.ToggleGhostsActionEntity, component.ToggleGhostsAction);

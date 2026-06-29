@@ -327,8 +327,8 @@
   description: Toggle viewing job, mindshield, criminal record, and squad status icons.
   components:
   - type: Action
-    icon: Interface/Minimalist/Slots/glasses.png
-    iconOn: Interface/Actions/red_glasses.png
+    icon: _CorvaxGoob/Interface/Actions/grey_eye_32.png
+    iconOn: _CorvaxGoob/Interface/Actions/red_eye_32.png
     priority: 9
     checkCanInteract: false
   - type: InstantAction
