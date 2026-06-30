@@ -95,7 +95,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Server.VendingMachines
 {
-    public sealed partial class VendingMachineSystem : SharedVendingMachineSystem // corvax goob edit - made partial
+    public sealed partial class VendingMachineSystem : SharedVendingMachineSystem // CorvaxGoob Edit - made partial
     {
         [Dependency] private readonly IRobustRandom _random = default!;
         [Dependency] private readonly PricingSystem _pricing = default!;
@@ -115,7 +115,7 @@ namespace Content.Server.VendingMachines
             SubscribeLocalEvent<VendingMachineComponent, EmpPulseEvent>(OnEmpPulse);
             SubscribeLocalEvent<VendingMachineComponent, TryVocalizeEvent>(OnTryVocalize);
 
-            InitializeVendingReturn(); // CorvaxGoob
+            InitializeVendingReturn(); // CorvaxGoob - Vending Return
 
             SubscribeLocalEvent<VendingMachineComponent, ActivatableUIOpenAttemptEvent>(OnActivatableUIOpenAttempt);
 
@@ -318,7 +318,7 @@ namespace Content.Server.VendingMachines
             // Vend a stored returned entity first; spawn a new prototype only if none are available.
             var ent = TryTakeReturnedItemForVend(vendComponent, vendComponent.NextItemToEject, spawnCoordinates, out var returned)
                 ? returned
-                : Spawn(vendComponent.NextItemToEject, spawnCoordinates); // CorvaxGoob
+                : Spawn(vendComponent.NextItemToEject, spawnCoordinates); // CorvaxGoob - Vending Return
 
             if (vendComponent.ThrowNextItem)
             {
