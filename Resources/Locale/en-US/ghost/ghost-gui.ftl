@@ -33,8 +33,14 @@ ghost-gui-toggle-fov-popup = Toggled field-of-view.
 
 ghost-gui-toggle-hearing-popup-on = You can now hear all messages.
 ghost-gui-toggle-hearing-popup-off = You can now only hear radio and nearby messages.
-ghost-gui-toggle-security-statuses-popup-on = Security status display enabled.
-ghost-gui-toggle-security-statuses-popup-off = Security status display disabled.
+# CorvaxGoob Start - Observer HUD [EN]
+ghost-gui-toggle-observer-hud-popup-security = Observer HUD: security mode enabled.
+ghost-gui-toggle-observer-hud-popup-security-health = Observer HUD: security and health mode enabled.
+ghost-gui-toggle-observer-hud-popup-off = Observer HUD disabled.
+ghost-gui-observer-hud-action-desc-off = Enable security status icons.
+ghost-gui-observer-hud-action-desc-security = Add health bars.
+ghost-gui-observer-hud-action-desc-security-health = Disable observer HUD.
+# CorvaxGoob End
 
 ghost-target-window-title = Ghost Warp
 ghost-target-window-current-button = Warp: {$name}

@@ -319,12 +319,12 @@
   - type: InstantAction
     event: !type:ToggleGhostHearingActionEvent
 
-# Goobstation
+# CorvaxGoob Observer HUD
 - type: entity
   parent: BaseMentalAction
-  id: ActionToggleGhostSecurityHud
-  name: Toggle Security Statuses
-  description: Toggle viewing job, mindshield, criminal record, and squad status icons.
+  id: ActionToggleGhostObserverHud
+  name: Toggle Observer HUD
+  description: Toggle the observer HUD display mode.
   components:
   - type: Action
     icon:
@@ -336,4 +336,4 @@
     priority: 9
     checkCanInteract: false
   - type: InstantAction
-    event: !type:ToggleGhostSecurityHudActionEvent
+    event: !type:ToggleGhostObserverHudActionEvent
