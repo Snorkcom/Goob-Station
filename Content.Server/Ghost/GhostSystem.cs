@@ -335,7 +335,9 @@ namespace Content.Server.Ghost
         {
             _actions.AddAction(uid, ref component.BooActionEntity, component.BooAction);
             _actions.AddAction(uid, ref component.ToggleGhostHearingActionEntity, component.ToggleGhostHearingAction);
-            _actions.AddAction(uid, ref component.ToggleGhostSecurityHudActionEntity, component.ToggleGhostSecurityHudAction); // CorvaxGoob
+            // CorvaxGoob: Only regular ghosts need this HUD action; admin ghosts already have admin overlays.
+            if (!component.CanGhostInteract)
+                _actions.AddAction(uid, ref component.ToggleGhostSecurityHudActionEntity, component.ToggleGhostSecurityHudAction);
             _actions.AddAction(uid, ref component.ToggleLightingActionEntity, component.ToggleLightingAction);
             _actions.AddAction(uid, ref component.ToggleFoVActionEntity, component.ToggleFoVAction);
             _actions.AddAction(uid, ref component.ToggleGhostsActionEntity, component.ToggleGhostsAction);
