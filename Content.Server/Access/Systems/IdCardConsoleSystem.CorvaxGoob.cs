@@ -39,6 +39,9 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
 
+    /// <summary>
+    /// Registers the CorvaxGoob bulk access message handler for the ID console.
+    /// </summary>
     private void InitializeCorvaxGoobBulkAccess()
     {
         SubscribeLocalEvent<IdCardConsoleComponent, IdCardConsoleBulkAccessMessage>(OnBulkAccessMessage);

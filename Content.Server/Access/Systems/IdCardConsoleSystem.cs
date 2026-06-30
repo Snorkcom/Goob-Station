@@ -64,6 +64,7 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // C
         base.Initialize();
 
         SubscribeLocalEvent<IdCardConsoleComponent, WriteToTargetIdMessage>(OnWriteToTargetIdMessage);
+
         InitializeCorvaxGoobBulkAccess(); // CorvaxGoob - Extended-access
 
         // one day, maybe bound user interfaces can be shared too.

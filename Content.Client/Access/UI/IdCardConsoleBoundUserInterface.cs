@@ -108,7 +108,7 @@ namespace Content.Client.Access.UI
                 newJobPrototype));
         }
 
-        // CorvaxGoob Start
+        // CorvaxGoob Start - Extended-access
         public void SubmitBulkAccessAction(IdCardConsoleBulkAccessAction action)
         {
             SendMessage(new IdCardConsoleBulkAccessMessage(action));
