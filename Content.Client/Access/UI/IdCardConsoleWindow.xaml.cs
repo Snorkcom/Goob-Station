@@ -87,7 +87,6 @@ namespace Content.Client.Access.UI
                 JobTitleSaveButton.Disabled = JobTitleLineEdit.Text == _lastJobTitle;
             };
             JobTitleSaveButton.OnPressed += _ => SubmitData();
-
             // Goobstation Start
             SearchLineEdit.OnTextChanged += args =>
             {
@@ -124,7 +123,6 @@ namespace Content.Client.Access.UI
 
             JobPresetOptionButton.OnItemSelected += SelectJobPreset;
             InitializeCorvaxGoobBulkAccessButtons(); // CorvaxGoob - Extended-access
-
             _accessButtons.Populate(accessLevels, prototypeManager);
             AccessLevelControlContainer.AddChild(_accessButtons);
 
