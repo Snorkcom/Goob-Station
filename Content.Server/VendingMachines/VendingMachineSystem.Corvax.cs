@@ -8,7 +8,11 @@ using Content.Shared.Destructible;
 using Content.Shared.Examine;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Popups;
+using Content.Shared.Verbs;
 using Content.Shared.VendingMachines;
+using Content.Shared.Wires;
+using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.Map;
 using Robust.Shared.Utility;
@@ -30,6 +34,7 @@ namespace Content.Server.VendingMachines
 
             SubscribeLocalEvent<VendingMachineComponent, ExaminedEvent>(OnExamined);
             SubscribeLocalEvent<VendingMachineComponent, DestructionEventArgs>(OnDestruction);
+            SubscribeLocalEvent<VendingMachineComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAlternativeVerbs);
         }
 
         private void OnComponentInit(Entity<VendingMachineComponent> ent, ref ComponentInit args)
@@ -125,24 +130,134 @@ namespace Content.Server.VendingMachines
 
         private void OnDestruction(EntityUid uid, VendingMachineComponent component, DestructionEventArgs args)
         {
-            if (component.ReturnedInventory is null)
+            // When the vending machine is destroyed, all previously returned items stored inside it fall out.
+            TryEjectStoredReturnedItems(uid, component, updateInventory: false, out _);
+        }
+
+        private void OnGetAlternativeVerbs(EntityUid uid, VendingMachineComponent component, GetVerbsEvent<AlternativeVerb> args)
+        {
+            // Show the verb as long as there is something real to remove.
+            // Panel, power, and access checks happen in Act so the user gets a specific failure popup.
+            if (!args.CanInteract || !HasStoredReturnedItems(component))
                 return;
 
-            var coordinates = Transform(uid).Coordinates;
-
-            // When the vending machine is destroyed, all previously returned items stored inside it fall out.
-            foreach (var returned in component.ReturnedInventory.Values)
+            var verb = new AlternativeVerb
             {
-                foreach (var item in returned)
-                {
-                    if (Deleted(item))
-                        continue;
+                Text = Loc.GetString("vending-machine-component-remove-returned-items"),
+                Act = () => RemoveReturnedItems(uid, args.User),
+                Priority = 2,
+            };
 
-                    _container.Remove(item, component.ReturnedInventoryContainer, destination: coordinates);
-                }
+            args.Verbs.Add(verb);
+        }
+
+        private void RemoveReturnedItems(EntityUid uid, EntityUid user)
+        {
+            if (!TryComp<VendingMachineComponent>(uid, out var component))
+                return;
+
+            // The menu hides empty machines, but returned items can be removed or deleted before the click arrives.
+            if (!HasStoredReturnedItems(component))
+                return;
+
+            // A powerless machine cannot operate its internal storage, but should not play an electronic deny sound.
+            if (!this.IsPowered(uid, EntityManager))
+            {
+                Popup.PopupEntity(Loc.GetString("vending-machine-component-remove-returned-items-no-power"), uid, user, PopupType.MediumCaution);
+                return;
             }
 
-            component.ReturnedInventory.Clear();
+            // Removing stored items is maintenance work, so require the service panel to be opened first.
+            if (!TryComp<WiresPanelComponent>(uid, out var panel) || !panel.Open)
+            {
+                Popup.PopupEntity(Loc.GetString("vending-machine-component-remove-returned-items-panel-closed"), uid, user, PopupType.MediumCaution);
+                Deny((uid, component), user);
+
+                // Deny() uses predicted audio and excludes the clicking user, so play the deny sound for them directly.
+                Audio.PlayEntity(component.SoundDeny, user, uid, AudioParams.Default.WithVolume(-2f));
+                return;
+            }
+
+            // Use normal vending-machine deny feedback for unauthorized users.
+            if (!IsAuthorized(uid, user, component))
+            {
+                Popup.PopupEntity(Loc.GetString("vending-machine-component-try-eject-access-denied"), uid, user, PopupType.MediumCaution);
+                Deny((uid, component), user);
+
+                // Keep the manual removal feedback consistent with normal unauthorized vending attempts.
+                Audio.PlayEntity(component.SoundDeny, user, uid, AudioParams.Default.WithVolume(-2f));
+                return;
+            }
+
+            var ejectedAny = TryEjectStoredReturnedItems(uid, component, updateInventory: true, out var changed);
+            if (!ejectedAny)
+            {
+                // Stale returned entries may be cleaned up without any real item being ejected.
+                if (changed)
+                {
+                    Dirty(uid, component);
+                    UpdateUI((uid, component));
+                }
+
+                return;
+            }
+
+            Dirty(uid, component);
+            UpdateUI((uid, component));
+
+            // This verb runs server-side, so broadcast the vend sound instead of relying on prediction.
+            Audio.PlayPvs(component.SoundVend, uid);
+        }
+
+        private bool TryEjectStoredReturnedItems(EntityUid uid, VendingMachineComponent component, bool updateInventory, out bool changed)
+        {
+            changed = false;
+
+            if (component.ReturnedInventory is null)
+                return false;
+
+            var ejectedAny = false;
+            var coordinates = Transform(uid).Coordinates;
+            var returnedInventory = component.ReturnedInventory;
+
+            // Buckets are removed while iterating, so walk a snapshot of the prototype keys.
+            foreach (var itemId in new List<string>(returnedInventory.Keys))
+            {
+                if (!returnedInventory.TryGetValue(itemId, out var returned))
+                    continue;
+
+                while (returned.Count > 0)
+                {
+                    var index = returned.Count - 1;
+                    var item = returned[index];
+                    returned.RemoveAt(index);
+                    changed = true;
+
+                    // Only real entities still stored inside this machine should drop or affect visible stock.
+                    if (Deleted(item) || !_container.Remove(item, component.ReturnedInventoryContainer, destination: coordinates))
+                        continue;
+
+                    ejectedAny = true;
+
+                    // Manual removal must undo the stock increase that happened when the item was returned.
+                    // Destruction skips this because the vending machine and its inventory are being deleted anyway.
+                    if (updateInventory &&
+                        TryGetReturnableEntry(component, itemId, out var entry) &&
+                        entry.Amount > 0)
+                        entry.Amount--;
+                }
+
+                if (returnedInventory.Remove(itemId))
+                    changed = true;
+            }
+
+            if (returnedInventory.Count == 0)
+            {
+                component.ReturnedInventory = null;
+                changed = true;
+            }
+
+            return ejectedAny;
         }
 
         private bool TryTakeReturnedItemForVend(VendingMachineComponent component, string itemId, EntityCoordinates spawnCoordinates, out EntityUid item)
