@@ -107,5 +107,12 @@ namespace Content.Client.Access.UI
                 newAccessList,
                 newJobPrototype));
         }
+
+        // CorvaxGoob Start
+        public void SubmitBulkAccessAction(IdCardConsoleBulkAccessAction action)
+        {
+            SendMessage(new IdCardConsoleBulkAccessMessage(action));
+        }
+        // CorvaxGoob End
     }
 }

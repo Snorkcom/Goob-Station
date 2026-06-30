@@ -21,7 +21,7 @@ namespace Content.Shared.Access.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 [Access(typeof(SharedIdCardConsoleSystem))]
-public sealed partial class IdCardConsoleComponent : Component
+public sealed partial class IdCardConsoleComponent : Component // corvax goob edit - made partial
 {
     public static string PrivilegedIdCardSlotId = "IdCardConsole-privilegedId";
     public static string TargetIdCardSlotId = "IdCardConsole-targetId";

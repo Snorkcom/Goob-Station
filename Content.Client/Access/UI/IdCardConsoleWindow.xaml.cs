@@ -37,7 +37,7 @@ using static Content.Shared.Access.Components.IdCardConsoleComponent;
 namespace Content.Client.Access.UI
 {
     [GenerateTypedNameReferences]
-    public sealed partial class IdCardConsoleWindow : DefaultWindow
+    public sealed partial class IdCardConsoleWindow : DefaultWindow // corvax goob edit - made partial
     {
         [Dependency] private readonly IConfigurationManager _cfgManager = default!;
         [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
@@ -122,6 +122,8 @@ namespace Content.Client.Access.UI
             }
 
             JobPresetOptionButton.OnItemSelected += SelectJobPreset;
+            InitializeCorvaxGoobBulkAccessButtons(); // CorvaxGoob
+
             _accessButtons.Populate(accessLevels, prototypeManager);
             AccessLevelControlContainer.AddChild(_accessButtons);
 
@@ -199,28 +201,33 @@ namespace Content.Client.Access.UI
             var interfaceEnabled =
                 state.IsPrivilegedIdPresent && state.IsPrivilegedIdAuthorized && state.IsTargetIdPresent;
 
-            var fullNameDirty = _lastFullName != null && FullNameLineEdit.Text != state.TargetIdFullName;
-            var jobTitleDirty = _lastJobTitle != null && JobTitleLineEdit.Text != state.TargetIdJobTitle;
+            var targetFullName = state.TargetIdFullName ?? string.Empty;
+            var targetJobTitle = state.TargetIdJobTitle ?? string.Empty;
+            var fullNameDirty = _lastFullName != null && FullNameLineEdit.Text != targetFullName;
 
             FullNameLabel.Modulate = interfaceEnabled ? Color.White : Color.Gray;
             FullNameLineEdit.Editable = interfaceEnabled;
             if (!fullNameDirty)
             {
-                FullNameLineEdit.Text = state.TargetIdFullName ?? string.Empty;
+                FullNameLineEdit.Text = targetFullName;
             }
 
             FullNameSaveButton.Disabled = !interfaceEnabled || !fullNameDirty;
 
             JobTitleLabel.Modulate = interfaceEnabled ? Color.White : Color.Gray;
             JobTitleLineEdit.Editable = interfaceEnabled;
+            SyncJobTitleAfterBulkAccess(targetJobTitle); // CorvaxGoob
+
+            var jobTitleDirty = _lastJobTitle != null && JobTitleLineEdit.Text != targetJobTitle;
             if (!jobTitleDirty)
             {
-                JobTitleLineEdit.Text = state.TargetIdJobTitle ?? string.Empty;
+                JobTitleLineEdit.Text = targetJobTitle;
             }
 
             JobTitleSaveButton.Disabled = !interfaceEnabled || !jobTitleDirty;
 
             JobPresetOptionButton.Disabled = !interfaceEnabled;
+            SetCorvaxGoobBulkButtonsDisabled(!interfaceEnabled); // CorvaxGoob
 
             _accessButtons.UpdateState(state.TargetIdAccessList?.ToList() ??
                                        new List<ProtoId<AccessLevelPrototype>>(),
