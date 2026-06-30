@@ -18,7 +18,6 @@ namespace Content.Client.Access.UI
         /// </remarks>
         private void InitializeCorvaxGoobBulkAccessButtons()
         {
-            DemoteToPassengerButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.DemoteToPassenger);
             StandardAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.StandardAccess);
             ExtendedAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.Extended);
             FullAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.Full);
@@ -44,7 +43,6 @@ namespace Content.Client.Access.UI
 
         private void SetCorvaxGoobBulkButtonsDisabled(bool disabled)
         {
-            DemoteToPassengerButton.Disabled = disabled;
             StandardAccessButton.Disabled = disabled;
             ExtendedAccessButton.Disabled = disabled;
             FullAccessButton.Disabled = disabled;

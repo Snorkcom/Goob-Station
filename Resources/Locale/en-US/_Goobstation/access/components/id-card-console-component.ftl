@@ -5,9 +5,10 @@
 
 id-card-console-window-job-search-label = Search
 # CorvaxGoob Start - Extended-access [EN]
-id-card-console-window-demote-to-passenger-button = Demote to Passenger
 id-card-console-window-standard-access-button = Standard
+id-card-console-window-standard-access-tooltip = Attempts to detect the job on the ID card and restore that job's standard access.
 id-card-console-window-extended-access-button = Extended
+id-card-console-window-extended-access-tooltip = Access to all station departments except head offices, the captain, AVD, NTR, BSO, and the armory.
 id-card-console-window-full-access-button = Full
 id-card-console-reset-job-failed = Unable to identify the target ID job.
 # CorvaxGoob End

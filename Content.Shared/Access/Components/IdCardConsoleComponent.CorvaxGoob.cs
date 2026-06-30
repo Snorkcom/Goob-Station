@@ -29,7 +29,6 @@ public sealed partial class IdCardConsoleComponent // corvax goob edit - made pa
     [Serializable, NetSerializable]
     public enum IdCardConsoleBulkAccessAction : byte
     {
-        DemoteToPassenger,
         StandardAccess,
         Extended,
         Full,

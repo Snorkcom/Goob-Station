@@ -5,9 +5,10 @@
 
 id-card-console-window-job-search-label = Поиск
 # CorvaxGoob Start - Extended-access [RU]
-id-card-console-window-demote-to-passenger-button = Понизить до пассажира
 id-card-console-window-standard-access-button = Стандартный
+id-card-console-window-standard-access-tooltip = Пытается определить должность на карте и сбросить доступы до стандартных для этой должности.
 id-card-console-window-extended-access-button = Расширенный
+id-card-console-window-extended-access-tooltip = Доступ во все отделы станции, кроме кабинетов глав, капитана, АВД, ПNT, ОСЩ и оружейной.
 id-card-console-window-full-access-button = Полный
 id-card-console-reset-job-failed = Не удалось определить должность целевой ID.
 # CorvaxGoob End

@@ -19,8 +19,6 @@ namespace Content.Server.Access.Systems;
 
 public sealed partial class IdCardConsoleSystem // corvax goob edit - made partial
 {
-    private static readonly ProtoId<JobPrototype> PassengerJob = "Passenger";
-
     private static readonly HashSet<ProtoId<AccessLevelPrototype>> ExtendedAccessExclusions =
     [
         "Armory",
@@ -96,17 +94,6 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
 
         switch (action)
         {
-            case IdCardConsoleBulkAccessAction.DemoteToPassenger:
-                if (!_prototype.TryIndex(PassengerJob, out var passengerJob))
-                    return;
-
-                newJob = passengerJob;
-                newJobTitle = passengerJob.LocalizedName;
-                // Demotion should behave like assigning Passenger, so it keeps Passenger's normal access within what this console can modify.
-                var passengerAccess = GetJobAccessTags(passengerJob).Intersect(modifiableTags);
-                newTags = oldTags.Except(modifiableTags).Union(passengerAccess).ToHashSet();
-                changedIdentity = ApplyJobIdentity(targetId, targetIdComponent, passengerJob, passengerJob.LocalizedName, player);
-                break;
             case IdCardConsoleBulkAccessAction.StandardAccess:
                 if (!TryResolveJobFromTitle(targetIdComponent.LocalizedJobTitle, out var resetJob))
                 {
