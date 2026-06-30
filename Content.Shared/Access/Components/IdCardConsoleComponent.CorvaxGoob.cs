@@ -7,7 +7,7 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared.Access.Components;
 
-public sealed partial class IdCardConsoleComponent // corvax goob edit - made partial
+public sealed partial class IdCardConsoleComponent
 {
     [DataField]
     public SoundSpecifier? BulkAccessSuccessSound = new SoundPathSpecifier("/Audio/Machines/quickbeep.ogg", AudioParams.Default.WithVolume(-6));
