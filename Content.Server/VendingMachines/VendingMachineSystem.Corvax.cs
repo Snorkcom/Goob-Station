@@ -69,7 +69,7 @@ namespace Content.Server.VendingMachines
             if (component.Broken || !this.IsPowered(uid, EntityManager))
                 return false;
 
-            // Keep the stored entity and displayed stock count in sync by moving the item before incrementing stock.
+            // Try to move the item into hidden storage before counting it as returned.
             if (!_hands.TryDropIntoContainer(user, used, component.ReturnedInventoryContainer))
                 return false;
 
@@ -260,6 +260,23 @@ namespace Content.Server.VendingMachines
             return ejectedAny;
         }
 
+        /// <summary>
+        /// Tries to take a previously returned item from the vending machine storage for vending.
+        /// </summary>
+        /// <remarks>
+        /// Returned items are stored as real entities so their current state is preserved.
+        /// This method removes one stored entity matching <paramref name="itemId"/> from the hidden
+        /// returned-items container and moves it to <paramref name="spawnCoordinates"/>.
+        /// If no valid stored entity is available, the caller should fall back to spawning a new prototype.
+        /// </remarks>
+        /// <param name="component">The vending machine component that owns the returned-items storage.</param>
+        /// <param name="itemId">The prototype ID of the item that should be vended.</param>
+        /// <param name="spawnCoordinates">The coordinates where the stored item should be moved.</param>
+        /// <param name="item">The stored returned entity, if one was found and moved successfully.</param>
+        /// <returns>
+        /// True if a stored returned entity was moved out of storage and should be vended;
+        /// false if the caller should spawn a new item normally.
+        /// </returns>
         private bool TryTakeReturnedItemForVend(VendingMachineComponent component, string itemId, EntityCoordinates spawnCoordinates, out EntityUid item)
         {
             item = default;
