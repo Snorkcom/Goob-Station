@@ -37,7 +37,7 @@ using static Content.Shared.Access.Components.IdCardConsoleComponent;
 namespace Content.Client.Access.UI
 {
     [GenerateTypedNameReferences]
-    public sealed partial class IdCardConsoleWindow : DefaultWindow // corvax goob edit - made partial
+    public sealed partial class IdCardConsoleWindow : DefaultWindow // CorvaxGoob Edit - made partial
     {
         [Dependency] private readonly IConfigurationManager _cfgManager = default!;
         [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
@@ -87,6 +87,7 @@ namespace Content.Client.Access.UI
                 JobTitleSaveButton.Disabled = JobTitleLineEdit.Text == _lastJobTitle;
             };
             JobTitleSaveButton.OnPressed += _ => SubmitData();
+
             // Goobstation Start
             SearchLineEdit.OnTextChanged += args =>
             {
@@ -122,7 +123,7 @@ namespace Content.Client.Access.UI
             }
 
             JobPresetOptionButton.OnItemSelected += SelectJobPreset;
-            InitializeCorvaxGoobBulkAccessButtons(); // CorvaxGoob
+            InitializeCorvaxGoobBulkAccessButtons(); // CorvaxGoob - Extended-access
 
             _accessButtons.Populate(accessLevels, prototypeManager);
             AccessLevelControlContainer.AddChild(_accessButtons);
@@ -201,33 +202,38 @@ namespace Content.Client.Access.UI
             var interfaceEnabled =
                 state.IsPrivilegedIdPresent && state.IsPrivilegedIdAuthorized && state.IsTargetIdPresent;
 
+            // CorvaxGoob Edit Start - Extended-access
             var targetFullName = state.TargetIdFullName ?? string.Empty;
             var targetJobTitle = state.TargetIdJobTitle ?? string.Empty;
             var fullNameDirty = _lastFullName != null && FullNameLineEdit.Text != targetFullName;
+            // CorvaxGoob End
 
             FullNameLabel.Modulate = interfaceEnabled ? Color.White : Color.Gray;
             FullNameLineEdit.Editable = interfaceEnabled;
             if (!fullNameDirty)
             {
-                FullNameLineEdit.Text = targetFullName;
+                FullNameLineEdit.Text = targetFullName; // CorvaxGoob Edit - Extended-access
             }
 
             FullNameSaveButton.Disabled = !interfaceEnabled || !fullNameDirty;
 
             JobTitleLabel.Modulate = interfaceEnabled ? Color.White : Color.Gray;
             JobTitleLineEdit.Editable = interfaceEnabled;
-            SyncJobTitleAfterBulkAccess(targetJobTitle); // CorvaxGoob
+
+            // CorvaxGoob Edit Start - Extended-access
+            SyncJobTitleAfterBulkAccess(targetJobTitle);
 
             var jobTitleDirty = _lastJobTitle != null && JobTitleLineEdit.Text != targetJobTitle;
             if (!jobTitleDirty)
             {
                 JobTitleLineEdit.Text = targetJobTitle;
             }
+            // CorvaxGoob End
 
             JobTitleSaveButton.Disabled = !interfaceEnabled || !jobTitleDirty;
 
             JobPresetOptionButton.Disabled = !interfaceEnabled;
-            SetCorvaxGoobBulkButtonsDisabled(!interfaceEnabled); // CorvaxGoob
+            SetCorvaxGoobBulkButtonsDisabled(!interfaceEnabled); // CorvaxGoob - Extended-access
 
             _accessButtons.UpdateState(state.TargetIdAccessList?.ToList() ??
                                        new List<ProtoId<AccessLevelPrototype>>(),

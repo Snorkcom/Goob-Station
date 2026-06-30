@@ -45,7 +45,7 @@ using Robust.Shared.Random;
 namespace Content.Server.Access.Systems;
 
 [UsedImplicitly]
-public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // corvax goob edit - made partial
+public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // CorvaxGoob Edit - made partial
 {
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly StationRecordsSystem _record = default!;
@@ -64,7 +64,7 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // c
         base.Initialize();
 
         SubscribeLocalEvent<IdCardConsoleComponent, WriteToTargetIdMessage>(OnWriteToTargetIdMessage);
-        InitializeCorvaxGoobBulkAccess(); // CorvaxGoob
+        InitializeCorvaxGoobBulkAccess(); // CorvaxGoob - Extended-access
 
         // one day, maybe bound user interfaces can be shared too.
         SubscribeLocalEvent<IdCardConsoleComponent, ComponentStartup>(UpdateUserInterface);
@@ -235,7 +235,7 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // c
         return privilegedId != null && _accessReader.IsAllowed(privilegedId.Value, uid, reader);
     }
 
-    // CorvaxGoob: bulk access resets can pass localized job titles directly.
+    // CorvaxGoob Edit Start - Extended-access
     private void UpdateStationRecord(EntityUid targetId, string newFullName, string newJobTitle, JobPrototype? newJobProto)
     {
         if (!TryComp<StationRecordKeyStorageComponent>(targetId, out var keyStorage)
@@ -256,6 +256,7 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // c
 
         _record.Synchronize(key);
     }
+    // CorvaxGoob End
 
     private void OnMachineDeconstructed(Entity<IdCardConsoleComponent> entity, ref MachineDeconstructedEvent args)
     {

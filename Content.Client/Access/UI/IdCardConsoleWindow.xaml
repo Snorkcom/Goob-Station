@@ -54,7 +54,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <LineEdit Name="SearchLineEdit" HorizontalExpand="True" />
         </GridContainer>
         <Control Name="AccessLevelControlContainer" />
-        <!-- CorvaxGoob Start -->
+        <!-- CorvaxGoob Start - Extended-access -->
         <BoxContainer Orientation="Horizontal" HorizontalExpand="True">
             <Button Name="DemoteToPassengerButton" Text="{Loc 'id-card-console-window-demote-to-passenger-button'}" Disabled="True" />
             <Control HorizontalExpand="True" />
