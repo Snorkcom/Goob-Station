@@ -536,6 +536,7 @@
     brokenState: broken
     normalState: normal-unshaded
     ejectState: eject-unshaded
+  - type: AntiRottingContainer
   - type: DatasetVocalizer
     dataset: ChefvendAds
   - type: SpeakOnUIClosed
