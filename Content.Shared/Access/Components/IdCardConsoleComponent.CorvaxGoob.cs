@@ -15,6 +15,12 @@ public sealed partial class IdCardConsoleComponent
     [DataField]
     public SoundSpecifier? BulkAccessFailureSound = new SoundPathSpecifier("/Audio/Machines/custom_deny.ogg", AudioParams.Default.WithVolume(-6));
 
+    /// <summary>
+    /// UI message for a bulk access action in the ID card console.
+    /// </summary>
+    /// <remarks>
+    /// The client sends this to tell the server which <see cref="IdCardConsoleBulkAccessAction"/> was selected.
+    /// </remarks>
     [Serializable, NetSerializable]
     public sealed class IdCardConsoleBulkAccessMessage : BoundUserInterfaceMessage
     {
@@ -26,6 +32,12 @@ public sealed partial class IdCardConsoleComponent
         }
     }
 
+    /// <summary>
+    /// Bulk access actions for the ID card console.
+    /// </summary>
+    /// <remarks>
+    /// Used by the client and server to identify which bulk access operation was selected: StandardAccess, Extended, or Full.
+    /// </remarks>
     [Serializable, NetSerializable]
     public enum IdCardConsoleBulkAccessAction : byte
     {

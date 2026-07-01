@@ -6,16 +6,13 @@ using static Content.Shared.Access.Components.IdCardConsoleComponent;
 
 namespace Content.Client.Access.UI
 {
-    public sealed partial class IdCardConsoleWindow // corvax goob edit - made partial
+    public sealed partial class IdCardConsoleWindow
     {
         private bool _pendingBulkAccessUpdate;
 
         /// <summary>
-        /// Wires the bulk access buttons to their corresponding server-side ID console actions.
+        /// Connects the bulk access buttons (Standard, Extended, and Full) to their server actions.
         /// </summary>
-        /// <remarks>
-        /// The client only sends the selected <see cref="IdCardConsoleBulkAccessAction"/>; all access validation and mutation happen on the server.
-        /// </remarks>
         private void InitializeCorvaxGoobBulkAccessButtons()
         {
             StandardAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.StandardAccess);
@@ -23,20 +20,23 @@ namespace Content.Client.Access.UI
             FullAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.Full);
         }
 
-        // Tracks a pending bulk-access response so the next UpdateState overwrites any unsaved
-        // manual JobTitleLineEdit text with the authoritative job title from the target ID card.
+        /// <summary>
+        /// Marks that a bulk action is pending and sends it to the server, so the next UpdateState can resync JobTitleLineEdit from the ID card.
+        /// </summary>
         private void SubmitBulkAccessAction(IdCardConsoleBulkAccessAction action)
         {
             _pendingBulkAccessUpdate = true;
             _owner.SubmitBulkAccessAction(action);
         }
 
+        /// <summary>
+        /// After a bulk action, replaces any unsaved JobTitleLineEdit text with the job title currently stored on the target ID card.
+        /// </summary>
         private void SyncJobTitleAfterBulkAccess(string targetJobTitle)
         {
             if (!_pendingBulkAccessUpdate)
                 return;
 
-            // Bulk actions mutate the card server-side, so the next state must replace any unsaved manual title edit with the authoritative card title.
             JobTitleLineEdit.Text = targetJobTitle;
             _pendingBulkAccessUpdate = false;
         }

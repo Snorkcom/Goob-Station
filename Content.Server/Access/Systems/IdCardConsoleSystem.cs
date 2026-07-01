@@ -66,7 +66,6 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // C
         SubscribeLocalEvent<IdCardConsoleComponent, WriteToTargetIdMessage>(OnWriteToTargetIdMessage);
 
         InitializeCorvaxGoobBulkAccess(); // CorvaxGoob - Extended-access
-
         // one day, maybe bound user interfaces can be shared too.
         SubscribeLocalEvent<IdCardConsoleComponent, ComponentStartup>(UpdateUserInterface);
         SubscribeLocalEvent<IdCardConsoleComponent, EntInsertedIntoContainerMessage>(UpdateUserInterface);
@@ -174,7 +173,7 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // C
             _idCard.TryChangeJobDepartment(targetId, job);
         }
 
-        UpdateStationRecord(targetId, newFullName, newJobTitle, job);
+        UpdateStationRecord(targetId, newFullName, newJobTitle, job); // CorvaxGoob Edit - Extended-access
         if ((!TryComp<StationRecordKeyStorageComponent>(targetId, out var keyStorage)
             || keyStorage.Key is not { } key
             || !_record.TryGetRecord<GeneralStationRecord>(key, out _))
@@ -236,7 +235,7 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // C
         return privilegedId != null && _accessReader.IsAllowed(privilegedId.Value, uid, reader);
     }
 
-    // CorvaxGoob Edit Start - Extended-access
+    // CorvaxGoob Edit - Extended-access
     private void UpdateStationRecord(EntityUid targetId, string newFullName, string newJobTitle, JobPrototype? newJobProto)
     {
         if (!TryComp<StationRecordKeyStorageComponent>(targetId, out var keyStorage)
@@ -257,7 +256,6 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem // C
 
         _record.Synchronize(key);
     }
-    // CorvaxGoob End
 
     private void OnMachineDeconstructed(Entity<IdCardConsoleComponent> entity, ref MachineDeconstructedEvent args)
     {

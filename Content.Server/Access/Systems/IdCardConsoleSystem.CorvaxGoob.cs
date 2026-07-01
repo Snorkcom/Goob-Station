@@ -17,8 +17,10 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.Access.Systems;
 
-public sealed partial class IdCardConsoleSystem // corvax goob edit - made partial
+public sealed partial class IdCardConsoleSystem
 {
+    private static readonly ProtoId<JobPrototype> HeadOfPersonnelJob = "HeadOfPersonnel";
+
     private static readonly HashSet<ProtoId<AccessLevelPrototype>> ExtendedAccessExclusions =
     [
         "Armory",
@@ -32,6 +34,18 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
         "NanotrasenRepresentative",
         "BlueshieldOfficer",
         "CentralCommand",
+    ];
+
+    private static readonly string[] CaptainJobTitles =
+    [
+        "капитан",
+        "Captain",
+    ];
+
+    private static readonly string[] HeadOfPersonnelJobTitles =
+    [
+        "глава персонала",
+        "Head of Personnel",
     ];
 
     [Dependency] private readonly PopupSystem _popup = default!;
@@ -74,6 +88,8 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
         if (!Resolve(uid, ref component))
             return;
 
+        // Bulk actions only run when both ID cards are present, the privileged card is authorized,
+        // and the target slot contains an ID card component that can be modified.
         if (component.PrivilegedIdSlot.Item is not { Valid: true } privilegedId
             || component.TargetIdSlot.Item is not { Valid: true } targetId
             || !PrivilegedIdIsAuthorized(uid, component)
@@ -82,9 +98,12 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
             return;
         }
 
+        // Collect the relevant bulk-access state: the privileged card's access (`privilegedTags`),
+        // the access shown on this console (`visibleTags`), the access that can actually be modified
+        // (`modifiableTags`), the target card's current access (`oldTags`), and the placeholders for
+        // the updated access/job result (`newTags`, `newJob`, `newJobTitle`, `changedIdentity`).
         var privilegedTags = _accessReader.FindAccessTags(privilegedId).ToHashSet();
         var visibleTags = component.AccessLevels.ToHashSet();
-        // Bulk changes stay inside the console-visible surface so hidden tags cannot be copied or cleared accidentally.
         var modifiableTags = privilegedTags.Intersect(visibleTags).ToHashSet();
         var oldTags = (_access.TryGetTags(targetId) ?? Array.Empty<ProtoId<AccessLevelPrototype>>()).ToHashSet();
         HashSet<ProtoId<AccessLevelPrototype>> newTags;
@@ -107,14 +126,21 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
                 newTags = oldTags.Except(modifiableTags).Union(resetJobAccess).ToHashSet();
                 changedIdentity = ApplyJobIdentity(targetId, targetIdComponent, resetJob, resetJob.LocalizedName, player);
                 break;
+
             case IdCardConsoleBulkAccessAction.Extended:
                 newTags = oldTags.Union(GetExtendedAccessTags(modifiableTags)).ToHashSet();
-                changedIdentity = TryAddAccessMarkerToJobTitle(targetId, targetIdComponent, player);
+                changedIdentity = ShouldSkipAccessMarker(action, targetIdComponent, oldTags)
+                    ? false
+                    : TryAddAccessMarkerToJobTitle(targetId, targetIdComponent, player);
                 break;
+
             case IdCardConsoleBulkAccessAction.Full:
                 newTags = oldTags.Union(modifiableTags).ToHashSet();
-                changedIdentity = TryAddAccessMarkerToJobTitle(targetId, targetIdComponent, player);
+                changedIdentity = ShouldSkipAccessMarker(action, targetIdComponent, oldTags)
+                    ? false
+                    : TryAddAccessMarkerToJobTitle(targetId, targetIdComponent, player);
                 break;
+
             default:
                 return;
         }
@@ -133,11 +159,12 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
 
         var addedTags = newTags.Except(oldTags).Select(tag => "+" + tag).ToList();
         var removedTags = oldTags.Except(newTags).Select(tag => "-" + tag).ToList();
+        /* //admin logs
         if (changedAccess)
         {
             _adminLogger.Add(LogType.Action, LogImpact.Medium,
                 $"{ToPrettyString(player):player} has bulk-modified {ToPrettyString(targetId):entity} with the following accesses: [{string.Join(", ", addedTags.Union(removedTags))}] [{string.Join(", ", newTags)}]");
-        }
+        }*/
 
         _audio.PlayPvs(component.BulkAccessSuccessSound, uid);
     }
@@ -160,6 +187,32 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
         }
 
         return tags;
+    }
+
+    private bool ShouldSkipAccessMarker(
+        IdCardConsoleBulkAccessAction action,
+        IdCardComponent targetIdComponent,
+        HashSet<ProtoId<AccessLevelPrototype>> oldTags)
+    {
+        if (MatchesSpecialJobTitle(targetIdComponent.LocalizedJobTitle, CaptainJobTitles))
+            return true;
+
+        if (action != IdCardConsoleBulkAccessAction.Extended
+            || !MatchesSpecialJobTitle(targetIdComponent.LocalizedJobTitle, HeadOfPersonnelJobTitles)
+            || !_prototype.TryIndex(HeadOfPersonnelJob, out var headOfPersonnelJob))
+        {
+            return false;
+        }
+
+        return GetJobAccessTags(headOfPersonnelJob).IsSubsetOf(oldTags);
+    }
+
+    private static bool MatchesSpecialJobTitle(string? jobTitle, string[] expectedTitles)
+    {
+        var normalizedTitle = NormalizeJobTitle(jobTitle);
+        // Marker skipping is intentionally exact: custom titles like "Navy Captain" still get marked.
+        return expectedTitles.Any(title =>
+            string.Equals(normalizedTitle, title, StringComparison.OrdinalIgnoreCase));
     }
 
     private bool TryAddAccessMarkerToJobTitle(EntityUid targetId, IdCardComponent targetIdComponent, EntityUid player)
@@ -185,6 +238,7 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
     {
         var changed = false;
 
+        // Skip when the card already has this exact localized title.
         if (!string.Equals(targetIdComponent.LocalizedJobTitle, jobTitle, StringComparison.CurrentCulture))
         {
             _idCard.TryChangeJobTitle(targetId, jobTitle, targetIdComponent, player: player);
@@ -222,6 +276,14 @@ public sealed partial class IdCardConsoleSystem // corvax goob edit - made parti
         return changed;
     }
 
+    /// <summary>
+    /// Tries to recover a visible console job from the localized title stored on the ID card.
+    /// </summary>
+    /// <remarks>
+    /// The lookup first normalizes the card title and searches for a single exact localized-name match.
+    /// If no exact match exists, it falls back to a single unambiguous case-insensitive "title contains full job name" match.
+    /// Hidden console jobs are ignored, and ambiguous or missing matches fail safely.
+    /// </remarks>
     private bool TryResolveJobFromTitle(string? jobTitle, [NotNullWhen(true)] out JobPrototype? job)
     {
         job = null;

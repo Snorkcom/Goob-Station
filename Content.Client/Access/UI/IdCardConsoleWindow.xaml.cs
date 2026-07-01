@@ -218,15 +218,16 @@ namespace Content.Client.Access.UI
             JobTitleLabel.Modulate = interfaceEnabled ? Color.White : Color.Gray;
             JobTitleLineEdit.Editable = interfaceEnabled;
 
-            // CorvaxGoob Edit Start - Extended-access
+            // CorvaxGoob Start - Extended-access
             SyncJobTitleAfterBulkAccess(targetJobTitle);
-
             var jobTitleDirty = _lastJobTitle != null && JobTitleLineEdit.Text != targetJobTitle;
+            // CorvaxGoob End
+
             if (!jobTitleDirty)
             {
-                JobTitleLineEdit.Text = targetJobTitle;
+                JobTitleLineEdit.Text = targetJobTitle; // CorvaxGoob Edit
             }
-            // CorvaxGoob End
+
 
             JobTitleSaveButton.Disabled = !interfaceEnabled || !jobTitleDirty;
 
