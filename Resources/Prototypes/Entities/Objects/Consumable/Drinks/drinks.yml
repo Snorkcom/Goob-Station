@@ -298,8 +298,8 @@
     metamorphicDefaultSprite:
       sprite: Objects/Consumable/Drinks/glass_clear.rsi
       state: icon
-  # CorvaxGoob Start
   - type: TransformableContainer
+  # CorvaxGoob Start
   - type: Tag
     tags:
     - Trash
