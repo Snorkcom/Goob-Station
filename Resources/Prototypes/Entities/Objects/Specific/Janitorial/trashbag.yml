@@ -48,14 +48,14 @@
       tags:
         - Cartridge
         - Trash
-        - Organ
-      components:
-        - BodyPart #CorvaxGoob
-        - SlimeExtract #CorvaxGoob
-    blacklist:
+        - Organ # CorvaxGoob
+      components: # CorvaxGoob
+        - BodyPart
+        - SlimeExtract
+    blacklist: # CorvaxGoob
       tags:
-        - Brain #CorvaxGoob
-        - Head #CorvaxGoob
+        - Brain
+        - Head
   - type: UseDelay
     delay: 0.5
   - type: Tag

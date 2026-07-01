@@ -182,7 +182,7 @@
     - Pizza
     - ReptilianFood
     - Slice
-    - Trash #CorvaxGoob
+    - Trash # CorvaxGoob
 
 - type: entity
   name: cotton pizza crust
@@ -215,4 +215,4 @@
     - Pizza
     - ClothMade
     - Slice
-    - Trash #CorvaxGoob
+    - Trash # CorvaxGoob

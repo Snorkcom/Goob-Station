@@ -1555,9 +1555,11 @@
     - FloorFlesh
   - type: Stack
     stackType: FloorTileFlesh
+  # CorvaxGoob Start
   - type: Tag
     tags:
-    - Trash #CorvaxGoob
+    - Trash
+  # CorvaxGoob End
   - type: Construction
     graph: TileFlesh
     node: fleshTile

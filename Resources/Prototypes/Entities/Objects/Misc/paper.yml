@@ -240,11 +240,11 @@
   id: Paper
   description: 'A piece of white paper.'
   components:
+  # CorvaxGoob Start
   - type: Tag
     tags:
-    - Document
-    - Trash #CorvaxGoob
-    - Paper
+    - Trash
+  # CorvaxGoob End
   - type: Sprite
     sprite: Objects/Misc/bureaucracy.rsi
     layers:
