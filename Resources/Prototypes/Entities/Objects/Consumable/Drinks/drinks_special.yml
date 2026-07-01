@@ -160,6 +160,10 @@
   - type: SolutionContainerVisuals
     maxFillLevels: 2
     fillBaseName: fill
+  - type: Tag
+    tags:
+    - DrinkGlass
+    - Trash #CorvaxGoob
 
 - type: entity
   parent: DrinkGlassBase

@@ -1157,6 +1157,7 @@
         damage: 20
       behaviors:
       - !type:GibBehavior
+        gibContents: Skip #CorvaxGoob - no organs
         recursive: false
 
 - type: entity
