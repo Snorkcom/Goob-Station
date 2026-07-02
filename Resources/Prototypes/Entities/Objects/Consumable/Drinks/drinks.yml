@@ -299,11 +299,8 @@
       sprite: Objects/Consumable/Drinks/glass_clear.rsi
       state: icon
   - type: TransformableContainer
-  # CorvaxGoob Start
-  - type: Tag
-    tags:
-    - Trash
-  # CorvaxGoob End
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   name: coupe glass
@@ -329,11 +326,8 @@
     - type: SolutionContainerVisuals
       maxFillLevels: 5
       fillBaseName: fill
-    # CorvaxGoob Start
-    - type: Tag
-      tags:
-      - Trash
-    # CorvaxGoob End
+    - type: TrashOnSolutionEmpty # CorvaxGoob
+      solution: drink
 
 - type: entity
   parent: DrinkGlass
@@ -2875,6 +2869,8 @@
   - type: Drink
   - type: Sprite
     sprite: Objects/Consumable/Drinks/shake-blue.rsi
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlassBase
@@ -2885,6 +2881,8 @@
   - type: Drink
   - type: Sprite
     sprite: Objects/Consumable/Drinks/shake-empty.rsi
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlassBase
@@ -2895,6 +2893,8 @@
   - type: Drink
   - type: Sprite
     sprite: Objects/Consumable/Drinks/shake-meat.rsi
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlassBase
@@ -2905,6 +2905,8 @@
   - type: Drink
   - type: Sprite
     sprite: Objects/Consumable/Drinks/shake-robo.rsi
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlassBase
@@ -2915,6 +2917,8 @@
   - type: Drink
   - type: Sprite
     sprite: Objects/Consumable/Drinks/shake-white.rsi
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlass

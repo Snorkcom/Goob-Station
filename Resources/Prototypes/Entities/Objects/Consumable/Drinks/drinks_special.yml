@@ -160,11 +160,8 @@
   - type: SolutionContainerVisuals
     maxFillLevels: 2
     fillBaseName: fill
-  # CorvaxGoob Start
-  - type: Tag
-    tags:
-    - Trash
-  # CorvaxGoob End
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlassBase
@@ -196,6 +193,8 @@
       sprite: Objects/Consumable/Drinks/jar.rsi
       state: icon
   - type: TransformableContainer
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
 
 - type: entity
   parent: DrinkGlassBase

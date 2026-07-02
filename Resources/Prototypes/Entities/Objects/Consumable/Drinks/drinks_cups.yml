@@ -205,6 +205,8 @@
   - type: SolutionContainerVisuals
     maxFillLevels: 3
     fillBaseName: icon-
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
   - type: PhysicalComposition #Goobstation - Recycle update
     materialComposition:
       Plastic: 100
@@ -251,6 +253,8 @@
   name: funny dog mug
   description: It looks like a cartoon beagle.
   components:
+  - type: TrashOnSolutionEmpty # CorvaxGoob
+    solution: drink
   - type: Sprite
     sprite: Objects/Consumable/Drinks/mug_dog.rsi
     state: icon-3
