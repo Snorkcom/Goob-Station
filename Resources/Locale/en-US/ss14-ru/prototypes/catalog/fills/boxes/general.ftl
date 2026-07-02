@@ -61,8 +61,6 @@ ent-BoxCandle = candle box
 ent-BoxCandleSmall = small candle box
     .desc = { ent-BoxCandle.desc }
 # CorvaxGoob Start
-ent-BoxRandomBibleEmpty = empty random scripture box
-    .desc = A small, empty cardboard scripture box.
 ent-BoxRandomBible = random scripture box
     .desc = A box containing one random holy scripture.
 # CorvaxGoob End

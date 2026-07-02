@@ -64,8 +64,6 @@ ent-BoxCandle = коробка свечей
 ent-BoxCandleSmall = коробка маленьких свечей
     .desc = { ent-BoxCandle.desc }
 # CorvaxGoob Start
-ent-BoxRandomBibleEmpty = пустая коробка случайного священного писания
-    .desc = Небольшая пустая картонная коробка от священного писания.
 ent-BoxRandomBible = коробка случайного священного писания
     .desc = Коробка с одним случайным священным писанием.
 # CorvaxGoob End

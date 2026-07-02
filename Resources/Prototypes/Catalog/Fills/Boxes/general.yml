@@ -522,24 +522,6 @@
         amount: 4
       - id: CandlePurpleSmall
         amount: 4
-# CorvaxGoob Start
-- type: entity
-  id: BoxRandomBibleEmpty
-  parent: BaseItem
-  name: empty random scripture box
-  description: A small, empty cardboard scripture box.
-  components:
-  - type: PhysicalComposition
-    materialComposition:
-      Cardboard: 50
-  - type: Sprite
-    sprite: Objects/Storage/boxes.rsi
-    state: box
-  - type: Tag
-    tags:
-    - Trash
-  - type: SpaceGarbage
-
 - type: entity
   name: random scripture box
   parent: BaseItem
@@ -551,7 +533,7 @@
     state: box
   - type: SpawnItemsOnUse
     items:
-      - id: BoxRandomBibleEmpty
+      - id: MysteryFigureBoxTrash
       - id: BibleSlabClockwork
         prob: 16
         orGroup: RandomBible
