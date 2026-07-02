@@ -60,6 +60,12 @@ ent-BoxCandle = candle box
     .desc = This box is specifically moulded to only carry candles.
 ent-BoxCandleSmall = small candle box
     .desc = { ent-BoxCandle.desc }
+# CorvaxGoob Start
+ent-BoxRandomBibleEmpty = empty random scripture box
+    .desc = A small, empty cardboard scripture box.
+ent-BoxRandomBible = random scripture box
+    .desc = A box containing one random holy scripture.
+# CorvaxGoob End
 ent-BoxDarts = darts box
     .desc = A box filled with colorful darts.
 ent-BoxEnvelope = envelope box

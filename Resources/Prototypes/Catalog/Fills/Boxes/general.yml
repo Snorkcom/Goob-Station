@@ -522,7 +522,64 @@
         amount: 4
       - id: CandlePurpleSmall
         amount: 4
+# CorvaxGoob Start
+- type: entity
+  id: BoxRandomBibleEmpty
+  parent: BaseItem
+  name: empty random scripture box
+  description: A small, empty cardboard scripture box.
+  components:
+  - type: PhysicalComposition
+    materialComposition:
+      Cardboard: 50
+  - type: Sprite
+    sprite: Objects/Storage/boxes.rsi
+    state: box
+  - type: Tag
+    tags:
+    - Trash
+  - type: SpaceGarbage
 
+- type: entity
+  name: random scripture box
+  parent: BaseItem
+  id: BoxRandomBible
+  description: A box containing one random holy scripture.
+  components:
+  - type: Sprite
+    sprite: Objects/Storage/boxes.rsi
+    state: box
+  - type: SpawnItemsOnUse
+    items:
+      - id: BoxRandomBibleEmpty
+      - id: BibleSlabClockwork
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleVeda
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleVelesBook
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleDruid
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleCommunistManifesto
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleNarsie
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleNanoTrasen
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleHonk
+        prob: 12
+        orGroup: RandomBible
+      - id: BibleNecronomicon
+        prob: 4
+        orGroup: RandomBible
+# CorvaxGoob End
 - type: entity
   name: darts box
   parent: BoxCardboard
