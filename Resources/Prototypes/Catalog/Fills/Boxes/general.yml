@@ -553,28 +553,22 @@
     items:
       - id: BoxRandomBibleEmpty
       - id: BibleSlabClockwork
-        prob: 12
-        orGroup: RandomBible
-      - id: BibleVeda
-        prob: 12
-        orGroup: RandomBible
-      - id: BibleVelesBook
-        prob: 12
+        prob: 16
         orGroup: RandomBible
       - id: BibleDruid
-        prob: 12
+        prob: 16
         orGroup: RandomBible
       - id: BibleCommunistManifesto
-        prob: 12
+        prob: 16
         orGroup: RandomBible
       - id: BibleNarsie
-        prob: 12
+        prob: 16
         orGroup: RandomBible
       - id: BibleNanoTrasen
-        prob: 12
+        prob: 16
         orGroup: RandomBible
       - id: BibleHonk
-        prob: 12
+        prob: 16
         orGroup: RandomBible
       - id: BibleNecronomicon
         prob: 4
