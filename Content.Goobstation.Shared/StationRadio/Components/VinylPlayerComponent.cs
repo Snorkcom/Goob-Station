@@ -1,3 +1,4 @@
+using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 
 namespace Content.Goobstation.Shared.StationRadio.Components;
@@ -16,4 +17,16 @@ public sealed partial class VinylPlayerComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public EntityUid? SoundEntity;
+
+    /// <summary>
+    /// Default local audio params for the record player.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public AudioParams AudioParams = AudioParams.Default.WithVolume(3f).WithMaxDistance(4.5f);
+
+    /// <summary>
+    /// Music volume multiplier controlled from the radio volume UI.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float Volume = 1f;
 }
