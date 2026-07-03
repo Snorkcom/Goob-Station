@@ -81,8 +81,8 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
         if (!TryComp(args.Entity, out VinylComponent? vinylcomp) || _net.IsClient || vinylcomp.Song == null || !_power.IsPowered(uid))
             return;
 
-        var startedRadioBroadcast = TryPrepareRadioBroadcast(uid, vinylcomp.Song, out var playOffset);
-        StartLocalVinylAudio(uid, comp, vinylcomp.Song, playOffset);
+        var hasRadioBroadcast = TryPrepareRadioBroadcast(uid, vinylcomp.Song, out var playOffset, out var broadcastStartTime, out var startedRadioBroadcast);
+        StartLocalVinylAudio(uid, comp, vinylcomp.Song, playOffset, hasRadioBroadcast ? broadcastStartTime : null);
 
         // Used by VinylSummonRuleSystem
         var ev = new VinylInsertedEvent(args.Entity);
@@ -91,28 +91,31 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
         if (!startedRadioBroadcast)
             return;
 
-        RelayRadioMedia(vinylcomp.Song, playOffset);
+        RelayRadioMedia(vinylcomp.Song, playOffset, broadcastStartTime);
     }
 
     /// <summary>
     /// Starts the shared radio clock when this player is wired into the radio rig.
     /// </summary>
-    private bool TryPrepareRadioBroadcast(EntityUid uid, SoundPathSpecifier media, out float playOffset)
+    private bool TryPrepareRadioBroadcast(EntityUid uid, SoundPathSpecifier media, out float playOffset, out TimeSpan broadcastStartTime, out bool startedRadioBroadcast)
     {
         playOffset = 0f;
+        broadcastStartTime = default;
+        startedRadioBroadcast = false;
 
         if (!CheckForRadioRig(uid))
             return false;
 
-        var startedRadioMedia = TryStartCurrentRadioMedia(media, out var radioMedia);
+        startedRadioBroadcast = TryStartCurrentRadioMedia(media, out var radioMedia);
         playOffset = GetRadioMediaOffset(radioMedia);
-        return startedRadioMedia;
+        broadcastStartTime = radioMedia.StartTime;
+        return true;
     }
 
     /// <summary>
     /// Plays the local vinyl source at the radio clock offset so late-created streams stay aligned.
     /// </summary>
-    private void StartLocalVinylAudio(EntityUid uid, VinylPlayerComponent comp, SoundPathSpecifier media, float playOffset)
+    private void StartLocalVinylAudio(EntityUid uid, VinylPlayerComponent comp, SoundPathSpecifier media, float playOffset, TimeSpan? broadcastStartTime)
     {
         var audio = _audio.PlayPredicted(media, uid, uid, comp.AudioParams
             .WithVolume(GetVinylVolume(comp))
@@ -123,22 +126,33 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
         comp.SoundEntity = audio.Value.Entity;
         // WithPlayOffset starts the client source; SetPlaybackPosition also fixes server AudioStart for late PVS.
         _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), playOffset);
+
+        if (broadcastStartTime != null)
+            MarkRadioSyncedAudio(audio.Value.Entity, broadcastStartTime.Value);
+
         Dirty(uid, comp);
     }
 
     /// <summary>
     /// Relays the current record to station receivers and personal cassette radio streams.
     /// </summary>
-    private void RelayRadioMedia(SoundPathSpecifier media, float playOffset)
+    private void RelayRadioMedia(SoundPathSpecifier media, float playOffset, TimeSpan broadcastStartTime)
     {
         var query = EntityQueryEnumerator<StationRadioReceiverComponent>();
         while (query.MoveNext(out var receiver, out var receiverComponent))
         {
             if (!receiverComponent.SoundEntity.HasValue)
-                RaiseLocalEvent(receiver, new StationRadioMediaPlayedEvent(media, playOffset));
+                RaiseLocalEvent(receiver, new StationRadioMediaPlayedEvent(media, playOffset, broadcastStartTime));
         }
 
-        PlayCassetteRadioMedia(media, playOffset); // CorvaxGoob - CassetteRadio
+        PlayCassetteRadioMedia(media, playOffset, broadcastStartTime); // CorvaxGoob - CassetteRadio
+    }
+
+    private void MarkRadioSyncedAudio(EntityUid audioUid, TimeSpan broadcastStartTime)
+    {
+        var synced = EnsureComp<RadioSyncedAudioComponent>(audioUid);
+        synced.BroadcastStartTime = broadcastStartTime;
+        Dirty(audioUid, synced);
     }
 
     private void OnVinylRemove(EntityUid uid, VinylPlayerComponent comp, EntRemovedFromContainerMessage args)

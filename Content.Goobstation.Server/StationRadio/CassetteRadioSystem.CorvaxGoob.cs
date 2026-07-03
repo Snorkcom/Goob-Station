@@ -19,6 +19,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Maths;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
 namespace Content.Goobstation.Server.StationRadio;
@@ -34,6 +35,11 @@ public sealed class CassetteRadioSystem : EntitySystem
     private static readonly SpriteSpecifier VolumeVerbIcon =
         new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png"));
 
+    private static readonly SpriteSpecifier ResyncRadioVerbIcon =
+        new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/refresh.svg.192dpi.png"));
+
+    private static readonly TimeSpan ResyncCooldown = TimeSpan.FromSeconds(5);
+
     /// <summary>
     /// Personal radio is audible only while the cassette player is immediately carried by the listener.
     /// Hands are included by InventorySystem.GetHandOrInventoryEntities.
@@ -47,6 +53,7 @@ public sealed class CassetteRadioSystem : EntitySystem
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly VinylPlayerSystem _vinylPlayer = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -82,6 +89,17 @@ public sealed class CassetteRadioSystem : EntitySystem
                 : EnableRadioVerbIcon,
             Act = () => SetEnabled(ent, !ent.Comp.Active, user),
         });
+
+        if (CanResyncRadio(ent, user))
+        {
+            args.Verbs.Add(new AlternativeVerb
+            {
+                Text = Loc.GetString("cassette-radio-verb-resync"),
+                Icon = ResyncRadioVerbIcon,
+                Priority = -2,
+                Act = () => ResyncRadio(ent, user),
+            });
+        }
 
         args.Verbs.Add(new AlternativeVerb
         {
@@ -220,7 +238,36 @@ public sealed class CassetteRadioSystem : EntitySystem
         if (!_vinylPlayer.TryGetCurrentRadioMedia(out var media))
             return;
 
-        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media));
+        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media), media.StartTime);
+    }
+
+    private bool CanResyncRadio(Entity<CassetteRadioComponent> ent, EntityUid user)
+    {
+        return ent.Comp.Active
+            && IsCarriedBy(user, ent.Owner)
+            && _timing.CurTime >= ent.Comp.NextResyncTime
+            && _vinylPlayer.TryGetCurrentRadioMedia(out _);
+    }
+
+    private void ResyncRadio(Entity<CassetteRadioComponent> ent, EntityUid user)
+    {
+        if (!ent.Comp.Active || !IsCarriedBy(user, ent.Owner) || !TryComp(user, out ActorComponent? actor))
+            return;
+
+        if (_timing.CurTime < ent.Comp.NextResyncTime)
+            return;
+
+        if (!_vinylPlayer.TryGetCurrentRadioMedia(out var media))
+            return;
+
+        ent.Comp.NextResyncTime = _timing.CurTime + ResyncCooldown;
+        ent.Comp.Wearer = user;
+        StopMedia(ent);
+        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media), media.StartTime);
+        RefreshRadioReceiver(ent);
+
+        RaiseNetworkEvent(new RadioPlaybackResyncEvent(), actor.PlayerSession);
+        _popup.PopupEntity(Loc.GetString("cassette-radio-popup-resynced"), ent, user);
     }
 
     /// <summary>
@@ -251,7 +298,7 @@ public sealed class CassetteRadioSystem : EntitySystem
         }
     }
 
-    private void StartMedia(Entity<CassetteRadioComponent> ent, SoundPathSpecifier media, float offset)
+    private void StartMedia(Entity<CassetteRadioComponent> ent, SoundPathSpecifier media, float offset, TimeSpan broadcastStartTime)
     {
         if (!ent.Comp.Active || ent.Comp.SoundEntity != null)
             return;
@@ -273,6 +320,10 @@ public sealed class CassetteRadioSystem : EntitySystem
         ent.Comp.SoundSession = actor.PlayerSession;
         // Keep the server-side AudioStart aligned for clients that receive this stream after it was created.
         _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), offset);
+
+        var synced = EnsureComp<RadioSyncedAudioComponent>(audio.Value.Entity);
+        synced.BroadcastStartTime = broadcastStartTime;
+        Dirty(audio.Value.Entity, synced);
     }
 
     private void SetMediaGain(Entity<CassetteRadioComponent> ent, bool audible)

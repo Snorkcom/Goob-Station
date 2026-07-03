@@ -1,10 +1,12 @@
 # CorvaxGoob Start
 cassette-radio-verb-enable = Turn radio on
 cassette-radio-verb-disable = Turn radio off
+cassette-radio-verb-resync = Resync radio
 cassette-radio-verb-volume = Adjust volume
 cassette-radio-popup-enabled = You turn the cassette player's radio on.
 cassette-radio-popup-enabled-no-neck = Turn on the cassette player's radio and keep it in your hand, pocket, or neck slot to hear the sound.
 cassette-radio-popup-disabled = You turn the cassette player's radio off.
+cassette-radio-popup-resynced = You resync the cassette player's radio.
 cassette-radio-volume-window-title = Cassette radio volume
 cassette-radio-volume-window-volume = Volume: {$volume}%
 station-radio-volume-verb = Adjust volume

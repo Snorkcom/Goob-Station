@@ -67,12 +67,12 @@ public sealed partial class VinylPlayerSystem
     /// <summary>
     /// Tells every enabled personal cassette receiver to recreate its private stream from the broadcast clock.
     /// </summary>
-    private void PlayCassetteRadioMedia(SoundPathSpecifier media, float playOffset)
+    private void PlayCassetteRadioMedia(SoundPathSpecifier media, float playOffset, TimeSpan broadcastStartTime)
     {
         var cassetteQuery = EntityQueryEnumerator<CassetteRadioComponent>();
         while (cassetteQuery.MoveNext(out var cassette, out _))
         {
-            RaiseLocalEvent(cassette, new StationRadioMediaPlayedEvent(media, playOffset));
+            RaiseLocalEvent(cassette, new StationRadioMediaPlayedEvent(media, playOffset, broadcastStartTime));
         }
     }
 

@@ -46,4 +46,9 @@ public sealed partial class CassetteRadioComponent : Component
     /// Player currently allowed to hear radio text and private music from this cassette.
     /// </summary>
     public EntityUid? Wearer;
+
+    /// <summary>
+    /// Next time the manual radio resync verb may be used.
+    /// </summary>
+    public TimeSpan NextResyncTime;
 }

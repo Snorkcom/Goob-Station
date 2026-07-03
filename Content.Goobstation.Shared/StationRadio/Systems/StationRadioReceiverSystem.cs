@@ -64,6 +64,11 @@ public sealed class StationRadioReceiverSystem : EntitySystem
         comp.SoundEntity = audio.Value.Entity;
         // WithPlayOffset starts the client source; SetPlaybackPosition also fixes server AudioStart for late PVS.
         _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), args.PlayOffset);
+
+        var synced = EnsureComp<RadioSyncedAudioComponent>(audio.Value.Entity);
+        synced.BroadcastStartTime = args.BroadcastStartTime;
+        Dirty(audio.Value.Entity, synced);
+
         Dirty(uid, comp);
 
         if (!_power.IsPowered(uid) || !comp.Active)
