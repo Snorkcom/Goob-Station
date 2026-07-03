@@ -9,14 +9,27 @@ public sealed partial class VinylPlayerSystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
 
+    /// <summary>
+    /// Single source of truth for the currently broadcast record and its station-wide start time.
+    /// </summary>
     private StationRadioMedia? _currentRadioMedia;
 
     private bool TryStartCurrentRadioMedia(SoundPathSpecifier media)
     {
-        if (_currentRadioMedia != null)
-            return false;
+        return TryStartCurrentRadioMedia(media, out _);
+    }
 
-        _currentRadioMedia = new StationRadioMedia(media, _timing.CurTime);
+    private bool TryStartCurrentRadioMedia(SoundPathSpecifier media, out StationRadioMedia radioMedia)
+    {
+        if (_currentRadioMedia != null)
+        {
+            // Return the active clock so callers can still align local audio even if they did not start the broadcast.
+            radioMedia = _currentRadioMedia.Value;
+            return false;
+        }
+
+        radioMedia = new StationRadioMedia(media, _timing.CurTime);
+        _currentRadioMedia = radioMedia;
         return true;
     }
 
@@ -40,15 +53,26 @@ public sealed partial class VinylPlayerSystem
 
     public float GetCurrentRadioMediaOffset(StationRadioMedia media)
     {
+        return GetRadioMediaOffset(media);
+    }
+
+    /// <summary>
+    /// Converts the saved start time into the offset every late-created stream should seek to.
+    /// </summary>
+    private float GetRadioMediaOffset(StationRadioMedia media)
+    {
         return MathF.Max(0f, (float) (_timing.CurTime - media.StartTime).TotalSeconds);
     }
 
-    private void PlayCassetteRadioMedia(SoundPathSpecifier media)
+    /// <summary>
+    /// Tells every enabled personal cassette receiver to recreate its private stream from the broadcast clock.
+    /// </summary>
+    private void PlayCassetteRadioMedia(SoundPathSpecifier media, float playOffset)
     {
         var cassetteQuery = EntityQueryEnumerator<CassetteRadioComponent>();
         while (cassetteQuery.MoveNext(out var cassette, out _))
         {
-            RaiseLocalEvent(cassette, new StationRadioMediaPlayedEvent(media));
+            RaiseLocalEvent(cassette, new StationRadioMediaPlayedEvent(media, playOffset));
         }
     }
 
@@ -62,4 +86,7 @@ public sealed partial class VinylPlayerSystem
     }
 }
 
+/// <summary>
+/// Describes the record currently being broadcast and when the broadcast clock started.
+/// </summary>
 public readonly record struct StationRadioMedia(SoundPathSpecifier Media, TimeSpan StartTime);

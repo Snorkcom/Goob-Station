@@ -8,10 +8,20 @@ namespace Content.Goobstation.Client.StationRadio;
 
 public sealed class StationRadioVolumeWindow : DefaultWindow
 {
+    private const float VolumeTolerance = 0.001f;
+
     private readonly Label _volumeLabel;
     private readonly Slider _volumeSlider;
 
-    public event Action<float>? OnVolumeChanged;
+    private float _pendingVolume = 1f;
+    private float _committedVolume = 1f;
+
+    /// <summary>
+    /// Raised only after the user releases the slider so dragging does not spam volume messages.
+    /// </summary>
+    public event Action<float>? OnVolumeCommitted;
+
+    public bool IsDragging => _volumeSlider.Grabbed;
 
     public StationRadioVolumeWindow()
     {
@@ -39,6 +49,7 @@ public sealed class StationRadioVolumeWindow : DefaultWindow
         };
 
         _volumeSlider.OnValueChanged += OnSliderValueChanged;
+        _volumeSlider.OnReleased += OnSliderReleased;
         container.AddChild(_volumeSlider);
 
         SetVolume(1f);
@@ -46,15 +57,29 @@ public sealed class StationRadioVolumeWindow : DefaultWindow
 
     public void SetVolume(float volume)
     {
-        var percent = Math.Clamp(volume, 0f, 1f) * 100f;
+        var clamped = Math.Clamp(volume, 0f, 1f);
+        _pendingVolume = clamped;
+        _committedVolume = clamped;
+
+        var percent = clamped * 100f;
         _volumeSlider.SetValueWithoutEvent(percent);
         UpdateLabel(percent);
     }
 
     private void OnSliderValueChanged(Range range)
     {
+        // Dragging is local-only; the server sees the new value when the slider is released.
         UpdateLabel(range.Value);
-        OnVolumeChanged?.Invoke(range.Value / 100f);
+        _pendingVolume = Math.Clamp(range.Value / 100f, 0f, 1f);
+    }
+
+    private void OnSliderReleased(Slider slider)
+    {
+        if (MathF.Abs(_pendingVolume - _committedVolume) <= VolumeTolerance)
+            return;
+
+        _committedVolume = _pendingVolume;
+        OnVolumeCommitted?.Invoke(_pendingVolume);
     }
 
     private void UpdateLabel(float percent)

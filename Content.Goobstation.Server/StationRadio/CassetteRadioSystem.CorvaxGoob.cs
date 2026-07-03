@@ -6,6 +6,7 @@ using Content.Server._EinsteinEngines.Language;
 using Content.Server.Radio;
 using Content.Server.Radio.Components;
 using Content.Shared.Chat;
+using Content.Shared.Hands;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Popups;
@@ -33,6 +34,12 @@ public sealed class CassetteRadioSystem : EntitySystem
     private static readonly SpriteSpecifier VolumeVerbIcon =
         new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png"));
 
+    /// <summary>
+    /// Personal radio is audible only while the cassette player is immediately carried by the listener.
+    /// Hands are included by InventorySystem.GetHandOrInventoryEntities.
+    /// </summary>
+    private const SlotFlags RadioCarrySlotFlags = SlotFlags.NECK | SlotFlags.POCKET;
+
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
@@ -48,6 +55,8 @@ public sealed class CassetteRadioSystem : EntitySystem
         SubscribeLocalEvent<CassetteRadioComponent, GetVerbsEvent<AlternativeVerb>>(OnGetVerbs);
         SubscribeLocalEvent<CassetteRadioComponent, GotEquippedEvent>(OnEquipped);
         SubscribeLocalEvent<CassetteRadioComponent, GotUnequippedEvent>(OnUnequipped);
+        SubscribeLocalEvent<CassetteRadioComponent, GotEquippedHandEvent>(OnEquippedHand);
+        SubscribeLocalEvent<CassetteRadioComponent, GotUnequippedHandEvent>(OnUnequippedHand);
         SubscribeLocalEvent<CassetteRadioComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<CassetteRadioComponent, StationRadioMediaPlayedEvent>(OnMediaPlayed);
         SubscribeLocalEvent<CassetteRadioComponent, StationRadioMediaStoppedEvent>(OnMediaStopped);
@@ -78,28 +87,36 @@ public sealed class CassetteRadioSystem : EntitySystem
         {
             Text = Loc.GetString("station-radio-volume-verb"),
             Icon = VolumeVerbIcon,
+            // Keep primary item verbs above volume in alt-click priority.
+            Priority = -1,
             Act = () => OpenVolumeUi(ent, user),
         });
     }
 
     private void OnEquipped(Entity<CassetteRadioComponent> ent, ref GotEquippedEvent args)
     {
-        if (!args.SlotFlags.HasFlag(SlotFlags.NECK))
+        if (!IsRadioCarrySlot(args.SlotFlags))
             return;
 
-        ent.Comp.Wearer = args.Equipee;
-        RefreshRadioReceiver(ent);
-        TryStartCurrentMedia(ent);
+        SetRadioCarrier(ent, args.Equipee);
     }
 
     private void OnUnequipped(Entity<CassetteRadioComponent> ent, ref GotUnequippedEvent args)
     {
-        if (!args.SlotFlags.HasFlag(SlotFlags.NECK) || ent.Comp.Wearer != args.Equipee)
+        if (!IsRadioCarrySlot(args.SlotFlags))
             return;
 
-        ent.Comp.Wearer = null;
-        StopMedia(ent);
-        RefreshRadioReceiver(ent);
+        ClearRadioCarrier(ent, args.Equipee);
+    }
+
+    private void OnEquippedHand(Entity<CassetteRadioComponent> ent, ref GotEquippedHandEvent args)
+    {
+        SetRadioCarrier(ent, args.User);
+    }
+
+    private void OnUnequippedHand(Entity<CassetteRadioComponent> ent, ref GotUnequippedHandEvent args)
+    {
+        ClearRadioCarrier(ent, args.User);
     }
 
     private void OnShutdown(Entity<CassetteRadioComponent> ent, ref ComponentShutdown args)
@@ -110,6 +127,7 @@ public sealed class CassetteRadioSystem : EntitySystem
     private void OnMediaPlayed(Entity<CassetteRadioComponent> ent, ref StationRadioMediaPlayedEvent args)
     {
         StopMedia(ent);
+        // Personal streams query the clock at creation so reconnects and slot moves use the freshest offset.
         TryStartCurrentMedia(ent);
     }
 
@@ -210,12 +228,12 @@ public sealed class CassetteRadioSystem : EntitySystem
     /// </summary>
     private void OnPlayerAttached(PlayerAttachedEvent args)
     {
-        if (!TryGetNeckCassette(args.Entity, out var cassette))
-            return;
-
-        cassette.Comp.Wearer = args.Entity;
-        RefreshRadioReceiver(cassette);
-        TryStartCurrentMedia(cassette);
+        foreach (var cassette in GetCarriedCassettes(args.Entity))
+        {
+            cassette.Comp.Wearer = args.Entity;
+            RefreshRadioReceiver(cassette);
+            TryStartCurrentMedia(cassette);
+        }
     }
 
     /// <summary>
@@ -223,11 +241,14 @@ public sealed class CassetteRadioSystem : EntitySystem
     /// </summary>
     private void OnPlayerDetached(PlayerDetachedEvent args)
     {
-        if (!TryGetNeckCassette(args.Entity, out var cassette) || cassette.Comp.Wearer != args.Entity)
-            return;
+        foreach (var cassette in GetCarriedCassettes(args.Entity))
+        {
+            if (cassette.Comp.Wearer != args.Entity)
+                continue;
 
-        StopMedia(cassette);
-        RefreshRadioReceiver(cassette);
+            StopMedia(cassette);
+            RefreshRadioReceiver(cassette);
+        }
     }
 
     private void StartMedia(Entity<CassetteRadioComponent> ent, SoundPathSpecifier media, float offset)
@@ -250,6 +271,7 @@ public sealed class CassetteRadioSystem : EntitySystem
 
         ent.Comp.SoundEntity = audio.Value.Entity;
         ent.Comp.SoundSession = actor.PlayerSession;
+        // Keep the server-side AudioStart aligned for clients that receive this stream after it was created.
         _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), offset);
     }
 
@@ -293,22 +315,64 @@ public sealed class CassetteRadioSystem : EntitySystem
     }
 
     /// <summary>
-    /// Finds the cassette currently equipped in the player's neck slot.
+    /// Assigns a player as the personal radio listener when the cassette is in a supported carried slot.
     /// </summary>
-    private bool TryGetNeckCassette(EntityUid wearer, out Entity<CassetteRadioComponent> cassette)
+    private void SetRadioCarrier(Entity<CassetteRadioComponent> ent, EntityUid carrier)
     {
-        var slotEnumerator = _inventory.GetSlotEnumerator(wearer, SlotFlags.NECK);
-        while (slotEnumerator.NextItem(out var item, out _))
-        {
-            if (!TryComp<CassetteRadioComponent>(item, out var component))
-                continue;
+        ent.Comp.Wearer = carrier;
+        RefreshRadioReceiver(ent);
+        TryStartCurrentMedia(ent);
+    }
 
-            cassette = (item, component);
-            return true;
+    /// <summary>
+    /// Clears the listener only after the cassette is no longer held, pocketed, or worn on the neck.
+    /// </summary>
+    private void ClearRadioCarrier(Entity<CassetteRadioComponent> ent, EntityUid carrier)
+    {
+        if (ent.Comp.Wearer != carrier)
+            return;
+
+        if (IsCarriedBy(carrier, ent.Owner))
+        {
+            RefreshRadioReceiver(ent);
+            TryStartCurrentMedia(ent);
+            return;
         }
 
-        cassette = default;
+        ent.Comp.Wearer = null;
+        StopMedia(ent);
+        RefreshRadioReceiver(ent);
+    }
+
+    /// <summary>
+    /// Finds every cassette player that can currently play private radio for the player.
+    /// </summary>
+    private IEnumerable<Entity<CassetteRadioComponent>> GetCarriedCassettes(EntityUid wearer)
+    {
+        foreach (var item in _inventory.GetHandOrInventoryEntities(wearer, RadioCarrySlotFlags))
+        {
+            if (TryComp<CassetteRadioComponent>(item, out var component))
+                yield return (item, component);
+        }
+    }
+
+    /// <summary>
+    /// Checks hands plus the supported inventory slots so missed move order cannot leave stale playback.
+    /// </summary>
+    private bool IsCarriedBy(EntityUid wearer, EntityUid cassette)
+    {
+        foreach (var item in _inventory.GetHandOrInventoryEntities(wearer, RadioCarrySlotFlags))
+        {
+            if (item == cassette)
+                return true;
+        }
+
         return false;
+    }
+
+    private static bool IsRadioCarrySlot(SlotFlags flags)
+    {
+        return (flags & RadioCarrySlotFlags) != 0;
     }
 
     /// <summary>
@@ -325,7 +389,10 @@ public sealed class CassetteRadioSystem : EntitySystem
 
     private bool TryGetWearer(Entity<CassetteRadioComponent> ent, out EntityUid wearer)
     {
-        if (ent.Comp.Wearer is { } currentWearer && Exists(currentWearer))
+        // The cached wearer is only valid while the item is still in an allowed carried location.
+        if (ent.Comp.Wearer is { } currentWearer
+            && Exists(currentWearer)
+            && IsCarriedBy(currentWearer, ent.Owner))
         {
             wearer = currentWearer;
             return true;

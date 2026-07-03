@@ -8,6 +8,7 @@ using Content.Shared.Power.EntitySystems;
 using Content.Shared.UserInterface;
 using Content.Shared.Verbs;
 using Robust.Shared.Audio;
+using Robust.Shared.Audio.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Maths;
@@ -40,6 +41,9 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
 
     private void OnPowerChanged(EntityUid uid, VinylPlayerComponent comp, PowerChangedEvent args)
     {
+        if (!args.Powered)
+            _ui.CloseUi(uid, StationRadioVolumeUiKey.Key);
+
         if (comp.SoundEntity != null && !args.Powered)
         {
             comp.SoundEntity = _audio.Stop(comp.SoundEntity);
@@ -77,32 +81,64 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
         if (!TryComp(args.Entity, out VinylComponent? vinylcomp) || _net.IsClient || vinylcomp.Song == null || !_power.IsPowered(uid))
             return;
 
-        var audio = _audio.PlayPredicted(vinylcomp.Song, uid, uid, comp.AudioParams.WithVolume(GetVinylVolume(comp)));
-        if (audio != null)
-        {
-            comp.SoundEntity = audio.Value.Entity;
-            Dirty(uid, comp);
-        }
+        var startedRadioBroadcast = TryPrepareRadioBroadcast(uid, vinylcomp.Song, out var playOffset);
+        StartLocalVinylAudio(uid, comp, vinylcomp.Song, playOffset);
 
         // Used by VinylSummonRuleSystem
         var ev = new VinylInsertedEvent(args.Entity);
         RaiseLocalEvent(uid, ref ev);
 
+        if (!startedRadioBroadcast)
+            return;
+
+        RelayRadioMedia(vinylcomp.Song, playOffset);
+    }
+
+    /// <summary>
+    /// Starts the shared radio clock when this player is wired into the radio rig.
+    /// </summary>
+    private bool TryPrepareRadioBroadcast(EntityUid uid, SoundPathSpecifier media, out float playOffset)
+    {
+        playOffset = 0f;
+
         if (!CheckForRadioRig(uid))
+            return false;
+
+        var startedRadioMedia = TryStartCurrentRadioMedia(media, out var radioMedia);
+        playOffset = GetRadioMediaOffset(radioMedia);
+        return startedRadioMedia;
+    }
+
+    /// <summary>
+    /// Plays the local vinyl source at the radio clock offset so late-created streams stay aligned.
+    /// </summary>
+    private void StartLocalVinylAudio(EntityUid uid, VinylPlayerComponent comp, SoundPathSpecifier media, float playOffset)
+    {
+        var audio = _audio.PlayPredicted(media, uid, uid, comp.AudioParams
+            .WithVolume(GetVinylVolume(comp))
+            .WithPlayOffset(playOffset));
+        if (audio == null)
             return;
 
-        // CorvaxGoob - CassetteRadio
-        if (!TryStartCurrentRadioMedia(vinylcomp.Song))
-            return;
+        comp.SoundEntity = audio.Value.Entity;
+        // WithPlayOffset starts the client source; SetPlaybackPosition also fixes server AudioStart for late PVS.
+        _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), playOffset);
+        Dirty(uid, comp);
+    }
 
+    /// <summary>
+    /// Relays the current record to station receivers and personal cassette radio streams.
+    /// </summary>
+    private void RelayRadioMedia(SoundPathSpecifier media, float playOffset)
+    {
         var query = EntityQueryEnumerator<StationRadioReceiverComponent>();
         while (query.MoveNext(out var receiver, out var receiverComponent))
         {
             if (!receiverComponent.SoundEntity.HasValue)
-                RaiseLocalEvent(receiver, new StationRadioMediaPlayedEvent(vinylcomp.Song));
+                RaiseLocalEvent(receiver, new StationRadioMediaPlayedEvent(media, playOffset));
         }
 
-        PlayCassetteRadioMedia(vinylcomp.Song); // CorvaxGoob - CassetteRadio
+        PlayCassetteRadioMedia(media, playOffset); // CorvaxGoob - CassetteRadio
     }
 
     private void OnVinylRemove(EntityUid uid, VinylPlayerComponent comp, EntRemovedFromContainerMessage args)
@@ -164,11 +200,16 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
         if (!args.CanAccess || !args.CanInteract)
             return;
 
+        if (!_power.IsPowered(ent.Owner))
+            return;
+
         var user = args.User;
         args.Verbs.Add(new AlternativeVerb
         {
             Text = Loc.GetString("station-radio-volume-verb"),
             Icon = VolumeVerbIcon,
+            // Keep the item-slot eject verb above volume in alt-click priority.
+            Priority = -1,
             Act = () => OpenVolumeUi(ent, user),
         });
     }
@@ -177,6 +218,12 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
     {
         if (args.Actor is not { Valid: true })
             return;
+
+        if (!_power.IsPowered(ent.Owner))
+        {
+            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            return;
+        }
 
         ent.Comp.Volume = MathHelper.Clamp(args.Volume, 0f, 1f);
         Dirty(ent.Owner, ent.Comp);
@@ -189,6 +236,12 @@ public sealed partial class VinylPlayerSystem : EntitySystem // CorvaxGoob Edit 
 
     private void OpenVolumeUi(Entity<VinylPlayerComponent> ent, EntityUid user)
     {
+        if (!_power.IsPowered(ent.Owner))
+        {
+            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            return;
+        }
+
         UpdateVolumeUi(ent);
         _ui.TryOpenUi(ent.Owner, StationRadioVolumeUiKey.Key, user);
     }

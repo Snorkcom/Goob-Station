@@ -6,6 +6,7 @@ using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.UserInterface;
 using Content.Shared.Verbs;
+using Robust.Shared.Audio.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Maths;
 using Robust.Shared.Utility;
@@ -34,6 +35,9 @@ public sealed class StationRadioReceiverSystem : EntitySystem
 
     private void OnPowerChanged(EntityUid uid, StationRadioReceiverComponent comp, PowerChangedEvent args)
     {
+        if (!args.Powered)
+            _ui.CloseUi(uid, StationRadioVolumeUiKey.Key);
+
         if (comp.SoundEntity == null)
             return;
 
@@ -51,11 +55,15 @@ public sealed class StationRadioReceiverSystem : EntitySystem
 
     private void OnMediaPlayed(EntityUid uid, StationRadioReceiverComponent comp, StationRadioMediaPlayedEvent args)
     {
-        var audio = _audio.PlayPredicted(args.MediaPlayed, uid, uid, comp.DefaultParams.WithVolume(GetReceiverVolume(comp)));
+        var audio = _audio.PlayPredicted(args.MediaPlayed, uid, uid, comp.DefaultParams
+            .WithVolume(GetReceiverVolume(comp))
+            .WithPlayOffset(args.PlayOffset));
         if (audio == null)
             return;
 
         comp.SoundEntity = audio.Value.Entity;
+        // WithPlayOffset starts the client source; SetPlaybackPosition also fixes server AudioStart for late PVS.
+        _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), args.PlayOffset);
         Dirty(uid, comp);
 
         if (!_power.IsPowered(uid) || !comp.Active)
@@ -78,11 +86,16 @@ public sealed class StationRadioReceiverSystem : EntitySystem
         if (!args.CanAccess || !args.CanInteract)
             return;
 
+        if (!_power.IsPowered(ent.Owner))
+            return;
+
         var user = args.User;
         args.Verbs.Add(new AlternativeVerb
         {
             Text = Loc.GetString("station-radio-volume-verb"),
             Icon = VolumeVerbIcon,
+            // Keep eject verbs above volume so alt-click still takes records out first.
+            Priority = -1,
             Act = () => OpenVolumeUi(ent, user),
         });
     }
@@ -91,6 +104,12 @@ public sealed class StationRadioReceiverSystem : EntitySystem
     {
         if (args.Actor is not { Valid: true })
             return;
+
+        if (!_power.IsPowered(ent.Owner))
+        {
+            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            return;
+        }
 
         ent.Comp.Volume = MathHelper.Clamp(args.Volume, 0f, 1f);
         Dirty(ent.Owner, ent.Comp);
@@ -103,6 +122,12 @@ public sealed class StationRadioReceiverSystem : EntitySystem
 
     private void OpenVolumeUi(Entity<StationRadioReceiverComponent> ent, EntityUid user)
     {
+        if (!_power.IsPowered(ent.Owner))
+        {
+            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            return;
+        }
+
         UpdateVolumeUi(ent);
         _ui.TryOpenUi(ent.Owner, StationRadioVolumeUiKey.Key, user);
     }
