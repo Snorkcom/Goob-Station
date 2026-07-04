@@ -13,15 +13,9 @@ public sealed class StationRadioMediaPlayedEvent : EntityEventArgs
     /// </summary>
     public float PlayOffset { get; }
 
-    /// <summary>
-    /// Station-wide broadcast clock metadata copied onto radio audio marker components.
-    /// </summary>
-    public TimeSpan BroadcastStartTime { get; }
-
-    public StationRadioMediaPlayedEvent(SoundPathSpecifier media, float playOffset = 0f, TimeSpan broadcastStartTime = default)
+    public StationRadioMediaPlayedEvent(SoundPathSpecifier media, float playOffset = 0f)
     {
         MediaPlayed = media;
         PlayOffset = playOffset;
-        BroadcastStartTime = broadcastStartTime;
     }
 }

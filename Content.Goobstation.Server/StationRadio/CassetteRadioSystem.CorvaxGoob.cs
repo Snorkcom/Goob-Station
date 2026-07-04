@@ -101,14 +101,17 @@ public sealed class CassetteRadioSystem : EntitySystem
             });
         }
 
-        args.Verbs.Add(new AlternativeVerb
+        if (IsCarriedBy(user, ent.Owner))
         {
-            Text = Loc.GetString("station-radio-volume-verb"),
-            Icon = VolumeVerbIcon,
-            // Keep primary item verbs above volume in alt-click priority.
-            Priority = -1,
-            Act = () => OpenVolumeUi(ent, user),
-        });
+            args.Verbs.Add(new AlternativeVerb
+            {
+                Text = Loc.GetString("station-radio-volume-verb"),
+                Icon = VolumeVerbIcon,
+                // Keep primary item verbs above volume in alt-click priority.
+                Priority = -1,
+                Act = () => OpenVolumeUi(ent, user),
+            });
+        }
     }
 
     private void OnEquipped(Entity<CassetteRadioComponent> ent, ref GotEquippedEvent args)
@@ -171,8 +174,14 @@ public sealed class CassetteRadioSystem : EntitySystem
 
     private void OnSetVolume(Entity<CassetteRadioComponent> ent, ref StationRadioSetVolumeMessage args)
     {
-        if (args.Actor is not { Valid: true })
+        if (args.Actor is not { Valid: true } actor)
             return;
+
+        if (!IsCarriedBy(actor, ent.Owner))
+        {
+            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            return;
+        }
 
         ent.Comp.Volume = MathHelper.Clamp(args.Volume, 0f, 1f);
 
@@ -184,6 +193,12 @@ public sealed class CassetteRadioSystem : EntitySystem
 
     private void OpenVolumeUi(Entity<CassetteRadioComponent> ent, EntityUid user)
     {
+        if (!IsCarriedBy(user, ent.Owner))
+        {
+            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            return;
+        }
+
         UpdateVolumeUi(ent);
         _ui.TryOpenUi(ent.Owner, StationRadioVolumeUiKey.Key, user);
     }
@@ -238,7 +253,7 @@ public sealed class CassetteRadioSystem : EntitySystem
         if (!_vinylPlayer.TryGetCurrentRadioMedia(out var media))
             return;
 
-        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media), media.StartTime);
+        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media));
     }
 
     private bool CanResyncRadio(Entity<CassetteRadioComponent> ent, EntityUid user)
@@ -263,7 +278,7 @@ public sealed class CassetteRadioSystem : EntitySystem
         ent.Comp.NextResyncTime = _timing.CurTime + ResyncCooldown;
         ent.Comp.Wearer = user;
         StopMedia(ent);
-        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media), media.StartTime);
+        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media));
         RefreshRadioReceiver(ent);
 
         RaiseNetworkEvent(new RadioPlaybackResyncEvent(), actor.PlayerSession);
@@ -298,7 +313,7 @@ public sealed class CassetteRadioSystem : EntitySystem
         }
     }
 
-    private void StartMedia(Entity<CassetteRadioComponent> ent, SoundPathSpecifier media, float offset, TimeSpan broadcastStartTime)
+    private void StartMedia(Entity<CassetteRadioComponent> ent, SoundPathSpecifier media, float offset)
     {
         if (!ent.Comp.Active || ent.Comp.SoundEntity != null)
             return;
@@ -321,9 +336,7 @@ public sealed class CassetteRadioSystem : EntitySystem
         // Keep the server-side AudioStart aligned for clients that receive this stream after it was created.
         _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), offset);
 
-        var synced = EnsureComp<RadioSyncedAudioComponent>(audio.Value.Entity);
-        synced.BroadcastStartTime = broadcastStartTime;
-        Dirty(audio.Value.Entity, synced);
+        EnsureComp<RadioSyncedAudioComponent>(audio.Value.Entity);
     }
 
     private void SetMediaGain(Entity<CassetteRadioComponent> ent, bool audible)
@@ -392,6 +405,7 @@ public sealed class CassetteRadioSystem : EntitySystem
 
         ent.Comp.Wearer = null;
         StopMedia(ent);
+        _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
         RefreshRadioReceiver(ent);
     }
 

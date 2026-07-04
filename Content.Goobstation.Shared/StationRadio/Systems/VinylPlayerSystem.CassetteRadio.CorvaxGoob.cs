@@ -14,11 +14,6 @@ public sealed partial class VinylPlayerSystem
     /// </summary>
     private StationRadioMedia? _currentRadioMedia;
 
-    private bool TryStartCurrentRadioMedia(SoundPathSpecifier media)
-    {
-        return TryStartCurrentRadioMedia(media, out _);
-    }
-
     private bool TryStartCurrentRadioMedia(SoundPathSpecifier media, out StationRadioMedia radioMedia)
     {
         if (_currentRadioMedia != null)
@@ -67,12 +62,12 @@ public sealed partial class VinylPlayerSystem
     /// <summary>
     /// Tells every enabled personal cassette receiver to recreate its private stream from the broadcast clock.
     /// </summary>
-    private void PlayCassetteRadioMedia(SoundPathSpecifier media, float playOffset, TimeSpan broadcastStartTime)
+    private void PlayCassetteRadioMedia(SoundPathSpecifier media, float playOffset)
     {
         var cassetteQuery = EntityQueryEnumerator<CassetteRadioComponent>();
         while (cassetteQuery.MoveNext(out var cassette, out _))
         {
-            RaiseLocalEvent(cassette, new StationRadioMediaPlayedEvent(media, playOffset, broadcastStartTime));
+            RaiseLocalEvent(cassette, new StationRadioMediaPlayedEvent(media, playOffset));
         }
     }
 
