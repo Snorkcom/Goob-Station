@@ -25,7 +25,7 @@
     onState: on
     offState: off
     selectState: select
-  - type: SingleStreamAudioVolume
+  - type: SingleStreamAudioVolume # CorvaxGoob
   - type: Machine
     board: JukeboxCircuitBoard
   - type: Appearance
@@ -39,7 +39,7 @@
     interfaces:
         enum.JukeboxUiKey.Key:
           type: JukeboxBoundUserInterface
-        enum.SingleStreamAudioVolumeUiKey.Key:
+        enum.SingleStreamAudioVolumeUiKey.Key: # CorvaxGoob
           type: SingleStreamAudioVolumeBoundUserInterface
         enum.WiresUiKey.Key:
           type: WiresBoundUserInterface
