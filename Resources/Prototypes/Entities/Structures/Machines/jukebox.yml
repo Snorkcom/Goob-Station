@@ -25,6 +25,7 @@
     onState: on
     offState: off
     selectState: select
+  - type: SingleStreamAudioVolume
   - type: Machine
     board: JukeboxCircuitBoard
   - type: Appearance
@@ -38,6 +39,8 @@
     interfaces:
         enum.JukeboxUiKey.Key:
           type: JukeboxBoundUserInterface
+        enum.SingleStreamAudioVolumeUiKey.Key:
+          type: SingleStreamAudioVolumeBoundUserInterface
         enum.WiresUiKey.Key:
           type: WiresBoundUserInterface
   - type: WiresPanel

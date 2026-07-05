@@ -4,9 +4,9 @@ using Robust.Client.UserInterface.CustomControls;
 using Robust.Shared.Maths;
 using Range = Robust.Client.UserInterface.Controls.Range;
 
-namespace Content.Goobstation.Client.StationRadio;
+namespace Content.Goobstation.Client.Audio;
 
-public sealed class StationRadioVolumeWindow : DefaultWindow
+public sealed class SingleStreamAudioVolumeWindow : DefaultWindow
 {
     private const float VolumeTolerance = 0.001f;
 
@@ -16,16 +16,13 @@ public sealed class StationRadioVolumeWindow : DefaultWindow
     private float _pendingVolume = 1f;
     private float _committedVolume = 1f;
 
-    /// <summary>
-    /// Raised only after the user releases the slider so dragging does not spam volume messages.
-    /// </summary>
     public event Action<float>? OnVolumeCommitted;
 
     public bool IsDragging => _volumeSlider.Grabbed;
 
-    public StationRadioVolumeWindow()
+    public SingleStreamAudioVolumeWindow()
     {
-        Title = Loc.GetString("station-radio-volume-window-title");
+        Title = Loc.GetString("single-stream-audio-volume-window-title");
         MinSize = new Vector2(300, 96);
 
         var container = new BoxContainer
@@ -68,7 +65,7 @@ public sealed class StationRadioVolumeWindow : DefaultWindow
 
     private void OnSliderValueChanged(Range range)
     {
-        // Dragging is local-only; the server sees the new value when the slider is released.
+        // Dragging only previews the number in the window. The server gets one message on release.
         UpdateLabel(range.Value);
         _pendingVolume = Math.Clamp(range.Value / 100f, 0f, 1f);
     }
@@ -78,13 +75,14 @@ public sealed class StationRadioVolumeWindow : DefaultWindow
         if (MathF.Abs(_pendingVolume - _committedVolume) <= VolumeTolerance)
             return;
 
+        // Commit once so changing volume does not spam network/audio state updates.
         _committedVolume = _pendingVolume;
         OnVolumeCommitted?.Invoke(_pendingVolume);
     }
 
     private void UpdateLabel(float percent)
     {
-        _volumeLabel.Text = Loc.GetString("station-radio-volume-window-volume",
+        _volumeLabel.Text = Loc.GetString("single-stream-audio-volume-window-volume",
             ("volume", (int) MathF.Round(percent)));
     }
 }

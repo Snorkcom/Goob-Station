@@ -1,13 +1,13 @@
-using Content.Goobstation.Shared.StationRadio;
+using Content.Goobstation.Shared.Audio;
 using Robust.Client.UserInterface;
 
-namespace Content.Goobstation.Client.StationRadio;
+namespace Content.Goobstation.Client.Audio;
 
-public sealed class StationRadioVolumeBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
+public sealed class SingleStreamAudioVolumeBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
     private const float VolumeAckTolerance = 0.001f;
 
-    private StationRadioVolumeWindow? _window;
+    private SingleStreamAudioVolumeWindow? _window;
     private float? _awaitingVolumeAck;
 
     protected override void Open()
@@ -15,7 +15,7 @@ public sealed class StationRadioVolumeBoundUserInterface(EntityUid owner, Enum u
         base.Open();
 
         _awaitingVolumeAck = null;
-        _window = this.CreateWindow<StationRadioVolumeWindow>();
+        _window = this.CreateWindow<SingleStreamAudioVolumeWindow>();
         _window.OnVolumeCommitted += OnVolumeCommitted;
     }
 
@@ -23,7 +23,7 @@ public sealed class StationRadioVolumeBoundUserInterface(EntityUid owner, Enum u
     {
         base.UpdateState(state);
 
-        if (state is not StationRadioVolumeState cast)
+        if (state is not SingleStreamAudioVolumeState cast)
             return;
 
         if (_window == null || _window.IsDragging)
@@ -44,6 +44,19 @@ public sealed class StationRadioVolumeBoundUserInterface(EntityUid owner, Enum u
     private void OnVolumeCommitted(float volume)
     {
         _awaitingVolumeAck = volume;
-        SendPredictedMessage(new StationRadioSetVolumeMessage(volume));
+        // Apply immediately on this client so the audio does not jump while waiting for server state.
+        EntMan.System<SingleStreamAudioVolumeClientSystem>().ApplyPredictedVolume(Owner, volume);
+        SendPredictedMessage(new SingleStreamAudioVolumeSetMessage(volume));
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (!disposing || _window == null)
+            return;
+
+        _window.OnVolumeCommitted -= OnVolumeCommitted;
+        _window = null;
     }
 }

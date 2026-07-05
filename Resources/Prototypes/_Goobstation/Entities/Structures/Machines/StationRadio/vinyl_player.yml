@@ -42,10 +42,11 @@
   - type: WiresPanel
   - type: WiresVisuals
   - type: VinylPlayer
+  - type: SingleStreamAudioVolume
   - type: UserInterface # CorvaxGoob
     interfaces:
-      enum.StationRadioVolumeUiKey.Key:
-        type: StationRadioVolumeBoundUserInterface
+      enum.SingleStreamAudioVolumeUiKey.Key:
+        type: SingleStreamAudioVolumeBoundUserInterface
   - type: Machine
     board: VinylPlayerCircuitboard
   - type: ApcPowerReceiver

@@ -49,7 +49,8 @@
     channels:
     - RadioShow
   - type: StationRadioReceiver
+  - type: SingleStreamAudioVolume
   - type: UserInterface # CorvaxGoob
     interfaces:
-      enum.StationRadioVolumeUiKey.Key:
-        type: StationRadioVolumeBoundUserInterface
+      enum.SingleStreamAudioVolumeUiKey.Key:
+        type: SingleStreamAudioVolumeBoundUserInterface

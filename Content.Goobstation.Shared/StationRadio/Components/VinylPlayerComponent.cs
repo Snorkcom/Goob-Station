@@ -23,10 +23,4 @@ public sealed partial class VinylPlayerComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public AudioParams AudioParams = AudioParams.Default.WithVolume(3f).WithMaxDistance(4.5f);
-
-    /// <summary>
-    /// Music volume multiplier controlled from the radio volume UI.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public float Volume = 1f;
 }
