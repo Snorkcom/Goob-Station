@@ -12,15 +12,11 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Maths;
 using Robust.Shared.Network;
-using Robust.Shared.Utility;
 
 namespace Content.Goobstation.Shared.StationRadio.Systems;
 
 public sealed class VinylPlayerSystem : EntitySystem
 {
-    private static readonly SpriteSpecifier VolumeVerbIcon =
-        new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png"));
-
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
@@ -41,7 +37,7 @@ public sealed class VinylPlayerSystem : EntitySystem
     private void OnPowerChanged(EntityUid uid, VinylPlayerComponent comp, PowerChangedEvent args)
     {
         if (!args.Powered)
-            _ui.CloseUi(uid, StationRadioVolumeUiKey.Key);
+            StationRadioVolumeHelpers.CloseVolumeUiIfUnpowered(uid, _power, _ui);
 
         if (comp.SoundEntity != null && !args.Powered)
         {
@@ -153,21 +149,7 @@ public sealed class VinylPlayerSystem : EntitySystem
 
     private void OnGetVerbs(Entity<VinylPlayerComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
     {
-        if (!args.CanAccess || !args.CanInteract)
-            return;
-
-        if (!_power.IsPowered(ent.Owner))
-            return;
-
-        var user = args.User;
-        args.Verbs.Add(new AlternativeVerb
-        {
-            Text = Loc.GetString("station-radio-volume-verb"),
-            Icon = VolumeVerbIcon,
-            // Keep the item-slot eject verb above volume in alt-click priority.
-            Priority = -1,
-            Act = () => OpenVolumeUi(ent, user),
-        });
+        StationRadioVolumeHelpers.AddVolumeVerb(ent, ref args, _power, OpenVolumeUi);
     }
 
     private void OnSetVolume(Entity<VinylPlayerComponent> ent, ref StationRadioSetVolumeMessage args)
@@ -177,7 +159,7 @@ public sealed class VinylPlayerSystem : EntitySystem
 
         if (!_power.IsPowered(ent.Owner))
         {
-            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            StationRadioVolumeHelpers.CloseVolumeUiIfUnpowered(ent.Owner, _power, _ui);
             return;
         }
 
@@ -187,24 +169,12 @@ public sealed class VinylPlayerSystem : EntitySystem
         if (ent.Comp.SoundEntity != null)
             _audio.SetVolume(ent.Comp.SoundEntity, GetVinylVolume(ent.Comp));
 
-        UpdateVolumeUi(ent);
+        StationRadioVolumeHelpers.UpdateVolumeUi(ent.Owner, ent.Comp.Volume, _ui);
     }
 
     private void OpenVolumeUi(Entity<VinylPlayerComponent> ent, EntityUid user)
     {
-        if (!_power.IsPowered(ent.Owner))
-        {
-            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
-            return;
-        }
-
-        UpdateVolumeUi(ent);
-        _ui.TryOpenUi(ent.Owner, StationRadioVolumeUiKey.Key, user);
-    }
-
-    private void UpdateVolumeUi(Entity<VinylPlayerComponent> ent)
-    {
-        _ui.SetUiState(ent.Owner, StationRadioVolumeUiKey.Key, new StationRadioVolumeState(ent.Comp.Volume));
+        StationRadioVolumeHelpers.OpenVolumeUi(ent.Owner, user, ent.Comp.Volume, _power, _ui);
     }
 
     /// <summary>

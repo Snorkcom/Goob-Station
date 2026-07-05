@@ -8,15 +8,11 @@ using Content.Shared.UserInterface;
 using Content.Shared.Verbs;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Maths;
-using Robust.Shared.Utility;
 
 namespace Content.Goobstation.Shared.StationRadio.Systems;
 
 public sealed class StationRadioReceiverSystem : EntitySystem
 {
-    private static readonly SpriteSpecifier VolumeVerbIcon =
-        new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png"));
-
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
@@ -35,7 +31,7 @@ public sealed class StationRadioReceiverSystem : EntitySystem
     private void OnPowerChanged(EntityUid uid, StationRadioReceiverComponent comp, PowerChangedEvent args)
     {
         if (!args.Powered)
-            _ui.CloseUi(uid, StationRadioVolumeUiKey.Key);
+            StationRadioVolumeHelpers.CloseVolumeUiIfUnpowered(uid, _power, _ui);
 
         if (comp.SoundEntity == null)
             return;
@@ -79,21 +75,7 @@ public sealed class StationRadioReceiverSystem : EntitySystem
 
     private void OnGetVerbs(Entity<StationRadioReceiverComponent> ent, ref GetVerbsEvent<AlternativeVerb> args)
     {
-        if (!args.CanAccess || !args.CanInteract)
-            return;
-
-        if (!_power.IsPowered(ent.Owner))
-            return;
-
-        var user = args.User;
-        args.Verbs.Add(new AlternativeVerb
-        {
-            Text = Loc.GetString("station-radio-volume-verb"),
-            Icon = VolumeVerbIcon,
-            // Keep other default alternative verbs above volume in quick alt-click priority.
-            Priority = -1,
-            Act = () => OpenVolumeUi(ent, user),
-        });
+        StationRadioVolumeHelpers.AddVolumeVerb(ent, ref args, _power, OpenVolumeUi);
     }
 
     private void OnSetVolume(Entity<StationRadioReceiverComponent> ent, ref StationRadioSetVolumeMessage args)
@@ -103,7 +85,7 @@ public sealed class StationRadioReceiverSystem : EntitySystem
 
         if (!_power.IsPowered(ent.Owner))
         {
-            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
+            StationRadioVolumeHelpers.CloseVolumeUiIfUnpowered(ent.Owner, _power, _ui);
             return;
         }
 
@@ -113,24 +95,12 @@ public sealed class StationRadioReceiverSystem : EntitySystem
         if (ent.Comp.SoundEntity != null)
             SetReceiverAudible(ent.Comp, _power.IsPowered(ent.Owner) && ent.Comp.Active);
 
-        UpdateVolumeUi(ent);
+        StationRadioVolumeHelpers.UpdateVolumeUi(ent.Owner, ent.Comp.Volume, _ui);
     }
 
     private void OpenVolumeUi(Entity<StationRadioReceiverComponent> ent, EntityUid user)
     {
-        if (!_power.IsPowered(ent.Owner))
-        {
-            _ui.CloseUi(ent.Owner, StationRadioVolumeUiKey.Key);
-            return;
-        }
-
-        UpdateVolumeUi(ent);
-        _ui.TryOpenUi(ent.Owner, StationRadioVolumeUiKey.Key, user);
-    }
-
-    private void UpdateVolumeUi(Entity<StationRadioReceiverComponent> ent)
-    {
-        _ui.SetUiState(ent.Owner, StationRadioVolumeUiKey.Key, new StationRadioVolumeState(ent.Comp.Volume));
+        StationRadioVolumeHelpers.OpenVolumeUi(ent.Owner, user, ent.Comp.Volume, _power, _ui);
     }
 
     /// <summary>
