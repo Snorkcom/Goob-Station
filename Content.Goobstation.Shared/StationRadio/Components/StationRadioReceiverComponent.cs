@@ -23,4 +23,10 @@ public sealed partial class StationRadioReceiverComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public AudioParams DefaultParams = AudioParams.Default.WithVolume(3.5f).WithMaxDistance(8f); // 8 is just the edge of the screen usually
+
+    /// <summary>
+    /// Music volume multiplier controlled from the radio volume UI.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float Volume = 1f;
 }
