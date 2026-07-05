@@ -6,6 +6,7 @@ using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Content.Shared.UserInterface;
 using Content.Shared.Verbs;
+using Robust.Shared.Audio.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Maths;
 
@@ -51,11 +52,17 @@ public sealed class StationRadioReceiverSystem : EntitySystem
     private void OnMediaPlayed(EntityUid uid, StationRadioReceiverComponent comp, StationRadioMediaPlayedEvent args)
     {
         var audio = _audio.PlayPredicted(args.MediaPlayed, uid, uid, comp.DefaultParams
-            .WithVolume(GetReceiverVolume(comp)));
+            .WithVolume(GetReceiverVolume(comp))
+            .WithPlayOffset(args.PlayOffset));
         if (audio == null)
             return;
 
         comp.SoundEntity = audio.Value.Entity;
+        // WithPlayOffset starts the client source; SetPlaybackPosition also fixes server AudioStart for late PVS.
+        _audio.SetPlaybackPosition(new Entity<AudioComponent?>(audio.Value.Entity, audio.Value.Component), args.PlayOffset);
+
+        EnsureComp<RadioSyncedAudioComponent>(audio.Value.Entity);
+
         Dirty(uid, comp);
 
         if (!_power.IsPowered(uid) || !comp.Active)

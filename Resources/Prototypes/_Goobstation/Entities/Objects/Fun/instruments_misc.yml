@@ -34,12 +34,21 @@
     - neck
   - type: ActivatableUI
     inHandsOnly: false
+  # CorvaxGoob Start
+  - type: CassetteRadio
+  - type: UserInterface
+    interfaces:
+      enum.InstrumentUiKey.Key:
+        type: InstrumentBoundUserInterface
+      enum.StationRadioVolumeUiKey.Key:
+        type: StationRadioVolumeBoundUserInterface
+  # CorvaxGoob End
 
 - type: entity
   parent: [BaseCassette] # CorvaxGoob-Contraband : deleted contra label
   id: BloodredCassette
   name: bloodred cassette player
-  description: The least subtle way to enjoy your favorite tunes.
+  description: The least subtle way to enjoy your favorite tunes. Radio is already built-in! # CorvaxGoob Edit
   components:
   - type: Sprite
     sprite: _Goobstation/Objects/Fun/bloodred_cassette_player.rsi
@@ -54,7 +63,7 @@
   parent: BaseCassette
   id: CrewCassette
   name: cassette player
-  description: Regular old cassette player to enjoy your tunes on the go.
+  description: Regular old cassette player to enjoy your tunes on the go. Radio is already built-in! # CorvaxGoob Edit
   components:
     - type: Sprite
       sprite: _Goobstation/Objects/Fun/crew_cassette_player.rsi
@@ -69,7 +78,7 @@
   parent: BaseCassette
   id: ExecutiveCassette
   name: executive cassette player
-  description: Perfect to make you look like you do mergers and acquisitions.
+  description: Perfect to make you look like you do mergers and acquisitions. Radio is already built-in! # CorvaxGoob Edit
   components:
     - type: Sprite
       sprite: _Goobstation/Objects/Fun/executive_cassette_player.rsi

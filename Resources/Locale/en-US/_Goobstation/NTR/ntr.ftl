@@ -70,7 +70,9 @@ ntr-executive-combatmed-name = Combat medkit
 ntr-executive-combatmed-desc = For when you need more than just basic first aid supplies.
 
 ntr-executive-cassette-name = Executive cassette player
+# CorvaxGoob Edit
 ntr-executive-cassette-desc = A cassette player to listen to tunes while you close important deals.
+    Radio is already built-in!
 
 ntr-executive-cooler-name = Premium water (?) cooler
 ntr-executive-cooler-desc = Made from the finest 24-karat hardened whiskey in the sector. Its shiny and golden, just like its insides. Comes with 500u of whiskey. Every fine executive has one of these in their room.

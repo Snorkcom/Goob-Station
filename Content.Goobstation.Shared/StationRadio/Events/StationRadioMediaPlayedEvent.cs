@@ -7,8 +7,15 @@ namespace Content.Goobstation.Shared.StationRadio.Events;
 public sealed class StationRadioMediaPlayedEvent : EntityEventArgs
 {
     public SoundPathSpecifier MediaPlayed { get; }
-    public StationRadioMediaPlayedEvent(SoundPathSpecifier Media)
+
+    /// <summary>
+    /// Offset from the station radio clock used to align late-created spatial audio streams.
+    /// </summary>
+    public float PlayOffset { get; }
+
+    public StationRadioMediaPlayedEvent(SoundPathSpecifier media, float playOffset = 0f)
     {
-        MediaPlayed = Media;
+        MediaPlayed = media;
+        PlayOffset = playOffset;
     }
 }
