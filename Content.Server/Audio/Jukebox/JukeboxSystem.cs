@@ -43,7 +43,7 @@
 
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
-using Content.Goobstation.Shared.Audio;
+using Content.Goobstation.Shared.Audio; // CorvaxGoob
 using Content.Shared.Audio.Jukebox;
 using Content.Shared.Power;
 using Robust.Server.GameObjects;
@@ -58,11 +58,11 @@ namespace Content.Server.Audio.Jukebox;
 
 public sealed class JukeboxSystem : SharedJukeboxSystem
 {
-    private const float JukeboxBaseVolume = -6f;
+    private const float JukeboxBaseVolume = -6f; // CorvaxGoob
 
     [Dependency] private readonly IPrototypeManager _protoManager = default!;
     [Dependency] private readonly AppearanceSystem _appearanceSystem = default!;
-    [Dependency] private readonly SingleStreamAudioVolumeSystem _volume = default!;
+    [Dependency] private readonly SingleStreamAudioVolumeSystem _volume = default!; // CorvaxGoob
 
     public override void Initialize()
     {
@@ -91,11 +91,11 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
         if (Exists(component.AudioStream))
         {
             Audio.SetState(component.AudioStream, AudioState.Playing);
-            _volume.SetStream(uid, component.AudioStream, JukeboxBaseVolume);
+            _volume.SetStream(uid, component.AudioStream, JukeboxBaseVolume); // CorvaxGoob
         }
         else
         {
-            _volume.ClearStream(uid, component.AudioStream);
+            _volume.ClearStream(uid, component.AudioStream); // CorvaxGoob
             component.AudioStream = Audio.Stop(component.AudioStream);
 
             if (string.IsNullOrEmpty(component.SelectedSongId) ||
@@ -104,9 +104,11 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
                 return;
             }
 
-            var audioParams = AudioParams.Default.WithMaxDistance(10f).WithVolume(JukeboxBaseVolume); // Goobstation - the jukebox doesn't break your ears anymore
+            // CorvaxGoob Edit Start
+            var audioParams = AudioParams.Default.WithMaxDistance(10f).WithVolume(JukeboxBaseVolume);
             component.AudioStream = Audio.PlayPvs(jukeboxProto.Path, uid, _volume.WithVolume(uid, audioParams))?.Entity;
             _volume.SetStream(uid, component.AudioStream, JukeboxBaseVolume);
+            // CorvaxGoob End
             Dirty(uid, component);
         }
     }
@@ -143,7 +145,7 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
     private void Stop(Entity<JukeboxComponent> entity)
     {
         Audio.SetState(entity.Comp.AudioStream, AudioState.Stopped);
-        _volume.ClearStream(entity.Owner, entity.Comp.AudioStream);
+        _volume.ClearStream(entity.Owner, entity.Comp.AudioStream); // CorvaxGoob
         Dirty(entity);
     }
 
@@ -154,7 +156,7 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
             component.SelectedSongId = args.SongId;
             DirectSetVisualState(uid, JukeboxVisualState.Select);
             component.Selecting = true;
-            _volume.ClearStream(uid, component.AudioStream);
+            _volume.ClearStream(uid, component.AudioStream); // CorvaxGoob
             component.AudioStream = Audio.Stop(component.AudioStream);
         }
 
@@ -184,7 +186,7 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
 
     private void OnComponentShutdown(EntityUid uid, JukeboxComponent component, ComponentShutdown args)
     {
-        _volume.ClearStream(uid, component.AudioStream);
+        _volume.ClearStream(uid, component.AudioStream); // CorvaxGoob
         component.AudioStream = Audio.Stop(component.AudioStream);
     }
 

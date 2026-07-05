@@ -1,6 +1,6 @@
 using Content.Goobstation.Shared.StationRadio.Components;
 using Content.Goobstation.Shared.StationRadio.Events;
-using Content.Goobstation.Shared.Audio;
+using Content.Goobstation.Shared.Audio; // CorvaxGoob
 using Content.Shared.Destructible;
 using Content.Shared.DeviceLinking;
 using Content.Shared.Power;
@@ -16,7 +16,7 @@ public sealed class VinylPlayerSystem : EntitySystem
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
-    [Dependency] private readonly SingleStreamAudioVolumeSystem _volume = default!;
+    [Dependency] private readonly SingleStreamAudioVolumeSystem _volume = default!; // CorvaxGoob
 
     public override void Initialize()
     {
@@ -31,9 +31,9 @@ public sealed class VinylPlayerSystem : EntitySystem
     {
         if (comp.SoundEntity != null && !args.Powered)
         {
-            _volume.ClearStream(uid, comp.SoundEntity);
+            _volume.ClearStream(uid, comp.SoundEntity);  // CorvaxGoob
             comp.SoundEntity = _audio.Stop(comp.SoundEntity);
-            Dirty(uid, comp);
+            Dirty(uid, comp);  // CorvaxGoob
         }
 
         if (!CheckForRadioRig(uid))
@@ -63,12 +63,14 @@ public sealed class VinylPlayerSystem : EntitySystem
         if (!TryComp(args.Entity, out VinylComponent? vinylcomp) || _net.IsClient || vinylcomp.Song == null || !_power.IsPowered(uid))
             return;
 
-        var audio = _audio.PlayPredicted(vinylcomp.Song, uid, uid, _volume.WithVolume(uid, comp.AudioParams));
+        var audio = _audio.PlayPredicted(vinylcomp.Song, uid, uid, _volume.WithVolume(uid, comp.AudioParams)); // CorvaxGoob Edit
         if (audio != null)
         {
             comp.SoundEntity = audio.Value.Entity;
+            // CorvaxGoob Start
             _volume.SetStream(uid, comp.SoundEntity, comp.AudioParams.Volume);
             Dirty(uid, comp);
+            // CorvaxGoob End
         }
 
         // Used by VinylSummonRuleSystem
@@ -90,9 +92,11 @@ public sealed class VinylPlayerSystem : EntitySystem
     {
         if (comp.SoundEntity != null)
         {
+            // CorvaxGoob Start
             _volume.ClearStream(uid, comp.SoundEntity);
             comp.SoundEntity = _audio.Stop(comp.SoundEntity);
             Dirty(uid, comp);
+            // CorvaxGoob End
         }
 
         // Used by VinylSummonRuleSystem
@@ -138,5 +142,4 @@ public sealed class VinylPlayerSystem : EntitySystem
         }
         return false;
     }
-
 }

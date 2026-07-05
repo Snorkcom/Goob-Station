@@ -1,4 +1,4 @@
-using Robust.Shared.Audio;
+using Robust.Shared.Audio; // CorvaxGoob
 using Robust.Shared.GameStates;
 
 namespace Content.Goobstation.Shared.StationRadio.Components;
@@ -19,7 +19,7 @@ public sealed partial class VinylPlayerComponent : Component
     public EntityUid? SoundEntity;
 
     /// <summary>
-    /// Default local audio params for the record player.
+    /// CorvaxGoob. Default local audio params for the record player.
     /// </summary>
     [DataField, AutoNetworkedField]
     public AudioParams AudioParams = AudioParams.Default.WithVolume(3f).WithMaxDistance(4.5f);
