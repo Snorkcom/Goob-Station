@@ -39,7 +39,7 @@ public sealed partial class CassetteRadioSystem
             }
             else
             {
-                SetMediaGain(ent, true);
+                ApplyMediaVolume(ent);
                 return;
             }
         }
@@ -104,15 +104,12 @@ public sealed partial class CassetteRadioSystem
         EnsureComp<RadioSyncedAudioComponent>(audio.Value.Entity);
     }
 
-    private void SetMediaGain(Entity<CassetteRadioComponent> ent, bool audible)
+    private void ApplyMediaVolume(Entity<CassetteRadioComponent> ent)
     {
         if (ent.Comp.SoundEntity == null)
             return;
 
-        if (audible)
-            _audio.SetVolume(ent.Comp.SoundEntity, GetRadioVolume(ent.Comp));
-        else
-            _audio.SetGain(ent.Comp.SoundEntity, 0f);
+        _audio.SetVolume(ent.Comp.SoundEntity, GetRadioVolume(ent.Comp));
     }
 
     private static float GetRadioVolume(CassetteRadioComponent comp)

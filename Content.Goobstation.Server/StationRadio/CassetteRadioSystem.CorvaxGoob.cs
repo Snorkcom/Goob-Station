@@ -122,7 +122,7 @@ public sealed partial class CassetteRadioSystem : EntitySystem
         ent.Comp.Volume = MathHelper.Clamp(args.Volume, 0f, 1f);
 
         if (ent.Comp.Active && TryGetWearerActor(ent, out _, out _))
-            SetMediaGain(ent, true);
+            ApplyMediaVolume(ent);
 
         UpdateVolumeUi(ent);
     }
