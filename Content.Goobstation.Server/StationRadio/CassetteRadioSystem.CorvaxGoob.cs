@@ -16,7 +16,6 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Maths;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
-using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
 namespace Content.Goobstation.Server.StationRadio;
@@ -32,11 +31,6 @@ public sealed partial class CassetteRadioSystem : EntitySystem
     private static readonly SpriteSpecifier VolumeVerbIcon =
         new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/settings.svg.192dpi.png"));
 
-    private static readonly SpriteSpecifier ResyncRadioVerbIcon =
-        new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/refresh.svg.192dpi.png"));
-
-    private static readonly TimeSpan ResyncCooldown = TimeSpan.FromSeconds(5);
-
     /// <summary>
     /// Personal radio is audible only while the cassette player is immediately carried by the listener.
     /// Hands are included by InventorySystem.GetHandOrInventoryEntities.
@@ -50,7 +44,6 @@ public sealed partial class CassetteRadioSystem : EntitySystem
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly VinylPlayerSystem _vinylPlayer = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -86,17 +79,6 @@ public sealed partial class CassetteRadioSystem : EntitySystem
                 : EnableRadioVerbIcon,
             Act = () => SetEnabled(ent, !ent.Comp.Active, user),
         });
-
-        if (CanResyncRadio(ent, user))
-        {
-            args.Verbs.Add(new AlternativeVerb
-            {
-                Text = Loc.GetString("cassette-radio-verb-resync"),
-                Icon = ResyncRadioVerbIcon,
-                Priority = -2,
-                Act = () => ResyncRadio(ent, user),
-            });
-        }
 
         if (IsCarriedBy(user, ent.Owner))
         {

@@ -50,35 +50,6 @@ public sealed partial class CassetteRadioSystem
         StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media));
     }
 
-    private bool CanResyncRadio(Entity<CassetteRadioComponent> ent, EntityUid user)
-    {
-        return ent.Comp.Active
-            && IsCarriedBy(user, ent.Owner)
-            && _timing.CurTime >= ent.Comp.NextResyncTime
-            && _vinylPlayer.TryGetCurrentRadioMedia(out _);
-    }
-
-    private void ResyncRadio(Entity<CassetteRadioComponent> ent, EntityUid user)
-    {
-        if (!ent.Comp.Active || !IsCarriedBy(user, ent.Owner) || !TryComp(user, out ActorComponent? actor))
-            return;
-
-        if (_timing.CurTime < ent.Comp.NextResyncTime)
-            return;
-
-        if (!_vinylPlayer.TryGetCurrentRadioMedia(out var media))
-            return;
-
-        ent.Comp.NextResyncTime = _timing.CurTime + ResyncCooldown;
-        ent.Comp.Wearer = user;
-        StopMedia(ent);
-        StartMedia(ent, media.Media, _vinylPlayer.GetCurrentRadioMediaOffset(media));
-        RefreshRadioReceiver(ent);
-
-        RaiseNetworkEvent(new RadioPlaybackResyncEvent(), actor.PlayerSession);
-        _popup.PopupEntity(Loc.GetString("cassette-radio-popup-resynced"), ent, user);
-    }
-
     /// <summary>
     /// Recreates personal global audio after the client gets a fresh player session.
     /// </summary>
