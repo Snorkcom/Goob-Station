@@ -316,9 +316,17 @@ namespace Content.Server.VendingMachines
             }
 
             // Vend a stored returned entity first; spawn a new prototype only if none are available.
-            var ent = TryTakeReturnedItemForVend(vendComponent, vendComponent.NextItemToEject, spawnCoordinates, out var returned)
+            var usedReturnedItem = TryTakeReturnedItemForVend(vendComponent, vendComponent.NextItemToEject, spawnCoordinates, out var returned); // CorvaxGoob - Vending Return
+            var ent = usedReturnedItem
                 ? returned
                 : Spawn(vendComponent.NextItemToEject, spawnCoordinates); // CorvaxGoob - Vending Return
+
+            if (usedReturnedItem) // CorvaxGoob - Vending Return
+            {
+                Popup.PopupEntity(Loc.GetString("vending-machine-component-vend-returned-item",
+                    ("item", ent),
+                    ("target", uid)), uid, PopupType.Medium);
+            }
 
             if (vendComponent.ThrowNextItem)
             {

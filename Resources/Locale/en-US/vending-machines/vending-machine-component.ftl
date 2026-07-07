@@ -19,4 +19,5 @@ vending-machine-component-returned-items-examine = Contains returned items.
 vending-machine-component-remove-returned-items = Remove returned items
 vending-machine-component-remove-returned-items-panel-closed = Open the maintenance panel first.
 vending-machine-component-remove-returned-items-no-power = The vending machine has no power.
+vending-machine-component-vend-returned-item = { THE($target) } dispenses a previously returned { THE($item) }.
 # CorvaxGoob End

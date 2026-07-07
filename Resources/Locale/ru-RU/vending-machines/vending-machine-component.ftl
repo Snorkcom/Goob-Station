@@ -10,4 +10,5 @@ vending-machine-component-returned-items-examine = Содержит возвра
 vending-machine-component-remove-returned-items = Вынуть возвращённые предметы
 vending-machine-component-remove-returned-items-panel-closed = Сначала откройте техническую панель.
 vending-machine-component-remove-returned-items-no-power = Автомат обесточен.
+vending-machine-component-vend-returned-item = { $target } выдаёт ранее возвращённый предмет: { $item }.
 # CorvaxGoob End
