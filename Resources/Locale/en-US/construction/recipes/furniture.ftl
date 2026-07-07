@@ -9,3 +9,5 @@ construction-recipe-table-fancy-purple = fancy table (purple)
 construction-recipe-table-fancy-pink = fancy table (pink)
 construction-recipe-table-fancy-red = fancy table (red)
 construction-recipe-table-fancy-white = fancy table (white)
+# CorvaxGoob
+construction-recipe-carved-wood-medallion = carved wood medallion

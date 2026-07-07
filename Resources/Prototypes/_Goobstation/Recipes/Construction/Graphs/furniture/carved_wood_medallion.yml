@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: 2026 Snorkcom <Snorkcom@users.noreply.github.com>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# CorvaxGoob Start
+- type: constructionGraph
+  id: CarvedWoodMedallionGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: medallion
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: WoodPlank
+              amount: 3
+              doAfter: 3
+    - node: medallion
+      entity: CarvedWoodMedallion
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+          steps:
+            - tool: Screwing
+              doAfter: 2
+# CorvaxGoob End

@@ -26,3 +26,18 @@
   canBuildInImpassable: true
   conditions:
     - !type:TileNotBlocked
+
+# CorvaxGoob Start
+- type: construction
+  id: CarvedWoodMedallion
+  name: construction-recipe-carved-wood-medallion
+  graph: CarvedWoodMedallionGraph
+  targetNode: medallion
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+# CorvaxGoob End

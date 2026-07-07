@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: 2026 GoobBot <uristmchands@proton.me>
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# CorvaxGoob Start
+- type: entity
+  parent: BaseSign
+  id: CarvedWoodMedallion
+  name: carved wood medallion
+  description: A hand-carved wooden display shield for a single cherished trophy.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Structures/Furniture/carved_wood_medallion.rsi
+    drawdepth: WallMountedItems
+    snapCardinals: false
+    noRot: true
+    layers:
+    - state: medallion
+    - map: ["display"]
+  - type: Transform
+    anchored: true
+  - type: Construction
+    graph: CarvedWoodMedallionGraph
+    node: medallion
+  - type: Damageable
+    damageContainer: StructuralInorganic
+    damageModifierSet: Wood
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 35
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: WoodDestroy
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: ItemSlots
+    slots:
+      display_slot:
+        ejectOnBreak: true
+        whitelist:
+          components:
+          - Item
+        blacklist:
+          sizes:
+          - Large
+          - Huge
+          - Ginormous
+  - type: ItemSlotRenderer
+    renderTargetSize: 32,32
+    mapping:
+      display_slot: display
+  - type: ContainerContainer
+    containers:
+      display_slot: !type:ContainerSlot {}
+  - type: PhysicalComposition
+    materialComposition:
+      Wood: 300
+  - type: StaticPrice
+    price: 15
+  - type: Tag
+    tags:
+    - Structure
+    - Wooden
+# CorvaxGoob End
