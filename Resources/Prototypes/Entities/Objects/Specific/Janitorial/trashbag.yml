@@ -56,6 +56,8 @@
       tags:
         - Brain
         - Head
+      components:
+        - Cybernetics
   - type: UseDelay
     delay: 0.5
   - type: Tag

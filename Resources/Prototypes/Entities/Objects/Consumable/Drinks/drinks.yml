@@ -299,8 +299,6 @@
       sprite: Objects/Consumable/Drinks/glass_clear.rsi
       state: icon
   - type: TransformableContainer
-  - type: TrashOnSolutionEmpty # CorvaxGoob
-    solution: drink
 
 - type: entity
   name: coupe glass
@@ -326,8 +324,6 @@
     - type: SolutionContainerVisuals
       maxFillLevels: 5
       fillBaseName: fill
-    - type: TrashOnSolutionEmpty # CorvaxGoob
-      solution: drink
 
 - type: entity
   parent: DrinkGlass
