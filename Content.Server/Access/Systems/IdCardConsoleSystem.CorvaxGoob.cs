@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Corvax-Forge
+// SPDX-FileCopyrightText: 2026 Snorkcom <Snorkcom@users.noreply.github.com>
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -64,15 +64,15 @@ public sealed partial class IdCardConsoleSystem
         if (args.Actor is not { Valid: true } player)
             return;
 
-        // Balance hook: route this through a do-after if bulk access changes need a delay later.
-        // var doAfter = new DoAfterArgs(EntityManager, player, TimeSpan.FromSeconds(3),
-        //     new IdCardConsoleBulkAccessDoAfterEvent(args.Action), uid, target: component.TargetIdSlot.Item, used: uid)
-        // {
-        //     BreakOnMove = true,
-        //     BreakOnDamage = true,
-        // };
-        // _doAfter.TryStartDoAfter(doAfter);
-        // return;
+        /* // Balance hook: route this through a do-after if bulk access changes need a delay later.
+        var doAfter = new DoAfterArgs(EntityManager, player, TimeSpan.FromSeconds(3),
+            new IdCardConsoleBulkAccessDoAfterEvent(args.Action), uid, target: component.TargetIdSlot.Item, used: uid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+        };
+        _doAfter.TryStartDoAfter(doAfter);
+            return;*/
 
         TryApplyBulkAccessAction(uid, args.Action, player, component);
 
