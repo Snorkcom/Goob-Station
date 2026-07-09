@@ -48,7 +48,7 @@ public sealed class CrewManifestListing : BoxContainer
         _spriteSystem = _entitySystem.GetEntitySystem<SpriteSystem>();
     }
 
-    // CorvaxGoob Start
+    // CorvaxGoob Edit Start
     public void AddCrewManifestEntries(CrewManifestEntries entries)
     {
         _entries = entries;
@@ -59,7 +59,6 @@ public sealed class CrewManifestListing : BoxContainer
     {
         Refresh();
     }
-    // CorvaxGoob End
 
     private void Refresh()
     {
@@ -69,7 +68,6 @@ public sealed class CrewManifestListing : BoxContainer
         if (_entries == null)
             return;
 
-        // CorvaxGoob Start
         var filter = _searchBar?.Text.Trim();
         var entryDict = new Dictionary<DepartmentPrototype, List<CrewManifestEntry>>();
         var hasEntries = false;
@@ -101,7 +99,7 @@ public sealed class CrewManifestListing : BoxContainer
             });
             return;
         }
-        // CorvaxGoob End
+    // CorvaxGoob End
 
         var entryList = new List<(DepartmentPrototype section, List<CrewManifestEntry> entries)>();
 
