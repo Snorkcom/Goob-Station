@@ -263,3 +263,4 @@ public sealed partial class InteractionVerbPrototype : IPrototype, IInheritingPr
         None = 0
     }
 }
+
