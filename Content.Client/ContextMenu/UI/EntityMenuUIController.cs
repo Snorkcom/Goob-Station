@@ -108,6 +108,7 @@ namespace Content.Client.ContextMenu.UI
         [UISystemDependency] private readonly CombatModeSystem _combatMode = default!;
 
         private bool _updating;
+        private ContextMenuPopup? _pinnedSubMenu; // CorvaxGoob
 
         /// <summary>
         ///     This maps the currently displayed entities to the actual GUI elements.
@@ -122,6 +123,7 @@ namespace Content.Client.ContextMenu.UI
             _updating = true;
             _cfg.OnValueChanged(CCVars.EntityMenuGroupingType, OnGroupingChanged, true);
             _context.OnContextKeyEvent += OnKeyBindDown;
+            _context.OnContextClosed += ClearPinnedSubMenu; // CorvaxGoob
 
             CommandBinds.Builder
                 .Bind(EngineKeyFunctions.UseSecondary,  new PointerInputCmdHandler(HandleOpenEntityMenu, outsidePrediction: true))
@@ -134,6 +136,10 @@ namespace Content.Client.ContextMenu.UI
             Elements.Clear();
             _cfg.UnsubValueChanged(CCVars.EntityMenuGroupingType, OnGroupingChanged);
             _context.OnContextKeyEvent -= OnKeyBindDown;
+            // CorvaxGoob Start
+            _context.OnContextClosed -= ClearPinnedSubMenu;
+            ClearPinnedSubMenu();
+            // CorvaxGoob End
             CommandBinds.Unregister<EntityMenuUIController>();
         }
 
@@ -142,6 +148,8 @@ namespace Content.Client.ContextMenu.UI
         /// </summary>
         public void OpenRootMenu(List<EntityUid> entities)
         {
+            ClearPinnedSubMenu(); // CorvaxGoob Start
+
             // close any old menus first.
             if (_context.RootMenu.Visible)
                 _context.Close();
@@ -163,6 +171,17 @@ namespace Content.Client.ContextMenu.UI
         {
             if (element is not EntityMenuElement entityElement)
                 return;
+
+            // CorvaxGoob Start
+            if (args.Function == ContentKeyFunctions.MouseMiddle &&
+                entityElement is { Entity: null, SubMenu: not null })
+            {
+                _pinnedSubMenu = entityElement.SubMenu;
+                _context.OpenSubMenu(entityElement);
+                args.Handle();
+                return;
+            }
+            // CorvaxGoob End
 
             // get an entity associated with this element
             var entity = entityElement.Entity;
@@ -211,25 +230,29 @@ namespace Content.Client.ContextMenu.UI
                 }
 
                 // CorvaxGoob Edit Start
-                if (ShouldCloseAfterEntityMenuAction(element, args.Function))
-                    _context.Close();
-                else
+                if (CanKeepPinnedSubMenuOpen(element, args.Function))
                     RemoveEntity(entity.Value);
+                else
+                    _context.Close();
                 // CorvaxGoob End
-
                 args.Handle();
             }
         }
-        // CorvaxGoob Edit Start
-        private bool ShouldCloseAfterEntityMenuAction(ContextMenuElement element, BoundKeyFunction function)
+
+        // CorvaxGoob Start
+        private bool CanKeepPinnedSubMenuOpen(ContextMenuElement element, BoundKeyFunction function)
         {
             if (function != EngineKeyFunctions.Use &&
                 function != ContentKeyFunctions.ActivateItemInWorld &&
                 function != ContentKeyFunctions.AltActivateItemInWorld)
-                return true;
+                return false;
 
-            // Keep grouped entity submenus open for repeated tool interactions, such as refining several glass shards.
-            return element.ParentMenu == null || element.ParentMenu == _context.RootMenu;
+            return element.ParentMenu == _pinnedSubMenu;
+        }
+
+        private void ClearPinnedSubMenu()
+        {
+            _pinnedSubMenu = null;
         }
         // CorvaxGoob End
 
