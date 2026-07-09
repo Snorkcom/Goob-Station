@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-
+/* CorvaxGoob-Deleted
 using Content.Goobstation.Common.ServerCurrency;
 using Content.Goobstation.Shared.ServerCurrency;
 using Content.Goobstation.Shared.ServerCurrency.UI;
@@ -61,3 +61,4 @@ namespace Content.Goobstation.Server.ServerCurrency.UI
         }
     }
 }
+*/
