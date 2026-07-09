@@ -210,15 +210,17 @@ namespace Content.Client.ContextMenu.UI
                     inputSys.HandleInputCommand(session, func, message);
                 }
 
+                // CorvaxGoob Edit Start
                 if (ShouldCloseAfterEntityMenuAction(element, args.Function))
                     _context.Close();
                 else
                     RemoveEntity(entity.Value);
+                // CorvaxGoob End
 
                 args.Handle();
             }
         }
-
+        // CorvaxGoob Edit Start
         private bool ShouldCloseAfterEntityMenuAction(ContextMenuElement element, BoundKeyFunction function)
         {
             if (function != EngineKeyFunctions.Use &&
@@ -229,6 +231,7 @@ namespace Content.Client.ContextMenu.UI
             // Keep grouped entity submenus open for repeated tool interactions, such as refining several glass shards.
             return element.ParentMenu == null || element.ParentMenu == _context.RootMenu;
         }
+        // CorvaxGoob End
 
         private bool HandleOpenEntityMenu(in PointerInputCmdHandler.PointerInputCmdArgs args)
         {

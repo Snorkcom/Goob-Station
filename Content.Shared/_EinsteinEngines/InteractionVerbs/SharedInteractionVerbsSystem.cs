@@ -327,7 +327,7 @@ public abstract class SharedInteractionVerbsSystem : EntitySystem
         verb.Priority = proto.Priority;
         verb.Icon = proto.Icon;
         verb.Category = VerbCategory.Interaction;
-        verb.CloseMenu = proto.CloseMenu;
+        verb.CloseMenu = proto.CloseMenu; // CorvaxGoob
     }
 
     /// <summary>
