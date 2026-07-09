@@ -210,9 +210,22 @@ namespace Content.Client.ContextMenu.UI
                     inputSys.HandleInputCommand(session, func, message);
                 }
 
-                _context.Close();
+                if (ShouldCloseAfterEntityMenuAction(element, args.Function))
+                    _context.Close();
+
                 args.Handle();
             }
+        }
+
+        private bool ShouldCloseAfterEntityMenuAction(ContextMenuElement element, BoundKeyFunction function)
+        {
+            if (function != EngineKeyFunctions.Use &&
+                function != ContentKeyFunctions.ActivateItemInWorld &&
+                function != ContentKeyFunctions.AltActivateItemInWorld)
+                return true;
+
+            // Keep grouped entity submenus open for repeated tool interactions, such as refining several glass shards.
+            return element.ParentMenu == null || element.ParentMenu == _context.RootMenu;
         }
 
         private bool HandleOpenEntityMenu(in PointerInputCmdHandler.PointerInputCmdArgs args)
