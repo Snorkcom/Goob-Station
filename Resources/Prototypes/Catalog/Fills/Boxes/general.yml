@@ -522,6 +522,7 @@
         amount: 4
       - id: CandlePurpleSmall
         amount: 4
+# CorvaxGoob Start
 - type: entity
   name: random scripture box
   parent: BaseItem
