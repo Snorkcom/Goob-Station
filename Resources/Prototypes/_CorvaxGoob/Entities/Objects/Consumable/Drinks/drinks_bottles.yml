@@ -19,7 +19,7 @@
   - type: Sealable
 
 - type: entity
-  parent: [DrinkBottleVisualsOpenable, DrinkBottlePlasticBaseFull]
+  parent: DrinkBottleGlassBaseFull
   id: DrinkJuiceAppleCartonXL
   name: apple juice XL
   description: A pure set of vitamins that is useful for corporate employees.

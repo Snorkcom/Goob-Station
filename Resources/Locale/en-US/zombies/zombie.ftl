@@ -26,5 +26,3 @@ zombie-roleban-ghosted = You have been ghosted because you are banned from playi
 # Goob
 zombie-cured-popup = The zombie infection vanishes without a trace!
 zombie-cure-failed-popup = The cure fails to take hold!
-
-zombie-roleban-ghosted = You have been ghosted because you are banned from playing the Zombie role.

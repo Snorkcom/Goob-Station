@@ -712,10 +712,10 @@
         reagent: Honk
         amount: -20
         conditions:
-        - !type:ReagentThreshold
+        - !type:ReagentCondition
+          reagent: Honk
           min: 50
       # CorvaxGoob-debaf-honk-end
-
 
 - type: reagent
   id: Lead

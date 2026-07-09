@@ -685,7 +685,7 @@
     - cotton
     - bread
 # CorvaxGoob-start
-  - type: Food
+  - type: Edible
     trash:
     - FoodCottonPizzaCrust
 # CorvaxGoob-end
