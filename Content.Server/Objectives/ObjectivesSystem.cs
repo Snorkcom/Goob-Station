@@ -52,10 +52,10 @@ using Robust.Server.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Utility;
 using Content.Shared.Administration.Logs;
-using Content.Goobstation.Shared.ManifestListings;
-using Robust.Shared.Network; //Goobstation
-using Content.Shared.Roles; //Goobstation
-using Content.Server.Roles; //Goobstation
+using Robust.Shared.Network;
+using Content.Shared.Roles;
+using Content.Server.Roles;
+using Content.Shared.Roles.Components; //Goobstation
 
 namespace Content.Server.Objectives;
 

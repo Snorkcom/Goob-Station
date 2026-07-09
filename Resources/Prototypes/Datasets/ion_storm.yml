@@ -296,75 +296,84 @@
 - type: dataset
   id: IonStormAreas
   values:
-  - КОМПЛЕКС АЛЬФА
-  - ЛОГОВО ЗЛА # Goobstation
-  - ПОЖАР # Goobstation
-  - КРЕПОСТЬ # Goobstation
-  - ПИЦЦЕРИЮ С ПРИВИДЕНИЯМИ # fnaf
-  - ИССЛЕДОВАТЕЛЬСКУЮ ЛАБОРАТОРИЮ В РАЙОНЕ ЮЖНОГО ПОЛЮСА
-  - ПАРАЛЛЕЛЬНОЕ ИЗМЕРЕНИЕ
-  - ПАРАЛЛЕЛЬНУЮ ВСЕЛЕННУЮ
-  - АТМОСФЕРНЫЙ ОТСЕК
-  - ГИДРОПОННЫЙ ОТСЕК
-  - СССП
-  - ЗОНА
-  - КАРГОНИЯ # Goobstation
-  - ЦЕНТКОМ
-  - ХРАМ # Goobstation
-  - ХИМ-ЛАБОРАТОРИЮ
-  - ПЛАНЕТУ КЛОУНОВ
-  - ЖИЛОЙ ОТСЕК # Goobstation
-  - ТСФ
-  - ИНЖЕНЕРНЫЙ ОТСЕК
-  - ГАЗОДОБЫЧИКИ # Goobstation
-  - ИМПЕРИЯ
-  - АД
-  - УБОРОЧНЫЙ ОТСЕК # Goobstation
-  - ЛАВАЛЭНД
-  - ТЕХНИЧЕСКИЕ ТУННЕЛИ
-  - КОНФЕДЕРАЦИЯ МАГОВ
-  - МЕДИЦИНСКИЙ ОТСЕК # Goobstation
-  - НАСЛЕДИЕ
-  - ЧАСТНУЮ РОСКОШНУЮ ЛУННУЮ БАЗУ МИСТЕРА НАНОТРЕЙЗЕН
-  - ПЕРМУ
-  - ОТСЕК РОБОТОТЕХНИКИ
-  - РУСЬ
-  - ДОНК
-  - ГДЕ-ТО ЗА РАДУГОЙ
-  - СОВКОМ
-  - КОООООООООООООООООООООООООООООООСМОООООООООООООС
-  - КОСМОС
-  - ШАТТЛ ПРИБЫТИЯ
-  - УБОРНЫЕ
-  - МОСТИК
-  - БРИГ
-  - ЯМЕ БИНГЛА # Goobstation
-  - ДЕПАРТАМЕНТЕ СНАБЖЕНИЯ КАРГО КАРГОНИЯ БУМАЖКОЛЮБОВ # Goobstation
-  - ЭВАКУАЦИОННЫЙ ШАТТЛ
-  - СПАСАТЕЛЬНУЮ КАПСУЛУ
-  - ГАЛАКТИКУ
-  - ГАЗОВЫЙ ГИГАНТ, КОТОРЫЙ АБСОЛЮТНО РЕАЛЕН
-  - ГУЛАГЕ
-  - КОРИДОРЕ # Goobstation
-  - ОЧЕРЕДЬ К ГП
-  - ИМПЕРИУМ ЧЕЛОВЕЧЕСТВА
-  - ИНТЕРНЕТ
-  - КУХНЮ
-  - БИБЛИОТЕКУ
-  - БАР В ТЕХНИЧЕСКИХ ПОМЕЩЕНИЯХ
-  - НЕВИДИМУЮ КОРОБКУ МИМА
-  - РИМСКУЮ ИМПЕРИЮ
-  - НИО, СОВЕРШЕННО ТОЧНО НЕ РНД # Goobstation
-  - МЕНТОВКЕ # Goobstation
-  - ТЕНЕВОЙ ФАБРИКЕ # Goobstation
-  - ОБЩЕСТВЕННОЙ МАСТЕРСКОЙ # Goobstation
-  - ВСЕЛЕННУЮ
-  - ЧОТАТАМВИЗАРД # Goobstation
-  - ГРЕЙТАЙДОЛЭНДЕ # Goobstation
-  - БИТЕЛЬГЕЙЗЕ
-  - МИСТЕР ЧАНГЕ
-  - ВАШИ СНЫ И/ИЛИ КОШМАРЫ
-  - ЭКВИЛИБРИСТИКЕ # Goobstation
+  - ALPHA COMPLEX
+  - A HAUNTED PIZZERIA # fnaf
+  - AMERICA
+  - AN EVIL LAIR # Goobstation
+  - A FIRE # Goobstation
+  - A FORTRESS # Goobstation
+  - A RESEARCH LABORATORY NEAR THE SOUTH POLE
+  - AN ALTERNATE DIMENSION
+  - AN ALTERNATE UNIVERSE
+  - ATMOSPHERICS
+  - BOTANY
+  - BRAZIL
+  - CANADA
+  - CARGONIA # Goobstation
+  - CENTCOMM
+  - CHAPEL # Goobstation
+  - CHEMICAL LAB
+  - CHINA
+  - CLOWN PLANET
+  - DORMS # Goobstation
+  - EARTH
+  - ENGINEERING
+  - GAS MINERS # Goobstation
+  - GERMANY
+  - HELL
+  - IMPERIUM
+  - IRELAND
+  - JANITORAL # Goobstation
+  - JUPITER
+  - LAVALAND
+  - MAINTENANCE
+  - MARS
+  - MEDICAL # Goobstation
+  - MERCURY
+  - MR. NANOTRASEN'S PRIVATE LUXURY MOONBASE
+  - NEPTUNE
+  - PERMA
+  - PLUTO
+  - POLAND
+  - ROBOTICS
+  - ROMANIA
+  - RUSSIA
+  - SIGIL
+  - SOMEWHERE OVER THE RAINBOW
+  - SOVIET RUSSIA
+  - SPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE
+  - SPACE
+  - THE ARRIVALS SHUTTLE
+  - THE BATHROOM
+  - THE BRIDGE
+  - THE BRIG
+  - THE BINGLE PIT # Goobstation
+  - THE CARGO DEPARTMENT # Goobstation
+  - THE EMERGENCY SHUTTLE
+  - THE ESCAPE PODS
+  - THE GALAXY
+  - THE GAS GIANT, WHICH IS TOTALLY REAL
+  - THE GULAG
+  - THE HALLWAY # Goobstation
+  - THE HOPLINE
+  - THE IMPERIUM OF MANKIND
+  - THE INTERNET
+  - THE KITCHEN
+  - THE LIBRARY
+  - THE MAINTENANCE BAR
+  - THE MIME'S INVISIBLE BOX
+  - THE ROMAN EMPIRE
+  - THE SCIENCE DEPARTMENT # Goobstation
+  - THE SECURITY DEPARTMENT # Goobstation
+  - THE SHADOW FACTORY # Goobstation
+  - THE TOOL ROOM # Goobstation
+  - THE UNIVERSE
+  - THE WIZARD'S DEN # Goobstation
+  - TIDELAND # Goobstation
+  - URANUS
+  - VENUS
+  - YOUR DREAMS AND/OR NIGHTMARES
+  - EQUESTRIA # Goobstation
 
 # Abstract concepts for the law holder to decide on it's own definition of.
 - type: dataset

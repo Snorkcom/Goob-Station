@@ -19,8 +19,8 @@
       - chest
       organs:
         brain: OrganVoxBrain # CorvaxGoob resprite
-        eyes: OrganVoxEyes # CorvaxGoob resprite
-    chest:
+        eyes: OrganVoxEyes
+    chest: # Goob
       part: ChestVox
       connections:
       - right arm
@@ -37,8 +37,8 @@
       - left leg
       organs:
         stomach: OrganVoxStomach
-        liver: OrganVoxLiver # CorvaxGoob resprite
-        kidneys: OrganVoxKidneys # CorvaxGoob resprite
+        liver: OrganVoxLiver
+        kidneys: OrganVoxKidneys
     right arm:
       part: RightArmVox
       connections:

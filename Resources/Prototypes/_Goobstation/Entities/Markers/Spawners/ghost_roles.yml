@@ -201,7 +201,7 @@
     - All
     mindRoles:
     - MindRoleGhostRoleTeamAntagonist
-    - MindRoleGhostRoleFreeAgentSecurityGoob
+    - MindRoleGhostRoleFreeAgentSecurityGoob # todo marty
     raffle:
       settings: default
   - type: Sprite

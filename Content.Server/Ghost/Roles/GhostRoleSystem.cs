@@ -46,7 +46,6 @@ using Content.Server._CorvaxGoob.Skills;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
 using Content.Server.EUI;
-using Content.Server.GameTicking;
 using Content.Server.GameTicking.Events;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Ghost.Roles.Events;
@@ -80,7 +79,11 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using System.Linq;
+using Content.Server.Popups;
+using Content.Shared.Verbs;
+using Robust.Shared.Collections;
+using Content.Shared.Ghost.Roles.Components;
+using Content.Shared.Roles.Components;
 
 namespace Content.Server.Ghost.Roles;
 
@@ -534,6 +537,20 @@ public sealed class GhostRoleSystem : EntitySystem
             return;
         }
 
+        // Decide to do a raffle or not
+        if (roleEnt.Comp.RaffleConfig is not null)
+        {
+            Log.Warning($"Server rejected ghost role request '{roleEnt.Comp.RoleName}' for '{player.Name}' - client missed ban?");
+            return;
+        }
+
+        // Check role requirements
+        if (!IsRoleAllowed(player, jobs, antags))
+        {
+            Log.Warning($"Server rejected ghost role request '{roleEnt.Comp.RoleName}' for '{player.Name}' - client missed requirement check?");
+            return;
+        }
+
         if (HasComp<GhostBarPlayerComponent>(player.AttachedEntity) // CorvaxGoob-GhostBar
             || EntityManager.TryGetComponent<GhostComponent>(attached, out var ghost) && ghost.CanTakeGhostRoles)
         {
@@ -568,7 +585,7 @@ public sealed class GhostRoleSystem : EntitySystem
         if (TryComp<MindContainerComponent>(roleEnt, out var mindCont)
             && TryComp<MindComponent>(mindCont.Mind, out var mind))
         {
-            foreach (var role in mind.MindRoles)
+            foreach (var role in mind.MindRoleContainer.ContainedEntities)
             {
                 if(!TryComp<MindRoleComponent>(role, out var comp))
                     continue;
@@ -703,9 +720,6 @@ public sealed class GhostRoleSystem : EntitySystem
         _mindSystem.TransferTo(newMind, mob);
 
         _roleSystem.MindAddRoles(newMind.Owner, role.MindRoles, newMind.Comp);
-
-        if (_roleSystem.MindHasRole<GhostRoleMarkerRoleComponent>(newMind!, out var markerRole))
-            markerRole.Value.Comp2.Name = role.RoleName;
     }
 
     /// <summary>
@@ -774,20 +788,6 @@ public sealed class GhostRoleSystem : EntitySystem
         return roles.ToArray();
     }
 
-    /// <summary>
-    /// Goobstation - Add requirement to the ghost role
-    /// </summary>
-    /// <param name="ghostRole">The entity</param>
-    /// <param name="job">The job requirement</param>
-    public void AddRoleRequirements(Entity<GhostRoleComponent>? ghostRole, JobRequirement job)
-    {
-        if (ghostRole is not {} ghost)
-            return;
-
-        //ghost.Comp.Requirements ??= []; // CorvaxGoob-NO
-        //ghost.Comp.Requirements.Add(job); // CorvaxGoob-NO Ограничение роли через хардкод?! Вы нормальные? Вам может лечиться надо? Нахрен такое дерьмо.
-
-    }
     private void OnPlayerAttached(PlayerAttachedEvent message)
     {
         // Close the session of any player that has a ghost roles window open and isn't a ghost anymore.
@@ -1011,7 +1011,7 @@ public sealed class GhostRoleSystem : EntitySystem
 
     public void OnGhostRoleRadioMessage(Entity<GhostRoleMobSpawnerComponent> entity, ref GhostRoleRadioMessage args)
     {
-        if (!_prototype.TryIndex(args.ProtoId, out var ghostRoleProto))
+        if (!_prototype.Resolve(args.ProtoId, out var ghostRoleProto))
             return;
 
         // if the prototype chosen isn't actually part of the selectable options, ignore it

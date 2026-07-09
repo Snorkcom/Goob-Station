@@ -97,6 +97,10 @@
   name: airlock
   description: It opens, it closes, and maybe crushes you.
   components:
+  - type: Anchorable
+    flags:
+    - Anchorable
+  - type: Rotatable
   - type: StationAiWhitelist
   - type: MeleeSound
     soundGroups:
@@ -129,6 +133,15 @@
       shader: unshaded
       visible: false
       map: ["enum.ElectrifiedLayers.HUD"]
+    - state: electrified
+      sprite: Effects/electricity.rsi
+      shader: unshaded
+      visible: false
+      map: ["enum.ElectrifiedLayers.Sparks"]
+    - state: sparks
+      map: ["enum.DoorVisualLayers.BaseEmagging"]
+      shader: unshaded
+      visible: false
   - type: AnimationPlayer
   - type: Physics
   - type: Fixtures

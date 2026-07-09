@@ -176,8 +176,7 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
             var requirementsManager = IoCManager.Resolve<JobRequirementsManager>();
 
             // Grouping roles
-            var groupedRoles = ghostState.GhostRoles.GroupBy(
-                role => (
+            var groupedRoles = ghostState.GhostRoles.GroupBy(role => (
                     role.Name,
                     role.Description,
                     //  Check the prototypes for role requirements and bans

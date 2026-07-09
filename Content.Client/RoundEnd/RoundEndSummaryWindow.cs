@@ -95,7 +95,7 @@ namespace Content.Client.RoundEnd
             if (photoTab is not null)
                 roundEndTabs.AddChild(photoTab);
 
-            Contents.AddChild(roundEndTabs);
+            ContentsContainer.AddChild(roundEndTabs);
 
             OpenCenteredRight();
             MoveToFront();

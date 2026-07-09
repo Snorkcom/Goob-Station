@@ -451,7 +451,7 @@ public sealed partial class NavMapSystem : SharedNavMapSystem
         if (!Resolve(ent, ref ent.Comp))
             return Loc.GetString("nav-beacon-pos-no-beacons");
 
-        return GetNearestBeaconString(_transformSystem.GetMapCoordinates(ent, ent.Comp), onlyName); //CorvaxGoob-SecApartment
+        return GetNearestBeaconString(_transformSystem.GetMapCoordinates(ent, ent.Comp), onlyName);
     }
 
     /// <summary>
@@ -466,10 +466,8 @@ public sealed partial class NavMapSystem : SharedNavMapSystem
         if (!TryGetNearestBeacon(coordinates, out var beacon, out var pos))
             return Loc.GetString("nav-beacon-pos-no-beacons");
 
-        //CorvaxGoob-SecApartment-Start
         if (onlyName)
             return beacon.Value.Comp.Text!;
-        ////CorvaxGoob-SecApartment-End
 
         var gridOffset = Angle.Zero;
         if (_mapManager.TryFindGridAt(pos.Value, out var grid, out _))

@@ -105,16 +105,17 @@
   metamorphicFillBaseName: fill-
   metamorphicChangeColor: false
   recognizable: true
+  standsout: true
   physicalDesc: reagent-physical-desc-ferrous
   metabolisms:
     Drink:
       effects:
-        - !type:SatiateThirst
-          factor: 1.0
-          conditions:
-            - !type:OrganType
-              type: Human
-              shouldHave: false
+      - !type:SatiateThirst
+        factor: 1.0
+        conditions:
+          - !type:MetabolizerTypeCondition
+            type: [ Human ]
+            inverted: true
     Food:
       effects:
         - !type:AdjustReagent
@@ -122,14 +123,14 @@
           amount: 0.1
     Medicine:
       effects:
-        - !type:HealthChange
-          conditions:
-            - !type:OrganType
-              type: Bloodsucker
-          damage:
-            groups:
-              Brute: -3
-              Burn: -1.25
+      - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Bloodsucker ]
+        damage:
+          groups:
+            Brute: -3
+            Burn: -1.25
   plantMetabolism:
     - !type:PlantAdjustWater
       amount: 0.5
@@ -157,6 +158,7 @@
   flavor: slimy
   color: "#2cf274"
   recognizable: true
+  standsout: true
   physicalDesc: reagent-physical-desc-viscous
   viscosity: 0.25
   tileReactions:
@@ -165,8 +167,17 @@
     Food:
       # Delicious!
       effects:
-        - !type:SatiateHunger
-          factor: 1
+      - !type:SatiateHunger
+        factor: 1
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [Slime]
+          inverted: true
+      - !type:ModifyBloodLevel
+        amount: 0.5 # drawing 15u removes 5% blood level from a slimeperson, this will add 5% when injecting 15u
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [Slime]
   footstepSound:
     collection: FootstepSlime # makes sense
     params:
@@ -235,20 +246,20 @@
           factor: -0.5
     Poison:
       effects:
-        - !type:HealthChange
-          conditions:
-            - !type:OrganType # Goobstation - Yowie
-              type: Yowie
-              shouldHave: false
-          damage:
-            types:
-              Poison: 4
-        - !type:ChemVomit
-          conditions:
-            - !type:OrganType # Goobstation - Yowie
-              type: Yowie
-              shouldHave: false
-          probability: 0.25
+      - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition # Goobstation - Yowie
+          type: [ Yowie ]
+          inverted: true
+        damage:
+          types:
+            Poison: 4
+      - !type:Vomit
+        conditions:
+        - !type:MetabolizerTypeCondition # Goobstation - Yowie
+          type: [ Yowie ]
+          inverted: true
+        probability: 0.25
 
 - type: reagent
   id: Ichor
@@ -262,33 +273,33 @@
   metabolisms:
     Drink:
       effects:
-        - !type:SuppressPain
-          amount: 4
-          time: 28
-        - !type:HealthChange # Goobstation - Make Ichor less shit
-          damage:
-            types:
-              Heat: -5
-              Shock: -5
-              Cold: -5
-              Caustic: -5
-              Poison: -5
-              Radiation: -5
-              Asphyxiation: -5
-              Bloodloss: -5
-              Blunt: -5
-              Slash: -5
-              Piercing: -5
-
-        - !type:ModifyBloodLevel
-          amount: 3
-
-        - !type:ModifyBleedAmount
-          amount: -1.5
-  # Goobstation, just in case you REALLY  REALLY want to water your plants
+      - !type:SatiateThirst
+        factor: 1.5
+      # Goob start
+      - !type:SuppressPain
+        amount: 4
+        time: 28
+      - !type:HealthChange # Goobstation - Make Ichor less shit
+        damage:
+          types:
+            Heat: -5
+            Shock: -5
+            Cold: -5
+            Caustic: -5
+            Poison: -5
+            Radiation: -5
+            Asphyxiation: -5
+            Bloodloss: -5
+            Blunt: -5
+            Slash: -5
+            Piercing: -5
+      - !type:ModifyBleed
+            amount: 3
+      # Goob end
+  # Just in case you REALLY  REALLY want to water your plants
   plantMetabolism:
-    - !type:PlantAdjustWater
-      amount: 1
+  - !type:PlantAdjustWater
+    amount: 1 # Goobstation
   footstepSound:
     collection: FootstepBlood
     params:

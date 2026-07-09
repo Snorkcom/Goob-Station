@@ -79,14 +79,15 @@
   name: counter
   abstract: true
   components:
-    - type: Fixtures
-      fixtures:
-        fix1:
-          shape: !type:PhysShapeAabb
-            bounds: "-0.45,-0.45,0.45,0.45"
-          density: 55
-          mask:
-            - TableMask
-          layer:
-            - TableLayer
-            - BulletImpassable # Goobstation - Crawling
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.45"
+        density: 55
+        mask:
+        - TableMask
+        layer:
+        - BulletImpassable # Goobstation - Crawling
+        - TableLayer

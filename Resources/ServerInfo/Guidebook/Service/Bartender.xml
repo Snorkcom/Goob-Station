@@ -28,6 +28,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 <Box>
 <GuideEntityEmbed Entity="DrinkGlass" Caption="Стакан"/>
 <GuideEntityEmbed Entity="DrinkGlassCoupeShaped"/>
+<GuideEntityEmbed Entity="DrinkShotGlass"/>
 <GuideEntityEmbed Entity="DrinkShaker"/>
 <GuideEntityEmbed Entity="DrinkJigger"/>
 </Box>

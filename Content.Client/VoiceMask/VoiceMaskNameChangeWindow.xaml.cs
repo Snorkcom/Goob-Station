@@ -31,6 +31,8 @@ public sealed partial class VoiceMaskNameChangeWindow : FancyWindow
 
     public Action<string>? OnNameChange;
     public Action<string?>? OnVerbChange;
+    public Action? OnToggle;
+    public Action? OnAccentToggle;
     public Action<string>? OnVoiceChange; // CorvaxGoob-TTS
 
     private List<(string, string)> _verbs = new();
@@ -55,6 +57,9 @@ public sealed partial class VoiceMaskNameChangeWindow : FancyWindow
             OnVerbChange?.Invoke((string?) args.Button.GetItemMetadata(args.Id));
             SpeechVerbSelector.SelectId(args.Id);
         };
+
+        ToggleButton.OnPressed += args => OnToggle?.Invoke();
+        ToggleAccentButton.OnPressed += args => OnAccentToggle?.Invoke();
 
         // CorvaxGoob-TTS-Start
         if (IoCManager.Resolve<IConfigurationManager>().GetCVar(CCCVars.TTSEnabled))
@@ -120,9 +125,12 @@ public sealed partial class VoiceMaskNameChangeWindow : FancyWindow
     }
 
     public void UpdateState(string name, string voice, string? verb) // CorvaxGoob-TTS
+    public void UpdateState(string name, string? verb, bool active, bool accentHide)
     {
         NameSelector.Text = name;
         _verb = verb;
+        ToggleButton.Pressed = active;
+        ToggleAccentButton.Pressed = accentHide;
 
         for (int id = 0; id < SpeechVerbSelector.ItemCount; id++)
         {

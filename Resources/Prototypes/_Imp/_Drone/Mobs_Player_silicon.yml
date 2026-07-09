@@ -28,8 +28,10 @@
   - type: Damageable
     damageContainer: Inorganic
   - type: Bloodstream
-    bloodReagent: Oil
-    bloodMaxVolume: 50
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: Oil
+        Quantity: 50
     bloodlossDamage:
       types:
         Bloodloss:
@@ -220,9 +222,10 @@
       30: 0.7
       50: 0.5
   - type: Temperature
-    heatDamageThreshold: 5000
     currentTemperature: 310.15
     specificHeat: 42
+  - type: TemperatureDamage
+    heatDamageThreshold: 5000
     heatDamage:
       types:
         Heat : 1 #per second, scales with temperature & other constants

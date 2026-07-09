@@ -45,6 +45,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     <GuideEntityEmbed Entity="ClothingHeadHatWelding"/>
   </Box>
 
+  Assume all of [color=#cb0000]Security[/color] and [color=#1b67a5]Command[/color] are implanted with mindshields already, [bold]however they can be removed using an implant extractor, obtainable from the Medical department's MedFab.[/bold]
   Еще одним препятствием на вашем пути являются эти надоедливые [color=cyan]импланты защиты разума[/color]. Они:
   - Предотвращают обращение человека в [color=red]Революционера[/color]
   - Де-конвертируют Революционеров, делая их больше не лояльными вашей цели

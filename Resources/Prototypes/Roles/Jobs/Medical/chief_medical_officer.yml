@@ -138,13 +138,13 @@
   requirements:
     - !type:RoleTimeRequirement
       role: JobChemist
-      time: 18000 #5 hrs
+      time: 2.5h
     - !type:RoleTimeRequirement
       role: JobMedicalDoctor
-      time: 28000 #8 hrs
+      time: 5h
     - !type:DepartmentTimeRequirement
       department: Medical
-      time: 36000 #10 hrs
+      time: 10h
     - !type:RoleTimeRequirement  # CorvaxGoob
       role: JobSurgeon
       time: 7200 # CorvaxGoob 2 hrs
@@ -156,6 +156,7 @@
       inverted: true
       species:
       - Abductor
+  weight: 10
   startingGear: CMOGear
   icon: "JobIconChiefMedicalOfficer"
   supervisors: job-supervisors-captain
@@ -171,7 +172,7 @@
   - Command
   - Chemicals
   - Virology
-  weight: 10 #Goob Edit
+  goobcoins: 40 #Goob content
   access:
   - Medical
   - Command

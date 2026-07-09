@@ -238,8 +238,10 @@
       guides:
       - Blob
     - type: Bloodstream
-      bloodMaxVolume: 300
-      bloodReagent: Blood
+      bloodReferenceSolution:
+        reagents:
+        - ReagentId: Blood
+          Quantity: 300
       bleedReductionAmount: 5
 
 # Observer

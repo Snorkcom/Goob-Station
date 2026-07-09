@@ -220,8 +220,8 @@
   - type: TTS # CorvaxGoob-TTS
     voice: Rat
   - type: Body
-    prototype: RatKing
-    requiredLegs: 1 # TODO: More than 1 leg
+    prototype: RatKing # Goobstation?
+    requiredLegs: 0 # TODO: Make more than 1 leg, set to 0 to avoid sprint speed being reset by the body system
   - type: Hunger # probably should be prototyped
     thresholds:
       Overfed: 400
@@ -262,10 +262,10 @@
       - CannotSuicide
       - FootstepSound
   - type: NoSlip
+  - type: Rummager
   - type: RatKing
     hungerPerArmyUse: 25
     hungerPerDomainUse: 50
-  - type: Rummager # DeltaV: Make rummaging a generic component
   - type: MobsterAccent
   - type: Speech
     speechVerb: SmallMob
@@ -430,7 +430,10 @@
       0: Alive
       15: Dead #goob
   - type: Bloodstream
-    bloodMaxVolume: 10 #goob (he is very small)
+    bloodReferenceSolution:
+      reagents:
+      - ReagentId: Blood
+        Quantity: 10 #goob (he is very small)
   - type: Destructible
     thresholds:
     - trigger:
@@ -441,7 +444,7 @@
         gibContents: Skip # goob - rat servants dont spawn organs.
         recursive: false
   - type: Stamina
-    critThreshold: 60
+    baseCritThreshold: 60
     animationThreshold: 30 # Goob edit
   - type: MeleeWeapon
     soundHit:
@@ -454,7 +457,7 @@
         Piercing: 3
   - type: Body
     prototype: Rat
-    requiredLegs: 1 # TODO: More than 1 leg
+    requiredLegs: 0 # TODO: Make more than 1 leg, set to 0 to avoid sprint speed being reset by the body system
   - type: Hunger # probably should be prototyped
     thresholds:
       Overfed: 200
@@ -508,7 +511,7 @@
     sprite: Mobs/Effects/onfire.rsi
     normalState: Mouse_burning
   - type: FelinidFood # Nyanotrasen - Felinid, ability to eat rat, see Content.Server/Nyanotrasen/Abilities/Felinid/FelinidSystem.cs
-  - type: Food
+  - type: Edible
   - type: Item
     size: Tiny # Delta V - Make them edible and pickable.
   - type: NightVision # Goobstation - Nigthvision
@@ -516,13 +519,16 @@
     activateSound: null
     deactivateSound: null
 
-- type: weightedRandomEntity
+- type: entityTable
   id: RatKingLoot
-  weights: # DeltaV: Rebalanced for Rodentia rummaging because we don't have Rat King
-    RandomSpawner100: 50 #garbage
-    FoodCheeseSlice: 25 #food
-    RandomSnacks: 10
-    RandomFoodSingle: 15
+  table: !type:GroupSelector
+    children:
+    - id: RandomSpawner100
+      weight: 66
+    - id: FoodCheese
+      weight: 28
+    - id: IngotGold1
+      weight: 5
 
 - type: entity
   parent: BaseAction

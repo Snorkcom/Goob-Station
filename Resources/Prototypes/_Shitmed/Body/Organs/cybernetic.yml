@@ -123,7 +123,7 @@
       Destroyed: 0
     slotId: heart
     onAdd:
-    - type: StaminaModifier
+    - type: StaminaModifierStatusEffect
       modifier: 1.35
   - type: Metabolizer
     maxPoisonsProcessable: 2
@@ -160,7 +160,7 @@
       Destroyed: 0
     slotId: heart
     onAdd:
-    - type: StaminaModifier
+    - type: StaminaModifierStatusEffect
       modifier: 1.7
     - type: PressureImmunity # CorvaxGoob
   - type: Metabolizer
@@ -244,6 +244,8 @@
       Lung:
         maxVol: 100.0
         canReact: false
+      food:
+        maxVol: 0
   - type: Tag
     tags:
     - Organ

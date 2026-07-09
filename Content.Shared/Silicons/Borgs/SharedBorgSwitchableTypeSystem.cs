@@ -55,13 +55,14 @@ public abstract class SharedBorgSwitchableTypeSystem : EntitySystem
     {
         _actionsSystem.AddAction(ent, ref ent.Comp.SelectTypeAction, ActionId);
         Dirty(ent);
-
+        // Goob start
         if (ent.Comp.SelectedBorgType != null &&
             TryComp(ent, out BorgSwitchableSubtypeComponent? subtype) &&
             subtype.BorgSubtype != null)
         {
             SelectBorgModule(ent, ent.Comp.SelectedBorgType.Value, subtype.BorgSubtype.Value);
         }
+        // Goob end
     }
 
     private void OnShutdown(Entity<BorgSwitchableTypeComponent> ent, ref ComponentShutdown args)
@@ -85,9 +86,9 @@ public abstract class SharedBorgSwitchableTypeSystem : EntitySystem
             return;
 
         if (!Prototypes.HasIndex(args.Prototype) || !Prototypes.HasIndex(args.Subtype))
-            return;
+            return; // GOOB
 
-        SelectBorgModule(ent, args.Prototype, args.Subtype);
+        SelectBorgModule(ent, args.Prototype, args.Subtype); // GOOB
     }
 
     //
@@ -97,14 +98,14 @@ public abstract class SharedBorgSwitchableTypeSystem : EntitySystem
     protected virtual void SelectBorgModule(
         Entity<BorgSwitchableTypeComponent> ent,
         ProtoId<BorgTypePrototype> borgType,
-        ProtoId<BorgSubtypePrototype> borgSubtype)
+        ProtoId<BorgSubtypePrototype> borgSubtype) // GOOB
     {
         ent.Comp.SelectedBorgType = borgType;
         if (TryComp(ent, out BorgSwitchableSubtypeComponent? subtype))
-            subtype.BorgSubtype = borgSubtype;
+            subtype.BorgSubtype = borgSubtype; // GOOB
 
         _actionsSystem.RemoveAction(ent.Owner, ent.Comp.SelectTypeAction);
-        _userInterface.CloseUi(ent.Owner, BorgSwitchableTypeUiKey.SelectBorgType);
+        _userInterface.CloseUi(ent.Owner, BorgSwitchableTypeUiKey.SelectBorgType); // GOOB
         ent.Comp.SelectTypeAction = null;
         Dirty(ent);
         if (subtype != null)
@@ -115,9 +116,9 @@ public abstract class SharedBorgSwitchableTypeSystem : EntitySystem
 
     protected void UpdateEntityAppearance(Entity<BorgSwitchableTypeComponent> entity)
     {
-        if (!Prototypes.TryIndex(entity.Comp.SelectedBorgType, out var proto) ||
+        if (!Prototypes.Resolve(entity.Comp.SelectedBorgType, out var proto) || // GOOB
             !TryComp(entity, out BorgSwitchableSubtypeComponent? subtype) ||
-            !Prototypes.TryIndex(subtype.BorgSubtype, out var subtypeProto))
+            !Prototypes.Resolve(subtype.BorgSubtype, out var subtypeProto))
             return;
 
         UpdateEntityAppearance(entity, proto, subtypeProto);
@@ -126,7 +127,7 @@ public abstract class SharedBorgSwitchableTypeSystem : EntitySystem
     protected virtual void UpdateEntityAppearance(
         Entity<BorgSwitchableTypeComponent> entity,
         BorgTypePrototype prototype,
-        BorgSubtypePrototype subtypePrototype)
+        BorgSubtypePrototype subtypePrototype) // GOOB
     {
         if (TryComp(entity, out InteractionPopupComponent? popup))
         {
@@ -137,6 +138,25 @@ public abstract class SharedBorgSwitchableTypeSystem : EntitySystem
         if (TryComp(entity, out FootstepModifierComponent? footstepModifier))
         {
             footstepModifier.FootstepSoundCollection = prototype.FootstepCollection;
+        }
+
+        if (prototype.SpriteBodyMovementState is { } movementState)
+        {
+            var spriteMovement = EnsureComp<SpriteMovementComponent>(entity);
+            spriteMovement.NoMovementLayers.Clear();
+            spriteMovement.NoMovementLayers["movement"] = new PrototypeLayerData
+            {
+                State = prototype.SpriteBodyState,
+            };
+            spriteMovement.MovementLayers.Clear();
+            spriteMovement.MovementLayers["movement"] = new PrototypeLayerData
+            {
+                State = movementState,
+            };
+        }
+        else
+        {
+            RemComp<SpriteMovementComponent>(entity);
         }
 
         // CorvaxGoob-TTS-start
