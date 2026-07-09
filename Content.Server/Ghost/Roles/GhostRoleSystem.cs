@@ -42,6 +42,7 @@ using Content.Shared.Verbs;
 using Robust.Shared.Collections;
 using Content.Shared.Ghost.Roles.Components;
 using Content.Shared.Roles.Components;
+using Content.Server.GameTicking;
 
 namespace Content.Server.Ghost.Roles;
 

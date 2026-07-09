@@ -13,7 +13,7 @@ using Content.Shared.Doors.Systems;
 using Content.Shared.Electrocution;
 using Content.Shared.Intellicard;
 using Content.Shared.Interaction;
-using Content.Shared.Inventory;
+using Content.Shared.DoAfter;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Mind;
 using Content.Shared.Mobs;

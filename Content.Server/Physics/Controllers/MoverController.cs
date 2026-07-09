@@ -447,7 +447,7 @@ public sealed class MoverController : SharedMoverController
             var brakeCount = 0;
             var angularCount = 0;
 
-            foreach (var (_, pilot, _, consoleXform) in pilots)
+            foreach (var (pilotUid, pilot, _, consoleXform) in pilots) // CorvaxGoob-Skills добавил pilotUid
             {
                 var (strafe, rotation, brakes) = GetPilotVelocityInput(pilot);
 

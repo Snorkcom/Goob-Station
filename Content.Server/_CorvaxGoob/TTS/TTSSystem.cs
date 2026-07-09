@@ -5,6 +5,7 @@ using Content.Server.Communications;
 using Content.Shared._CorvaxGoob.CCCVars;
 using Content.Shared._CorvaxGoob.TTS;
 using Content.Shared._EinsteinEngines.Language;
+using Content.Shared.Chat;
 using Content.Shared.GameTicking;
 using Content.Shared.Players.RateLimiting;
 using Robust.Shared.Audio;
