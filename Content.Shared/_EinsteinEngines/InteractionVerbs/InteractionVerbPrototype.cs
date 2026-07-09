@@ -181,8 +181,9 @@ public sealed partial class InteractionVerbPrototype : IPrototype, IInheritingPr
     /// <summary>
     ///     Whether the context menu should close after this verb is used.
     /// </summary>
+    /// <remarks>CorvaxGoob</remarks>
     [DataField]
-    public bool? CloseMenu; // CorvaxGoob
+    public bool? CloseMenu;
 
     /// <summary>
     ///     If true, this verb can be invoked on any entity that the action is allowed on, even if its components don't specify it.
