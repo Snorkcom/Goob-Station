@@ -319,7 +319,7 @@
   - type: InstantAction
     event: !type:ToggleGhostHearingActionEvent
 
-# CorvaxGoob Observer HUD
+# CorvaxGoob - Observer HUD
 - type: entity
   parent: BaseMentalAction
   id: ActionToggleGhostObserverHud

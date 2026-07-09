@@ -141,7 +141,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Server.Ghost
 {
-    public sealed partial class GhostSystem : SharedGhostSystem // CorvaxGoob edit - made partial
+    public sealed partial class GhostSystem : SharedGhostSystem // CorvaxGoob Edit - made partial
     {
         [Dependency] private readonly SharedActionsSystem _actions = default!;
         [Dependency] private readonly IAdminLogManager _adminLog = default!;
@@ -210,7 +210,7 @@ namespace Content.Server.Ghost
 
             SubscribeLocalEvent<GhostComponent, GetVisMaskEvent>(OnGhostVis);
 
-            InitializeGhostObserverHud(); // CorvaxGoob Observer HUD
+            InitializeGhostObserverHud(); // CorvaxGoob - Observer HUD
         }
 
         private void OnGhostVis(Entity<GhostComponent> ent, ref GetVisMaskEvent args)
@@ -327,7 +327,7 @@ namespace Content.Server.Ghost
 
             // Entity can't see ghosts anymore.
             _eye.RefreshVisibilityMask(uid);
-            ShutdownGhostObserverHud(uid, component); // CorvaxGoob Observer HUD
+            ShutdownGhostObserverHud(uid, component); // CorvaxGoob - Observer HUD
             _actions.RemoveAction(uid, component.BooActionEntity);
         }
 
@@ -338,7 +338,7 @@ namespace Content.Server.Ghost
             _actions.AddAction(uid, ref component.ToggleLightingActionEntity, component.ToggleLightingAction);
             _actions.AddAction(uid, ref component.ToggleFoVActionEntity, component.ToggleFoVAction);
             _actions.AddAction(uid, ref component.ToggleGhostsActionEntity, component.ToggleGhostsAction);
-            AddGhostObserverHudAction(uid, component); // CorvaxGoob Observer HUD
+            AddGhostObserverHudAction(uid, component); // CorvaxGoob - Observer HUD
         }
 
         private void OnGhostExamine(EntityUid uid, GhostComponent component, ExaminedEvent args)
