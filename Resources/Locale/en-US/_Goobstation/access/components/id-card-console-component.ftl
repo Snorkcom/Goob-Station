@@ -6,7 +6,7 @@
 id-card-console-window-job-search-label = Search
 # CorvaxGoob Start - Extended-access [EN]
 id-card-console-window-standard-access-button = Standard
-id-card-console-window-standard-access-tooltip = Attempts to detect the job on the ID card and restore that job's standard access.
+id-card-console-window-standard-access-tooltip = Detects the job on the ID card and restores that job's default access.
 id-card-console-window-extended-access-button = Extended
 id-card-console-window-extended-access-tooltip = Access to all station departments except head offices, the captain, AVD, NTR, BSO, and the armory.
 id-card-console-window-full-access-button = Full
