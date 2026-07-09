@@ -212,6 +212,8 @@ namespace Content.Client.ContextMenu.UI
 
                 if (ShouldCloseAfterEntityMenuAction(element, args.Function))
                     _context.Close();
+                else
+                    RemoveEntity(entity.Value);
 
                 args.Handle();
             }
