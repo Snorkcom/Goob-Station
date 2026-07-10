@@ -223,6 +223,7 @@
   - CaptainOuterClothing
   - CaptainWintercoat
   - CaptainJacket # Goobstation
+  - CaptainWintercoatUnarmored #Goobstation
 
 - type: loadoutGroup
   id: CaptainJobTrinkets
@@ -295,8 +296,9 @@
   - AncientJumpsuit
   - RainbowJumpsuit
   - RainbowJumpskirt
-  - OverallsJumpsuit
  # goob changes start
+  - JumpsuitRecruit
+  - OverallsJumpsuit
   - GreyMJ
   - BlackMJ
   - BlueMJ
@@ -313,6 +315,9 @@
   - BrownMJ
   - MaroonMJ
   - QuarterzipJumpsuit
+  - ContractorJumpsuit
+  - ContractorJumpsuitTac
+  - BlackMJAlt
  # goob changes end
 
 - type: loadoutGroup
@@ -901,6 +906,7 @@
   - CargoTechnicianJumpsuitMail # Goob/DeltaV - Mail # Fixmail
   - CargoTechnicianJumpskirtMail # Goob/DeltaV - Mail
   - CargoTechMJ # goob
+  - MailCarrierMJ #Goob
 
 - type: loadoutGroup
   id: CargoTechnicianBackpack
@@ -1058,6 +1064,7 @@
   - SeniorEngineerJumpsuit
   - SeniorEngineerJumpskirt
   - EngiMJ # goob
+  - StationEngineerJumpsuitCasual # goob
 
 - type: loadoutGroup
   id: StationEngineerBackpack
@@ -1242,6 +1249,8 @@
   - SeniorResearcherJumpsuit
   - SeniorResearcherJumpskirt
   - ResearchMJ # goob
+  - ScientistFormal # goob
+  - SeniorResearcherMJ #goob
 
 - type: loadoutGroup
   id: ScientistBackpack
@@ -1335,6 +1344,7 @@
   - HeadofSecurityJumpskirtBlack
   # CorvaxGoob-Loadouts-End
   - HoSSummerShirt # goob
+  - HoSMJ # goob
 
 - type: loadoutGroup
   id: HeadofSecurityNeck
@@ -1383,6 +1393,7 @@
   loadouts:
   - WardenJumpsuit
   - WardenJumpskirt
+  - WardenMJ # goob
 
 - type: loadoutGroup
   id: WardenOuterClothing
@@ -1424,6 +1435,8 @@
   - TrooperUniform
   - UniformJumpsuitDSS # _CorvaxGoob
   - VeteranOfficerBlackJumpsuit # Goobstation
+  - SecurityMJ # Goob
+  - SecurityMJSenior # Goob
 
 - type: loadoutGroup
   id: SecurityBackpack
@@ -1524,6 +1537,7 @@
   loadouts:
   - RedJumpsuit
   - RedJumpskirt
+  - RedMJ #Goob
 
 - type: loadoutGroup
   id: SecurityCadetJobTrinkets
@@ -1774,7 +1788,7 @@
 - type: loadoutGroup
   id: MedicalEyewear
   name: loadout-group-medical-glasses
-  minLimit: 0
+  minLimit: 1 #Goobstation
   loadouts:
   - MedicalHud
   - MedicalEyePatchHud

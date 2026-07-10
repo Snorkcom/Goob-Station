@@ -39,7 +39,7 @@
 - type: marking
   id: CyberLimbsMarkingZenghuLHand
   bodyPart: LHand
-  markingCategory: LeftArm
+  markingCategory: LeftHand # Goob
   speciesRestriction: [IPC]
   sponsorOnly: true # CorvaxGoob-Sponsors
   sprites:
