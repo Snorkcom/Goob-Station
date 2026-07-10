@@ -65,6 +65,8 @@
   - OffsetCane
   - OffsetCaneWood
   - JetInjector
+  - SprayBottleStypticPowderEmpty #CorvaxGoob
+  - SprayBottleSilverSulfadiazineEmpty #CorvaxGoob
 
 - type: latheRecipePack
   id: RollerBedsStatic
