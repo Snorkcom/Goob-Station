@@ -15,18 +15,21 @@ SPDX-FileCopyrightText: 2025 Aiden <28298836+Aidenkrz@users.noreply.github.com>
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
+<!-- CorvaxGoob Edit -->
 <DefaultWindow xmlns="https://spacestation14.io"
             Title="{Loc 'ghost-roles-window-title'}"
-            MinSize="490 400"
-            SetSize="490 500">
+            MinSize="540 420"
+            SetSize="560 560">
     <Label Name="NoRolesMessage"
            Text="{Loc 'ghost-roles-window-no-roles-available-label'}"
            VerticalAlignment="Top" />
-    <ScrollContainer VerticalExpand="True"
+    <ScrollContainer Name="RoleScroll"
+                     VerticalExpand="True"
                      HScrollEnabled="False">
         <BoxContainer Orientation="Vertical"
                       Name="EntryContainer"
-                      VerticalExpand="True">
+                      Margin="8 10 8 10"
+                      HorizontalExpand="True">
             <!-- Ghost role entries are added here by code -->
         </BoxContainer>
     </ScrollContainer>

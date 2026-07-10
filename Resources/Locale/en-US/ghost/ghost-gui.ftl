@@ -40,6 +40,10 @@ ghost-target-window-warp-to-most-followed = Warp to Most Followed
 
 ghost-roles-window-title = Ghost Roles
 ghost-roles-window-available-button = Available ({$rolesCount})
+# CorvaxGoob Start
+ghost-roles-window-category-antagonist = Antagonists and threats ({$rolesCount})
+ghost-roles-window-category-other = Others ({$rolesCount})
+# CorvaxGoob End
 ghost-roles-window-join-raffle-button = Join raffle
 ghost-roles-window-raffle-in-progress-button =
     Join raffle ({$time} left, { $players ->

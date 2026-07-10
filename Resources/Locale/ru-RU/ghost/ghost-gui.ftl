@@ -14,6 +14,10 @@ ghost-target-window-current-button = Телепорт в: { $name }
 ghost-target-window-warp-to-most-followed = Телепорт к самому следуемому
 ghost-roles-window-title = Роли призраков
 ghost-roles-window-available-button = Доступно ({ $rolesCount })
+# CorvaxGoob Start
+ghost-roles-window-category-antagonist = Антагонисты и угрозы ({ $rolesCount })
+ghost-roles-window-category-other = Остальные ({ $rolesCount })
+# CorvaxGoob End
 ghost-roles-window-join-raffle-button = Участвовать в лотерее
 ghost-roles-window-raffle-in-progress-button =
     Участвовать в лотерее (Осталось { $time }, { $players ->

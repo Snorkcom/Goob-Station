@@ -175,34 +175,60 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
             var spriteSystem = sysManager.GetEntitySystem<SpriteSystem>();
             var requirementsManager = IoCManager.Resolve<JobRequirementsManager>();
 
-            // Grouping roles
-            var groupedRoles = ghostState.GhostRoles.GroupBy(
-                role => (
-                    role.Name,
-                    role.Description,
-                    //  Check the prototypes for role requirements and bans
-                    requirementsManager.IsAllowed(role.RolePrototypes.Item1, role.RolePrototypes.Item2, null, out var reason),
-                    reason));
+            // CorvaxGoob Edit Start
+            // Group roles by category first, then keep the previous grouping for identical roles.
+            var categoryGroups = ghostState.GhostRoles
+                .GroupBy(role => role.Category)
+                .OrderBy(group => GetCategorySortOrder(group.Key));
 
-            // Add a new entry for each role group
-            foreach (var group in groupedRoles)
+            foreach (var categoryGroup in categoryGroups)
             {
-                var reason = group.Key.reason;
-                var name = group.Key.Name;
-                var description = group.Key.Description;
-                var prototypesAllowed = group.Key.Item3;
+                var categoryContainer = _window.AddCategory(categoryGroup.Key, categoryGroup.Count());
+                var groupedRoles = categoryGroup.GroupBy(
+                    role => (
+                        role.Name,
+                        role.Description,
+                        role.Highlighted,
+                        //  Check the prototypes for role requirements and bans
+                        PrototypesAllowed: requirementsManager.IsAllowed(role.RolePrototypes.Item1, role.RolePrototypes.Item2, null, out var reason),
+                        Reason: reason))
+                    .OrderByDescending(group => group.Key.Highlighted);
 
-                // Adding a new role
-                _window.AddEntry(name, description, prototypesAllowed, reason, group, spriteSystem);
+                // Add a new entry for each role group
+                foreach (var group in groupedRoles)
+                {
+                    var reason = group.Key.Reason;
+                    var name = group.Key.Name;
+                    var description = group.Key.Description;
+                    var prototypesAllowed = group.Key.PrototypesAllowed;
+                    var highlighted = group.Key.Highlighted;
+
+                    // Adding a new role
+                    _window.AddEntry(categoryContainer, categoryGroup.Key, name, description, prototypesAllowed, reason, highlighted, group, spriteSystem); // CorvaxGoob Edit
+                }
+            // CorvaxGoob Edit End
             }
 
             // Restore the Collapsible box state if it is saved
             _window.RestoreCollapsibleBoxesStates();
+            _window.InvalidateRoleListLayout(); // CorvaxGoob
 
             // Close the rules window if it is no longer needed
             var closeRulesWindow = ghostState.GhostRoles.All(role => role.Identifier != _windowRulesId);
             if (closeRulesWindow)
                 _windowRules?.Close();
         }
+
+        // CorvaxGoob Start
+        private static int GetCategorySortOrder(GhostRoleCategory category)
+        {
+            return category switch
+            {
+                GhostRoleCategory.Antagonist => 0,
+                GhostRoleCategory.Other => 1,
+                _ => int.MaxValue,
+            };
+        }
+        // CorvaxGoob End
     }
 }

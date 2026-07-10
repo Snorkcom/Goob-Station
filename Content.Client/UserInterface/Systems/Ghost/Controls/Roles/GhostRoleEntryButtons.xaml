@@ -12,7 +12,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 <BoxContainer xmlns="https://spacestation14.io"
               Orientation="Horizontal"
-              HorizontalAlignment="Stretch">
+              HorizontalAlignment="Stretch"
+              HorizontalExpand="True"> <!-- CorvaxGoob Edit -->
     <Button Name="RequestButton"
             Access="Public"
             Text="{Loc 'ghost-roles-window-request-role-button'}"

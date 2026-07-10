@@ -5,11 +5,14 @@ SPDX-FileCopyrightText: 2025 Aiden <28298836+Aidenkrz@users.noreply.github.com>
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
+<!-- CorvaxGoob Edit -->
 <BoxContainer xmlns="https://spacestation14.io"
               Orientation="Vertical"
+              HorizontalExpand="True"
               Margin="8 0 8 0">
     <BoxContainer Name="Buttons"
                   Orientation="Vertical"
+                  HorizontalExpand="True"
                   SeparationOverride="5">
         <!-- Buttons are added here by code -->
     </BoxContainer>

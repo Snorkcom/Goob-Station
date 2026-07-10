@@ -1,0 +1,147 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Explicitly maintained ghost role classifications.
+# The id matches an entity prototype that owns GhostRole, or a GhostRoleMobSpawner prototype target.
+# Missing entries are shown as Other and never trigger availability sound.
+
+# Emergency response teams and death squads.
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerDeathSquad # Агент Эскадрона Смерти
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTLeader # ОБР лидер
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTLeaderEVA # ОБР лидер
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTChaplain # ОБР священник
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTChaplainEVA # ОБР священник
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTJanitor # ОБР уборщик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTJanitorEVA # ОБР уборщик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTEngineer # ОБР инженер
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTEngineerEVA # ОБР инженер
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTSecurity # ОБР офицер безопасности
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTSecurityEVA # ОБР офицер безопасности
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTMedical # ОБР медик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTMedicalEVA # ОБР медик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerCBURNUnit # Агент РХБЗЗ
+  category: Other
+  highlight: true
+
+# No-requirements variants.
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerDeathSquadNoReq # Эскадрон Смерти
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTLeaderNoReq # Лидер ОБР
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTLeaderEVANoReq # Лидер ОБР
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTChaplainNoReq # ОБР священник
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTChaplainEVANoReq # ОБР священник
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTJanitorNoReq # ОБР уборщик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTJanitorEVANoReq # ОБР уборщик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTEngineerNoReq # ОБР инженер
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTEngineerEVANoReq # ОБР инженер
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTSecurityNoReq # ОБР офицер безопасности
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTSecurityEVANoReq # ОБР офицер безопасности
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTMedicalNoReq # ОБР медик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerERTMedicalEVANoReq # ОБР медик
+  category: Other
+  highlight: true
+
+- type: ghostRoleClassification
+  id: RandomHumanoidSpawnerCBURNUnitNoReq # Агент РХБЗЗ
+  category: Other
+  highlight: true

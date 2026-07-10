@@ -71,6 +71,8 @@ using Content.Shared.Verbs;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;
 using Robust.Server.Player;
+using Robust.Shared.Audio; // CorvaxGoob
+using Robust.Shared.Audio.Systems; // CorvaxGoob
 using Robust.Shared.Collections;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
@@ -80,6 +82,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using System.Diagnostics.CodeAnalysis; // CorvaxGoob
 using System.Linq;
 
 namespace Content.Server.Ghost.Roles;
@@ -103,6 +106,10 @@ public sealed class GhostRoleSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly SkillsSystem _skillsSystem = default!; // CorvaxGoob-Skills
     [Dependency] private readonly GhostSystem _ghost = default!; // CorvaxGoob-GhostBarMoreFeatures
+    [Dependency] private readonly SharedAudioSystem _audio = default!; // CorvaxGoob
+
+    private static readonly SoundSpecifier ImportantGhostRoleSound = new SoundPathSpecifier("/Audio/_Goobstation/Wizard/swap.ogg",
+        AudioParams.Default.WithVolume(-4f)); // CorvaxGoob
 
     private uint _nextRoleIdentifier;
     private bool _needsUpdateGhostRoleCount = true;
@@ -370,8 +377,69 @@ public sealed class GhostRoleSystem : EntitySystem
             return;
 
         _ghostRoles[role.Comp.Identifier = GetNextRoleIdentifier()] = role;
+        // CorvaxGoob Start
+        if (TryGetRoleClassification(role, out var classification) && classification.NotifyOnAvailable)
+            NotifyGhostRoleAvailable();
+        // CorvaxGoob End
+
         UpdateAllEui();
     }
+
+    // CorvaxGoob Start
+    private bool TryGetRoleClassification(
+        Entity<GhostRoleComponent> role,
+        [NotNullWhen(true)] out GhostRoleClassificationPrototype? classification)
+    {
+        var prototypeId = MetaData(role.Owner).EntityPrototype?.ID;
+        if (prototypeId is not null &&
+            _prototype.TryIndex<GhostRoleClassificationPrototype>(prototypeId, out classification))
+        {
+            return true;
+        }
+
+        if (TryComp<GhostRoleMobSpawnerComponent>(role.Owner, out var spawner) &&
+            spawner.Prototype is { } spawnPrototype &&
+            _prototype.TryIndex<GhostRoleClassificationPrototype>(spawnPrototype.Id, out classification))
+        {
+            return true;
+        }
+
+        classification = null;
+        return false;
+    }
+
+    private GhostRoleCategory GetRoleCategory(Entity<GhostRoleComponent> role)
+    {
+        return TryGetRoleClassification(role, out var classification)
+            ? classification.Category
+            : GhostRoleCategory.Other;
+    }
+
+    private bool IsRoleHighlighted(Entity<GhostRoleComponent> role)
+    {
+        return TryGetRoleClassification(role, out var classification) && classification.Highlight;
+    }
+
+    private void NotifyGhostRoleAvailable()
+    {
+        foreach (var session in _playerManager.Sessions)
+        {
+            if (!CanReceiveGhostRoleNotification(session))
+                continue;
+
+            _audio.PlayGlobal(ImportantGhostRoleSound, session);
+        }
+    }
+
+    private bool CanReceiveGhostRoleNotification(ICommonSession session)
+    {
+        if (session.AttachedEntity is not { Valid: true } attached)
+            return false;
+
+        return TryComp<GhostComponent>(attached, out var ghost) && ghost.CanTakeGhostRoles
+            || HasComp<GhostBarPlayerComponent>(attached);
+    }
+    // CorvaxGoob End
 
     public void UnregisterGhostRole(Entity<GhostRoleComponent> role)
     {
@@ -764,6 +832,10 @@ public sealed class GhostRoleSystem : EntitySystem
                 Name = role.RoleName,
                 Description = role.RoleDescription,
                 Rules = role.RoleRules,
+                // CorvaxGoob Start
+                Category = GetRoleCategory((uid, role)),
+                Highlighted = IsRoleHighlighted((uid, role)),
+                // CorvaxGoob End
                 RolePrototypes = (jobs, antags),
                 Kind = kind,
                 RafflePlayerCount = rafflePlayerCount,

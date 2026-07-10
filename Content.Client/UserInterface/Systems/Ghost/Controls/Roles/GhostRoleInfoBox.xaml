@@ -5,11 +5,16 @@ SPDX-FileCopyrightText: 2025 Aiden <28298836+Aidenkrz@users.noreply.github.com>
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
+<!-- CorvaxGoob Edit -->
 <BoxContainer xmlns="https://spacestation14.io"
-              Orientation="Vertical">
+              Orientation="Vertical"
+              HorizontalExpand="True">
     <Label Name="Title"
-           StyleClasses="LabelKeyText"/>
-    <PanelContainer StyleClasses="HighDivider" />
+           StyleClasses="LabelKeyText"
+           HorizontalExpand="True"/>
+    <PanelContainer StyleClasses="HighDivider"
+                    HorizontalExpand="True" />
     <RichTextLabel Name="Description"
+                   HorizontalExpand="True"
                    Margin="0 4"/>
 </BoxContainer>

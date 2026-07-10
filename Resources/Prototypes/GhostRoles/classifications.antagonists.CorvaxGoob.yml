@@ -1,0 +1,815 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Explicitly maintained ghost role antagonist classifications.
+# The id matches an entity prototype that owns GhostRole, or a GhostRoleMobSpawner prototype target.
+# Missing entries are shown as Other and never trigger availability sound.
+
+# 1. NukeOps and syndy.
+- type: ghostRoleClassification
+  id: SpawnPointGhostNukeOperative # Ядерный оперативник
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointLoneNukeOperative # Одинокий оперативник
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointNukeopsCommander # Командир ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointNukeopsMedic # Медик ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointNukeopsOperative # Ядерный оперативник
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointLoneNukeOperativeToken # Одинокий оперативник (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobHoloparasiteGuardian # Холопаразит
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: PlayerBorgSyndicateAssaultBattery # Штурмовой борг Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobHumanSyndicateAgentMedic # Медик подкрепления Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobHumanSyndicateAgentSpy # Шпион подкрепления Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobHumanSyndicateAgentThief # Вор подкрепления Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobHumanSyndicateAgentNukeops # Подкрепление ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobMonkeySyndicateAgent # Обезьяна-агент Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobMonkeySyndicateAgentNukeops # Обезьяна-агент ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobKoboldSyndicateAgent # Кобольд-агент Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobKoboldSyndicateAgentNukeops # Кобольд-агент ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: Mobsyndicategorilla # Горилла синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobCatSyndy # СиндиКот
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobMothSyndy # СиндиМоль
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SyndicatePersonalAI # Персональный ИИ синдиката
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: PlayerBorgDerelictSyndicateAssaultGhostRole # Брошенный штурмовой борг Синдиката
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: ContractorSpawner # Наёмник Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ContractorTokenSpawner # Наёмник Синдиката (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+# 2. Solo antagonists
+- type: ghostRoleClassification
+  id: SpawnPointGhostDragon # Космический дракон
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostDragonToken # Космический дракон (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobDragon # Космический дракон
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostSpaceNinja # Космический ниндзя
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostSpaceNinjaToken # Космический ниндзя (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostAncientRogueKing # Древний король-изгой
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: AncientRogueKingToken # Древний король-изгой (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostWraith # Фантом
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: WraithToken # Фантом (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobRevenant # Ревенант
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobRevenantToken # Ревенант (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostHastur # Хастур
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: HasturToken # Хастур (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostSlasher # Мясник
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostSlasherToken # Мясник (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostSlaughterDemon # Демон резни
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointSlaughterDemonToken # Демон резни (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostLaughterDemon # Демон смеха
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointLaughterDemonToken # Демон смеха (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointWizard # Волшебник
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointWizardToken # Волшебник (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobSkeletonCloset # Скелет из шкафа
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostRatKing # Крысиный король
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobRatKing # Крысиный король
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostParadoxClone # Парадоксальный клон
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostGreyTide # Грейтайд
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostTunnelClown # Тоннельный клоун
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostDarkLord # Тёмный лорд
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostMimeAssassin # Мим-убийца
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostDarkPriest # Тёмный жрец
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobLaughterDemon # Демон смеха
+  category: Antagonist
+  highlight: true
+
+# 3. Abductors
+- type: ghostRoleClassification
+  id: LoneAbductorSpawner # Одинокий абдуктор
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: AbductorScientistSpawner # Абдуктор-учёный
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: AbductorAgentSpawner # Абдуктор-агент
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobAbductorAntag # Абдуктор
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobAbductorScientist # Абдуктор-учёный
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobAbductorAgent # Абдуктор-агент
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: LoneAbductorSpawnerToken # Одинокий абдуктор (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+# 4. Regular/minor roles
+- type: ghostRoleClassification
+  id: SpawnPointGhostDerelictCyborgSyndicate # Заброшенный борг Синдиката
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostDerelictCyborgSyndicateToken # Заброшенный борг Синдиката (токен)
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobLesserSlaughterDemon # Низший демон резни
+  category: Antagonist
+
+# 5. Blob
+- type: ghostRoleClassification
+  id: SpawnPointGhostBlob # Блоб
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobObserverBlob # Блоб
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostBlobRat # Блоб-мышь
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostBlobRatToken # Блоб-мышь (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobMouseBlob # Блоб-мышь
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobBlobBlobbernaut # Блоббернаут
+  category: Antagonist
+
+# 6. Xenos
+- type: ghostRoleClassification
+  id: MobXenomorphQueen # Королева ксеноморфов
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostXenomorph # Ксеноморф
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphPraetorian # Ксеноморф-преторианец
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphHunter # Ксеноморф-охотник
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphDrone # Ксеноморф-дрон
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphSentinel # Ксеноморф-плевальщик
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphLarva # Ксеноморф-грудолом
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphFaceHugger # Ксеноморф-лицехват
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobXenomorphMaid # Ксеномейдочка
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoBurrowerSentient # Разумный ксеноморф-копатель
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoCrusherSentient # Разумный ксеноморф-крушитель
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoDroneSentient # Разумный ксеноморф-дрон
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoKingSentient # Разумный король ксеноморфов
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoQueenSentient # Разумная королева ксеноморфов
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoRavagerSentient # Разумный ксеноморф-опустошитель
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoRogueKingSentient # Разумный король-изгой ксеноморфов
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: CMMobXenoWarriorSentient # Разумный ксеноморф-воин
+  category: Antagonist
+
+# 7. Other ghost-role familiars.
+- type: ghostRoleClassification
+  id: SpawnPointGhostCerberus # Цербер
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCorgiCerberus # Цербер
+  category: Antagonist
+
+# 8. Bingle roles.
+- type: ghostRoleClassification
+  id: SpawnPointGhostBinglePrime # Бингл-прайм
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostBinglePrimeToken # Бингл-прайм (токен)
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostBingle # Бингл
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobBingle # Бингл
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: MobBinglePrime # Бингл-прайм
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+# 9. Wraith and wraith summons.
+- type: ghostRoleClassification
+  id: MobWraith # Фантом
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: SummonVoidGhost # Призрак пустоты
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobRotHulk # Гниющий громила
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobPlagueRatSmall # Чумная крыса
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAncientGuardBotWraith # Древний боевой бот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAncientLegsWraith # Древние ноги фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAncientRepairBotWraith # Древний ремонтный бот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAncientRobot1Wraith # Древний робот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAncientRobot2Wraith # Древний робот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAncientRobot3Wraith # Древний робот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobBearGoonWraith # Медведь-прислужник фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobBGunbotWraith # Боевой бот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobBrullbarWraith # Брульбар фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCrunchedWraith # Скомканный прислужник фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobLionWraith # Лев фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobMonstrosityBodyWraith # Тело чудовища фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobMonstrosityHeadWraith # Голова чудовища фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobNukebotWraith # Ядерный бот фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobShadeWraith # Тень фантома
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSkeletonGoonLesser # Малый скелет-прислужник
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSkeletonGoonWraith # Скелет-прислужник фантома
+  category: Antagonist
+
+# 10. Heretic and cosmic ghost roles.
+- type: ghostRoleClassification
+  id: MobGhoulFireShark # Огненная акула-гуль
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobGhoulProphet # Пророк-гуль
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobGhoulRustWalker # Ржавый ходок-гуль
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobGhoulStalker # Преследователь-гуль
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobStarGazer # Звездочёт
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: SpawnPointRogueAscended # Вознесённый изгой
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobRogueAscended # Вознесённый изгой
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCosmicGod # Космический бог
+  category: Antagonist
+
+# 11. Aggressive fauna.
+- type: ghostRoleClassification
+  id: MobCarp # Космический карп
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCarpMagic # Мэджикарп
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCarpRainbow # Радужный карп
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCarpDragon # Космический карп дракона
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCarpDungeon # Космический карп из подземелья
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCarpSentient # Разумный карп
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobShark # Карпоакула
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSharkDragon # Космическая акула дракона
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobDragonDungeon # Космический дракон из подземелья
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobBearSpace # Космический медведь
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobBearSpaceSalvage # Космический медведь с обломка
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSpiderSpace # Космический паук
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSpiderSpaceSalvage # Космический паук с обломка
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobGiantSpiderAngry # Гигантский паук
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobClownSpider # Клоун-паук
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCobraSpace # Космическая кобра
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobCobraSpaceSalvage # Космическая кобра с обломка
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobTomatoKiller # Помидор-убийца
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobTick # Космический клещ
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobTickSalvage # Космический клещ с обломка
+  category: Antagonist
+
+# 12. Angry slimes.
+- type: ghostRoleClassification
+  id: MobAdultSlimesBlueAngry # Злой синий слайм
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAdultSlimesGreenAngry # Злой зелёный слайм
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobAdultSlimesYellowAngry # Злой жёлтый слайм
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: ReagentSlime # Химический слайм
+  category: Antagonist
+
+# 13. Other hostile or threat-leaning roles.
+- type: ghostRoleClassification
+  id: SpawnPointPirateCaptain # Пират IRS
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: SyndieSoldierTeamLeaderSpawner # Командир команды Синдиката
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: SyndieSoldierSpawner # Солдат Синдиката
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: PirateScoonerSpawner # Космический пират
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: PirateCaptainScoonerSpawner # Капитан космических пиратов
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: VisitorBlackmarketeerSpawner # Торговец чёрного рынка
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSyndicateSmuggler # Контрабандист Синдиката
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSkeletonPirate # Скелет-пират
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: MobSkeletonBiker # Скелет-байкер
+  category: Antagonist
+
+- type: ghostRoleClassification
+  id: SpawnPointGhostVoxRaider # Вокс-рейдер
+  category: Antagonist
+
+# 14. Uplink ally radios.
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicate # Радио подкрепления Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicateNukeops # Радио подкрепления ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicateAncestor # Радио генетического предка Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicateAncestorNukeops # Радио генетического предка ядерных оперативников
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicateCyborgAssault # Радио штурмового борга Синдиката
+  category: Antagonist
+  notifyOnAvailable: true
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicateSyndiCat # Радио СиндиКота
+  category: Antagonist
+  highlight: true
+
+- type: ghostRoleClassification
+  id: ReinforcementRadioSyndicateSyndiRoach # Радио СиндиМоли
+  category: Antagonist
+  highlight: true
