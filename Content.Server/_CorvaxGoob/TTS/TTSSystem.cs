@@ -103,10 +103,10 @@ public sealed partial class TTSSystem : EntitySystem
         if (args.Message is null)
             return;
 
-        var obfuscatedMessage = _lang.ObfuscateSpeech(args.Message, args.Language);
-
         if (!args.Language.SpeechOverride.RequireSpeech)
             return;
+
+        var obfuscatedMessage = _lang.ObfuscateSpeech(args.Message, args.Language);
 
         if (args.IsWhisper)
             HandleWhisper(uid, args.Message, obfuscatedMessage, args.Language, protoVoice.Speaker, component.Pitch);

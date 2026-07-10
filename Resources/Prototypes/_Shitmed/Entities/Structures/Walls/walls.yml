@@ -54,9 +54,14 @@
         - FullTileMask
         layer:
         - WallLayer
+  # CorvaxGoob-start попытка исправить тесты
   - type: Construction
-    graph: Girder
-    node: diagonalshuttleWall
+    graph: GirderDiagonal
+    node: shuttleWallDiagonal
+  #- type: Construction
+  #  graph: Girder
+  #  node: diagonalshuttleWall
+  # CorvaxGoob-end
   - type: RustRequiresPathStage
     pathStage: 10 # Ascension
 
