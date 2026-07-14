@@ -1,2 +1,2 @@
-ent-ClothingShoesBootsMagAtmos = atmos magboots
-    .desc = Like normal magboots, but simply better by virtue of being from the Atmospherics department.
+ent-ClothingShoesBootsMagAtmos = атмосферные магнитные сапоги
+    .desc = Как обычные магнитные сапоги, но лучше, потому что из отдела атмосферных систем.
