@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
 /* CorvaxGoob-Coins-start
 using Robust.Shared.Serialization;
 
@@ -10,6 +8,7 @@ public sealed record SharedRMCPatronFull(
     SharedRMCPatronTier? Tier,
     bool Linked,
     Color? GhostColor,
+    SharedRMCGhostCosmetics? GhostCosmetics, // Goob - ghost cosmetics
     SharedRMCLobbyMessage? LobbyMessage,
     SharedRMCRoundEndShoutouts? RoundEndShoutout
 );
