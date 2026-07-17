@@ -8,7 +8,6 @@ public sealed record SharedRMCPatronFull(
     SharedRMCPatronTier? Tier,
     bool Linked,
     Color? GhostColor,
-    SharedRMCGhostCosmetics? GhostCosmetics, // Goob - ghost cosmetics
     SharedRMCLobbyMessage? LobbyMessage,
     SharedRMCRoundEndShoutouts? RoundEndShoutout
 );
