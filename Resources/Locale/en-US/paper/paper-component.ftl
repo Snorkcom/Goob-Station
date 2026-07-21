@@ -36,7 +36,7 @@ paper-ui-fill-level = {$currentLength}/{$maxLength}
 paper-ui-save-button = Save ({$keybind})
 
 paper-tamper-proof-modified-message = This page was written using tamper-proof ink.
-# CorvaxGoob Start
+# CorvaxGoob Start - Edit-documents-helper
 paper-insert-helper-title = Insert
 paper-insert-helper-station = Station
 paper-insert-helper-time-date = Time, date
