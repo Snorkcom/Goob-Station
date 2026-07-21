@@ -9,7 +9,7 @@ ghost-gui-toggle-lighting-manager-popup-fullbright = Полная яркость
 ghost-gui-toggle-fov-popup = Поле зрения переключено.
 ghost-gui-toggle-hearing-popup-on = Теперь вы слышите все фразы.
 ghost-gui-toggle-hearing-popup-off = Теперь вы слышите только радиосвязь и фразы поблизости.
-# CorvaxGoob Start - Observer HUD [RU]
+# CorvaxGoob Start - Observer HUD
 ghost-gui-toggle-observer-hud-popup-security = HUD наблюдателя: режим СБ включён.
 ghost-gui-toggle-observer-hud-popup-security-health = HUD наблюдателя: режим СБ и здоровья включён.
 ghost-gui-toggle-observer-hud-popup-off = HUD наблюдателя выключен.

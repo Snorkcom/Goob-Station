@@ -16,6 +16,7 @@ ent-ActionToggleGhosts = Toggle Ghosts
     .desc = Toggle the visibility of other ghosts.
 ent-ActionToggleGhostHearing = Toggle Ghost Hearing
     .desc = Toggle between hearing all messages and hearing only radio & nearby messages.
-# CorvaxGoob Observer HUD [EN]
+# CorvaxGoob Start - Observer HUD
 ent-ActionToggleGhostObserverHud = Toggle Observer HUD
     .desc = Toggle observer HUD mode.
+# CorvaxGoob End
