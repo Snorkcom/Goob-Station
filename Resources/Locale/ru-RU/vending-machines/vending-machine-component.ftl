@@ -4,7 +4,7 @@ vending-machine-component-try-eject-invalid-item = Несуществующий 
 vending-machine-component-try-eject-out-of-stock = Нет в наличии
 vending-machine-component-try-eject-access-denied = Доступ запрещён
 vending-machine-component-search-filter = Поиск...
-# CorvaxGoob Start - Vending Return [RU]
+# CorvaxGoob Start - Vending Return
 vending-machine-component-return-success = Вы возвращаете { $item } в { $target }.
 vending-machine-component-returned-items-examine = Содержит возвращённые предметы.
 vending-machine-component-remove-returned-items = Вынуть возвращённые предметы
