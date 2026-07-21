@@ -1,5 +1,3 @@
-// SPDX-FileCopyrightText: 2026 Snorkcom <Snorkcom@users.noreply.github.com>
-//
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Diagnostics.CodeAnalysis;
@@ -52,9 +50,9 @@ public sealed partial class IdCardConsoleSystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
 
     /// <summary>
-    /// Registers the CorvaxGoob bulk access message handler for the ID console.
+    /// Registers the bulk access message handler for the ID console.
     /// </summary>
-    private void InitializeCorvaxGoobBulkAccess()
+    private void InitializeBulkAccess()
     {
         SubscribeLocalEvent<IdCardConsoleComponent, IdCardConsoleBulkAccessMessage>(OnBulkAccessMessage);
     }

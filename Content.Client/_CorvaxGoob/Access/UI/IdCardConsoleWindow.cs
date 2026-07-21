@@ -1,5 +1,3 @@
-// SPDX-FileCopyrightText: 2026 Snorkcom <Snorkcom@users.noreply.github.com>
-//
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using static Content.Shared.Access.Components.IdCardConsoleComponent;
@@ -13,7 +11,7 @@ namespace Content.Client.Access.UI
         /// <summary>
         /// Connects the bulk access buttons (Standard, Extended, and Full) to their server actions.
         /// </summary>
-        private void InitializeCorvaxGoobBulkAccessButtons()
+        private void InitializeBulkAccessButtons()
         {
             StandardAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.StandardAccess);
             ExtendedAccessButton.OnPressed += _ => SubmitBulkAccessAction(IdCardConsoleBulkAccessAction.Extended);
@@ -41,7 +39,7 @@ namespace Content.Client.Access.UI
             _pendingBulkAccessUpdate = false;
         }
 
-        private void SetCorvaxGoobBulkButtonsDisabled(bool disabled)
+        private void SetBulkButtonsDisabled(bool disabled)
         {
             StandardAccessButton.Disabled = disabled;
             ExtendedAccessButton.Disabled = disabled;

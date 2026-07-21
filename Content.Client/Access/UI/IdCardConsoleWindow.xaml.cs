@@ -122,7 +122,7 @@ namespace Content.Client.Access.UI
             }
 
             JobPresetOptionButton.OnItemSelected += SelectJobPreset;
-            InitializeCorvaxGoobBulkAccessButtons(); // CorvaxGoob - Extended-access
+            InitializeBulkAccessButtons(); // CorvaxGoob - Extended-access
             _accessButtons.Populate(accessLevels, prototypeManager);
             AccessLevelControlContainer.AddChild(_accessButtons);
 
@@ -232,7 +232,7 @@ namespace Content.Client.Access.UI
             JobTitleSaveButton.Disabled = !interfaceEnabled || !jobTitleDirty;
 
             JobPresetOptionButton.Disabled = !interfaceEnabled;
-            SetCorvaxGoobBulkButtonsDisabled(!interfaceEnabled); // CorvaxGoob - Extended-access
+            SetBulkButtonsDisabled(!interfaceEnabled); // CorvaxGoob - Extended-access
 
             _accessButtons.UpdateState(state.TargetIdAccessList?.ToList() ??
                                        new List<ProtoId<AccessLevelPrototype>>(),

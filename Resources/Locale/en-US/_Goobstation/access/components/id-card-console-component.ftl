@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 id-card-console-window-job-search-label = Search
-# CorvaxGoob Start - Extended-access [EN]
+# CorvaxGoob Start - Extended-access
 id-card-console-window-standard-access-button = Default
 id-card-console-window-standard-access-tooltip = Detects the job on the ID card and restores that job's default access.
 id-card-console-window-extended-access-button = Extended

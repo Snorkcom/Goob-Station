@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 id-card-console-window-job-search-label = Поиск
-# CorvaxGoob Start - Extended-access [RU]
+# CorvaxGoob Start - Extended-access
 id-card-console-window-standard-access-button = Стандартный
 id-card-console-window-standard-access-tooltip = Определяет текущую должность на карте и восстанавливает стандартные доступы для неё.
 id-card-console-window-extended-access-button = Расширенный
