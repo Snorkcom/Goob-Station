@@ -25,6 +25,8 @@ public sealed class CardPdaPainterBoundUserInterface : BoundUserInterface
     {
         base.Open();
 
+        // The window is dumb UI: it raises events for button clicks,
+        // while this BUI converts those clicks into network messages.
         _window = this.CreateWindow<CardPdaPainterWindow>();
         _window.OnTargetSlotPressed += OnTargetSlotPressed;
         _window.OnPaintPressed += OnPaintPressed;
@@ -54,11 +56,13 @@ public sealed class CardPdaPainterBoundUserInterface : BoundUserInterface
 
     private void OnTargetSlotPressed()
     {
+        // Reuse the standard item-slot message so insert/eject behaves like other SS14 slot UIs.
         SendPredictedMessage(new ItemSlotButtonPressedEvent(CardPdaPainterComponent.TargetSlotId));
     }
 
     private void OnPaintPressed(ProtoId<JobPrototype> jobId)
     {
+        // Send only the chosen job. The server will validate the current slot item and resolve the visual template.
         SendMessage(new CardPdaPainterRepaintMessage(jobId));
     }
 }

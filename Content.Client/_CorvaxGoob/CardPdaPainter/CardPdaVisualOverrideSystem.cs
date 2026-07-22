@@ -37,12 +37,14 @@ public sealed class CardPdaVisualOverrideSystem : EntitySystem
             return;
         }
 
+        // Sprite data is client-side, so the server stores only the template prototype ID.
         if (TryComp<SpriteComponent>(ent, out var sprite) &&
             prototype.TryGetComponent<SpriteComponent>(out var otherSprite, Factory))
         {
             sprite.CopyFrom(otherSprite);
         }
 
+        // PDA windows use these colors for their frame, so copy them along with the world sprite.
         if (TryComp<PdaBorderColorComponent>(ent, out var borderColor) &&
             prototype.TryGetComponent<PdaBorderColorComponent>(out var otherBorderColor, Factory))
         {

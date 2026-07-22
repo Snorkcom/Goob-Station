@@ -18,6 +18,8 @@ public abstract class SharedCardPdaPainterSystem : EntitySystem
 
     private void OnComponentInit(EntityUid uid, CardPdaPainterComponent component, ComponentInit args)
     {
+        // Item slots are registered on both client and server so the UI button can insert/eject
+        // the target item predictively while the server still owns the final slot state.
         _itemSlots.AddItemSlot(uid, CardPdaPainterComponent.TargetSlotId, component.TargetSlot);
     }
 

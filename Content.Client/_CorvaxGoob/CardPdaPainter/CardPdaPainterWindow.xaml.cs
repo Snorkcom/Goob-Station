@@ -36,6 +36,8 @@ public sealed partial class CardPdaPainterWindow : DefaultWindow
 
     public void UpdateState(CardPdaPainterBoundUserInterfaceState state, IPrototypeManager prototype)
     {
+        // The server sends a fresh state after opening the window and after every slot change.
+        // This method only redraws labels, the job list, and the preview.
         TargetSlotButton.Text = state.IsTargetPresent
             ? Loc.GetString("card-pda-painter-window-eject")
             : Loc.GetString("card-pda-painter-window-insert");
@@ -60,6 +62,7 @@ public sealed partial class CardPdaPainterWindow : DefaultWindow
             return string.Compare(xName, yName, StringComparison.CurrentCulture);
         });
 
+        // Keep the current selection when possible, but select the first valid entry after target changes.
         if (!_hasSelectedJob || !HasEntry(_selectedJob))
         {
             _hasSelectedJob = _entries.Count > 0;
@@ -76,6 +79,7 @@ public sealed partial class CardPdaPainterWindow : DefaultWindow
     {
         JobsContainer.RemoveAllChildren();
 
+        // Searching is purely client-side: the server already sent every valid job style for this target type.
         var prototype = IoCManager.Resolve<IPrototypeManager>();
         var filter = SearchLineEdit.Text.Trim();
 
@@ -113,6 +117,7 @@ public sealed partial class CardPdaPainterWindow : DefaultWindow
 
     private void UpdateSelection(IPrototypeManager prototype)
     {
+        // The preview uses the exact entity prototype that the server will use as the visual template.
         if (!TryGetSelectedEntry(out var entry) ||
             !prototype.TryIndex(entry.JobId, out JobPrototype? job))
         {
