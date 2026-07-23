@@ -34,3 +34,4 @@
   - type: ContainerContainer
     containers:
       CardPdaPainter-target: !type:ContainerSlot
+  - type: CargoSellBlacklist
