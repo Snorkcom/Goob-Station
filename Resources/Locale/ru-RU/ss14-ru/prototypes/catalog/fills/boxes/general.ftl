@@ -63,10 +63,6 @@ ent-BoxCandle = коробка свечей
     .desc = Эта коробка изготовлена специально для хранения свечей.
 ent-BoxCandleSmall = коробка маленьких свечей
     .desc = { ent-BoxCandle.desc }
-# CorvaxGoob Start
-ent-BoxRandomBible = коробка случайного священного писания
-    .desc = Коробка с одним случайным священным писанием.
-# CorvaxGoob End
 ent-BoxDarts = коробка дротиков
     .desc = Коробка, наполненная разноцветными дротиками.
 ent-BoxEnvelope = коробка конвертов
