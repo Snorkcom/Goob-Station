@@ -14,4 +14,4 @@ card-pda-painter-popup-invalid-target = Вставьте ID-карту или К
 card-pda-painter-slot-name = ID-карта или КПК
 
 ent-CardPdaPainter = декоратор ID-карт и КПК
-    .desc = Компактный покрасочный прибор для ID-карт и КПК. Использует только сертифицированные красители NanoTrasen.
+    .desc = Компактный покрасочный прибор для ID-карт и КПК. Использует только сертифицированные чернила NanoTrasen.
