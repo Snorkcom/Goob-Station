@@ -10,7 +10,3 @@ crew-manifest-window-title = Crew Manifest
 crew-manifest-button-label = Crew Manifest
 crew-manifest-button-description = Show a list of your fellow crewmembers
 crew-manifest-no-valid-station = Invalid station, or empty manifest!
-# CorvaxGoob Start
-crew-manifest-search-placeholder = Enter name or job title
-crew-manifest-no-matches = No matches found
-# CorvaxGoob End
