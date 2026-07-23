@@ -12,6 +12,3 @@ card-pda-painter-window-no-selection = Профессия не выбрана
 card-pda-painter-popup-success = Предмет перекрашен.
 card-pda-painter-popup-invalid-target = Вставьте ID-карту или КПК.
 card-pda-painter-slot-name = ID-карта или КПК
-
-ent-CardPdaPainter = декоратор ID-карт и КПК
-    .desc = Компактный покрасочный прибор для ID-карт и КПК. Использует только сертифицированные чернила NanoTrasen.

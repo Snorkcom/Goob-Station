@@ -12,6 +12,3 @@ card-pda-painter-window-no-selection = No job selected
 card-pda-painter-popup-success = The item has been repainted.
 card-pda-painter-popup-invalid-target = Insert an ID card or PDA.
 card-pda-painter-slot-name = ID card or PDA
-
-ent-CardPdaPainter = ID card and PDA decorator
-    .desc = A compact ID card and PDA painter. Uses only NanoTrasen-certified ink.

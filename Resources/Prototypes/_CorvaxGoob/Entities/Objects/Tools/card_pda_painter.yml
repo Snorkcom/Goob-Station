@@ -34,9 +34,3 @@
   - type: ContainerContainer
     containers:
       CardPdaPainter-target: !type:ContainerSlot
-  - type: PhysicalComposition
-    materialComposition:
-      Steel: 100
-      Plastic: 50
-  - type: StaticPrice
-    price: 50
