@@ -49,15 +49,17 @@
         - Cartridge
         - Trash
         - Organ # CorvaxGoob
-      components: # CorvaxGoob
+# CorvaxGoob Start
+      components:
         - BodyPart
         - SlimeExtract
-    blacklist: # CorvaxGoob
+    blacklist:
       tags:
         - Brain
         - Head
       components:
         - Cybernetics
+# CorvaxGoob End
   - type: UseDelay
     delay: 0.5
   - type: Tag
