@@ -14,4 +14,4 @@ card-pda-painter-popup-invalid-target = Insert an ID card or PDA.
 card-pda-painter-slot-name = ID card or PDA
 
 ent-CardPdaPainter = ID card and PDA decorator
-    .desc = A compact ID card and PDA painter. Uses only NanoTrasen-certified dye.
+    .desc = A compact ID card and PDA painter. Uses only NanoTrasen-certified ink.
