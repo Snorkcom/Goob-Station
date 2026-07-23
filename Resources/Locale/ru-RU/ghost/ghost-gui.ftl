@@ -9,14 +9,6 @@ ghost-gui-toggle-lighting-manager-popup-fullbright = Полная яркость
 ghost-gui-toggle-fov-popup = Поле зрения переключено.
 ghost-gui-toggle-hearing-popup-on = Теперь вы слышите все фразы.
 ghost-gui-toggle-hearing-popup-off = Теперь вы слышите только радиосвязь и фразы поблизости.
-# CorvaxGoob Start - Observer HUD
-ghost-gui-toggle-observer-hud-popup-security = HUD наблюдателя: режим СБ включён.
-ghost-gui-toggle-observer-hud-popup-security-health = HUD наблюдателя: режим СБ и здоровья включён.
-ghost-gui-toggle-observer-hud-popup-off = HUD наблюдателя выключен.
-ghost-gui-observer-hud-action-desc-off = Включить отображение статусов СБ.
-ghost-gui-observer-hud-action-desc-security = Добавить отображение полосок здоровья.
-ghost-gui-observer-hud-action-desc-security-health = Выключить HUD наблюдателя.
-# CorvaxGoob End
 ghost-target-window-title = Телепорт призрака
 ghost-target-window-current-button = Телепорт в: { $name }
 ghost-target-window-warp-to-most-followed = Телепорт к самому следуемому
