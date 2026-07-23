@@ -522,6 +522,7 @@
         amount: 4
       - id: CandlePurpleSmall
         amount: 4
+
 - type: entity
   name: darts box
   parent: BoxCardboard
