@@ -16,6 +16,9 @@
     key: enum.CardPdaPainterUiKey.Key
     singleUser: true
     requireActiveHand: false
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access: [["HeadOfPersonnel"]]
   - type: UserInterface
     interfaces:
       enum.CardPdaPainterUiKey.Key:
