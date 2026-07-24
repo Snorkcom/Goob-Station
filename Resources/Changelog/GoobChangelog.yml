@@ -23991,3 +23991,9 @@ Entries:
       message: Shadow anomaly is harder to spawn now
   id: 2759
   time: '2026-07-24T10:39:52.0000000+00:00'
+- author: elioskmil
+  changes:
+    - type: Add
+      message: adds material silo flatpacks to CMO, CE, and HoS lockers.
+  id: 2760
+  time: '2026-07-24T10:40:56.0000000+00:00'
