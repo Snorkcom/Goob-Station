@@ -7,27 +7,22 @@ using Robust.Client.UserInterface;
 namespace Content.Client._CorvaxGoob.Traitor.HighRiskPinpointer;
 
 /// <summary>
-/// Opens the fixed target list and sends the selected high-risk item or DNA sequence to the server.
+/// Opens the target selection window, forwards search requests to the server, and preserves the current selection
+/// while this bound interface remains active.
 /// </summary>
 [UsedImplicitly]
-public sealed class HighRiskPinpointerUserInterface : BoundUserInterface
+public sealed class HighRiskPinpointerUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
-    private HighRiskPinpointerWindow? _window;
-    private int _selectedTargetId = (int) HighRiskPinpointerTarget.Hypospray;
-
-    public HighRiskPinpointerUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
-    {
-    }
+    // Reuse the selected entry if the window is recreated without replacing the bound interface.
+    private int _selectedTargetId;
 
     protected override void Open()
     {
         base.Open();
 
-        _window = this.CreateWindow<HighRiskPinpointerWindow>();
-        _window.TargetSelected += target => SendMessage(new HighRiskPinpointerSelectTargetMessage(target));
-        _window.DnaSubmitted += dna => SendMessage(new HighRiskPinpointerTrackDnaMessage(dna));
-        _window.SelectionChanged += targetId => _selectedTargetId = targetId;
-        _window.SelectTarget(_selectedTargetId);
-        _window.OpenCentered();
+        var window = this.CreateWindow<HighRiskPinpointerWindow>();
+        window.SearchSubmitted += (selectionId, dna) => SendMessage(new HighRiskPinpointerSearchMessage(selectionId, dna));
+        window.SelectionChanged += targetId => _selectedTargetId = targetId;
+        window.SelectTarget(_selectedTargetId);
     }
 }

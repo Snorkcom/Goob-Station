@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 - type: entity
-  parent: [PinpointerSyndicateNuclear, BaseSyndicateContraband]
+  parent: PinpointerSyndicateNuclear
   id: PinpointerSyndicateHighRisk
   name: high-risk pinpointer
   description: A Syndicate pinpointer configured to find the station's most valuable targets or an exact DNA sequence.
   components:
+  # The custom interface supplies explicit targets instead of using the standard automatic target search.
   - type: Pinpointer
     whitelist: null
     targetName: null
     canToggle: false
-    canRetarget: false
     canEmag: false
   - type: HighRiskPinpointer
   - type: ActivatableUI
